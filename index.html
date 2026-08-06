@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <!-- 2단계: 관계자 외 출입금지 비밀번호 오버레이 -->
+    <!-- 2단계: 관계자 비밀번호 오버레이 -->
     <div id="passwordOverlay" class="overlay hidden">
         <div class="login-box">
             <h2>RESTRICTED AREA</h2>
@@ -213,22 +213,20 @@
         const MY_PASS = "너가원하는비밀번호"; // 여기에 관계자 비밀번호 설정
 
         const firebaseConfig = {
-            apiKey: "YOUR_FIREBASE_API_KEY",
-            authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
-            projectId: "YOUR_FIREBASE_PROJECT_ID",
-            storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
-            appId: "YOUR_FIREBASE_APP_ID"
+            apiKey: "AIzaSyAagWKtXuvQOhV-__Mxmd5ys8vs0xDDCUs",
+            authDomain: "water-log132.firebaseapp.com",
+            projectId: "water-log132",
+            storageBucket: "water-log132.firebasestorage.app",
+            messagingSenderId: "569667354916",
+            appId: "1:569667354916:web:3008428d6c795f04f7f3b1"
         };
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // 로그인 상태 감지
         auth.onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById('googleLoginOverlay').classList.add('hidden');
-                // 구글 로그인 성공 후, 비밀번호 검증 단계를 거쳤는지 확인
                 if (sessionStorage.getItem('pass_verified') === 'true') {
                     showMainApp(user.email);
                 } else {
@@ -256,7 +254,7 @@
                 const user = auth.currentUser;
                 if (user) showMainApp(user.email);
             } else {
-                alert('비밀번호 틀렸다. 나가라.');
+                alert('비밀번호 틀렸다. 다시 해라.');
             }
         }
 
@@ -331,7 +329,7 @@
                 updateTable();
 
                 const sortResultDiv = document.getElementById('aiSortResult');
-                sortResultDiv.innerHTML = `<div class="result-card"><span style="color:var(--text-sub)">총 ${uniqueNewItems.length}개의 북마크를 AI가 분석하고 분류하는 중이다...</span></div>`;
+                sortResultDiv.innerHTML = `<div class="result-card">총 ${uniqueNewItems.length}개의 북마크를 AI가 분석하고 분류하는 중이다...</div>`;
 
                 const titlesSnippet = uniqueNewItems.slice(0, 15).map(b => `- ${b.title}`).join('\n');
                 const prompt = `다음 북마크 제목들을 보고, 성격에 맞게 카테고리별로 자동 분류해 주고, 전반적인 취향에 대해 시니컬하게 반말 팩폭을 날려줘.\n\n${titlesSnippet}`;
@@ -388,7 +386,7 @@
 
             const picked = bookmarks[Math.floor(Math.random() * bookmarks.length)];
             const resultArea = document.getElementById('resultArea');
-            resultArea.innerHTML = `<div class="result-card"><b>TARGET:</b> <a href="${picked.url}" target="_blank">${picked.title}</a><br><span style="color:var(--text-sub)">AI 검열관이 내용을 분석하는 중이다...</span></div>`;
+            resultArea.innerHTML = `<div class="result-card"><b>TARGET:</b> <a href="${picked.url}" target="_blank">${picked.title}</a><br>AI 검열관이 내용을 분석하는 중이다...</div>`;
 
             const prompt = `다음 북마크 내용을 분석해라. 
 제목: ${picked.title}
@@ -422,3 +420,5 @@ URL: ${picked.url}
     </script>
 </body>
 </html>
+
+```
