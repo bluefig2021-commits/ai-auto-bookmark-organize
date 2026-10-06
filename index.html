@@ -678,7 +678,9 @@ function updateRandomNav(){
   const prev = document.getElementById("randomPrev");
   const next = document.getElementById("randomNext");
   if(prev) prev.disabled = randomHistoryPos <= 0;
-  if(next) next.disabled = randomHistoryPos < 0 || randomHistoryPos >= randomHistory.length - 1;
+  // 다음은 현재 기록의 끝에 있어도 새 랜덤 북마크를 뽑을 수 있으므로 항상 활성화
+  // 북마크가 1개뿐일 때만 의미가 없으므로 비활성화
+  if(next) next.disabled = archive.length <= 1;
 }
 
 function goToRandomIndex(index, addToHistory = false){
