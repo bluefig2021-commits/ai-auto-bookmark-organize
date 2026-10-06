@@ -18,13 +18,13 @@
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans KR",sans-serif}
 button,input,textarea,select{font:inherit}button{cursor:pointer}
 .top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.top-inner,.main{width:min(920px,calc(100% - 36px));margin:0 auto}
+.top-inner,.main{width:min(760px,calc(100% - 32px));margin:0 auto}
 .top-inner{padding:14px 0 0}
 .brand-row{display:flex;align-items:center;justify-content:space-between;gap:18px}
 .brand{font-size:17px;font-weight:800;letter-spacing:-.7px}
 .brand small{font-size:10px;color:var(--muted);font-weight:400;margin-left:6px;letter-spacing:0}
 .actions{display:flex;gap:6px;align-items:center}
-.action{border:1px solid #dedede;background:#fff;padding:7px 10px;border-radius:5px;font-size:11px;color:#333}
+.action{border:1px solid #d8d8d8;background:#fff;padding:7px 10px;border-radius:11px;font-size:11px;color:#333}
 .action:hover{background:#f6f6f6}
 .action.dark{background:#171717;border-color:#171717;color:#fff}
 .action.dark:hover{background:#000}
@@ -38,7 +38,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
 .heading{font-size:18px;font-weight:800;letter-spacing:-.7px}
 .count{font-size:11px;color:var(--muted);margin-left:6px}
-.search{width:235px;border:1px solid #e0e0e0;background:#fff;padding:8px 10px;border-radius:5px;outline:none;font-size:11px}
+.search{width:220px;border:1px solid #dedede;background:#fff;padding:8px 11px;border-radius:12px;outline:none;font-size:11px}
 .search:focus{border-color:#aaa}
 .list{display:flex;flex-direction:column;border-top:1px solid #cfcfcf}
 .item{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line)}
@@ -49,7 +49,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .item-title:hover{text-decoration:underline}
 .item-url{color:#9a9a9a;font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tag{color:#777;font-size:10px;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis}
-.edit-btn{border:1px solid #e2e2e2;background:#fff;color:#777;font-size:10px;padding:5px 7px;border-radius:4px}
+.edit-btn{border:1px solid #dcdcdc;background:#fff;color:#777;font-size:10px;padding:5px 8px;border-radius:10px}
 .edit-btn:hover{color:#111;background:#f6f6f6}
 .empty{border-top:0;padding:56px 20px;text-align:center;color:#999;font-size:11px}
 .empty strong{display:block;color:#333;margin-bottom:7px}
@@ -58,7 +58,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .random-screen.show{display:block}
 .random-wrap{padding:6px 0 20px}
 .random-meta{display:flex;justify-content:space-between;align-items:center;color:#999;font-size:10px;margin-bottom:10px}
-.random-card{border:1px solid #dedede;background:#fff}
+.random-card{border:1px solid #dcdcdc;background:#fff;border-radius:14px;overflow:hidden}
 .random-info{padding:22px 24px 18px}
 .random-favicon{width:28px;height:28px;object-fit:contain;margin-bottom:13px}
 .random-title{display:block;color:#111;text-decoration:none;font-size:clamp(18px,3vw,27px);font-weight:800;line-height:1.2;letter-spacing:-1px;word-break:keep-all}
@@ -66,20 +66,20 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .random-domain{margin-top:7px;color:#999;font-size:10px}
 .random-category{margin-top:5px;color:#777;font-size:10px}
 .random-actions{display:flex;gap:7px;margin-top:15px}
-.random-next{border:1px solid #ccc;background:#fff;padding:7px 11px;border-radius:4px;font-size:10px}
-.random-open{display:inline-flex;align-items:center;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:7px 11px;border-radius:4px;font-size:10px}
+.random-next{border:1px solid #d2d2d2;background:#fff;padding:7px 11px;border-radius:11px;font-size:10px}
+.random-open{display:inline-flex;align-items:center;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:7px 11px;border-radius:11px;font-size:10px}
 .preview-label{padding:9px 12px;border-top:1px solid #ececec;border-bottom:1px solid #ececec;background:#fafafa;color:#777;font-size:10px}
 .preview-frame{width:100%;height:410px;border:0;display:block;background:#fafafa}
 .overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.2);padding:18px}
 .overlay.show{display:flex}
-.modal{width:min(620px,100%);max-height:88vh;overflow-y:auto;background:#fff;border:1px solid #ddd;box-shadow:0 18px 55px rgba(0,0,0,.13)}
+.modal{width:min(560px,100%);max-height:88vh;overflow-y:auto;background:#fff;border:1px solid #ddd;box-shadow:0 18px 55px rgba(0,0,0,.13)}
 .modal-head{padding:15px 18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
 .modal-title{font-size:14px;font-weight:800}
 .close{border:0;background:transparent;font-size:20px;color:#888}
 .modal-body{padding:18px}
 .field{margin-bottom:14px}.field:last-child{margin-bottom:0}
 .label{display:block;font-size:10px;font-weight:700;color:#555;margin-bottom:6px}
-.field input,.field textarea,.field select{width:100%;border:1px solid #ddd;background:#fff;padding:8px 9px;outline:none;border-radius:4px;font-size:11px}
+.field input,.field textarea,.field select{width:100%;border:1px solid #ddd;background:#fff;padding:8px 9px;outline:none;border-radius:10px;font-size:11px}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:#999}
 .help{color:#999;font-size:9px;line-height:1.5;margin-top:5px}
 .modal-foot{border-top:1px solid #eee;padding:12px 18px;display:flex;justify-content:space-between;gap:7px}
@@ -353,16 +353,50 @@ async function runAI(){
   localStorage.setItem(API_KEY,key);
   const button=document.getElementById("aiButton");button.disabled=true;button.textContent="분류 중...";
   document.getElementById("progress").classList.add("show");
-  const errors=[];
+
   const classified=archive.map(item=>({...item}));
+  const pendingIndexes=[];
+  let adultSkipped=0;
+
+  // 성인/야동 북마크는 Gemini에 아예 보내지 않고 NONE으로 처리.
+  for(let i=0;i<classified.length;i++){
+    if(isAdultBookmark(classified[i])){
+      classified[i].mainCategory="NONE";
+      classified[i].subCategory="";
+      adultSkipped++;
+    }else{
+      pendingIndexes.push(i);
+    }
+  }
+
+  if(!pendingIndexes.length){
+    archive=classified;saveData();render();
+    document.getElementById("progressText").textContent=`완료 · NONE ${adultSkipped}개`;
+    setTimeout(()=>closeModal("aiOverlay"),700);
+    button.disabled=false;button.textContent="자동 분류 시작";
+    return;
+  }
+
+  const errors=[];
   try{
     const chunkSize=20;
-    for(let start=0;start<archive.length;start+=chunkSize){
-      const end=Math.min(start+chunkSize,archive.length);
-      const chunk=archive.slice(start,end).map((item,i)=>({...item,_index:start+i}));
-      document.getElementById("progressText").textContent=`AI 분류 중... ${start} ~ ${end} / ${archive.length}`;
-      document.getElementById("progressFill").style.width=`${(end/archive.length)*100}%`;
-      const prompt=`너는 개인 디지털 북마크를 정리하는 AI다. 각 북마크를 제목과 URL을 보고 사용자가 나중에 찾기 쉽게 분류해라. 반드시 JSON 배열만 반환한다. 각 항목에 _index를 그대로 포함해라. title과 url은 절대 바꾸지 않는다. mainCategory와 subCategory만 지정한다. 대분류는 너무 많이 만들지 말고 비슷한 자료는 같은 대분류로 묶는다. 소분류는 필요할 때만 만든다. 한국어 카테고리명을 사용한다. 설명문과 마크다운은 금지한다.\n\n형식:\n[{"_index":0,"title":"원래 제목","url":"원래 URL","mainCategory":"대분류","subCategory":"소분류"}]\n\n북마크:\n${JSON.stringify(chunk,null,2)}`;
+    for(let start=0;start<pendingIndexes.length;start+=chunkSize){
+      const indexChunk=pendingIndexes.slice(start,start+chunkSize);
+      const chunk=indexChunk.map(idx=>({...classified[idx],_index:idx}));
+      const end=start+indexChunk.length;
+      document.getElementById("progressText").textContent=`AI 분류 중... ${end} / ${pendingIndexes.length}${adultSkipped?` · NONE ${adultSkipped}개`:""}`;
+      document.getElementById("progressFill").style.width=`${(end/pendingIndexes.length)*100}%`;
+
+      const prompt=`너는 개인 디지털 북마크를 정리하는 AI다. 각 북마크를 제목과 URL을 보고 사용자가 나중에 찾기 쉽게 분류해라. 반드시 JSON 배열만 반환한다. 각 항목에 _index를 그대로 포함해라. title과 url은 절대 바꾸지 않는다. mainCategory와 subCategory만 지정한다. 대분류는 너무 많이 만들지 말고 비슷한 자료는 같은 대분류로 묶는다. 소분류는 필요할 때만 만든다. 한국어 카테고리명을 사용한다. 설명문과 마크다운은 금지한다.
+
+중요: 성인물/포르노/야동/성인 사이트로 보이는 항목은 분류하지 말고 mainCategory를 NONE으로 지정한다. 다만 그런 항목은 이 요청에 원래 포함되지 않을 수 있다.
+
+형식:
+[{"_index":0,"title":"원래 제목","url":"원래 URL","mainCategory":"대분류","subCategory":"소분류"}]
+
+북마크:
+${JSON.stringify(chunk,null,2)}`;
+
       try{
         const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json"}})});
         if(!response.ok){let msg=`API 오류 (${response.status})`;try{const data=await response.json();if(data?.error?.message)msg+=`\n${data.error.message}`}catch{}throw new Error(msg)}
@@ -370,22 +404,44 @@ async function runAI(){
         const parsed=JSON.parse(text);if(!Array.isArray(parsed))throw new Error("Gemini 결과가 배열이 아닙니다.");
         let usedIndex=false;
         for(let j=0;j<parsed.length;j++){
-          const item=parsed[j];const idx=Number.isInteger(item?._index)?item._index:start+j;
-          if(idx>=start&&idx<end&&classified[idx]){classified[idx].mainCategory=item.mainCategory||"미분류";classified[idx].subCategory=item.subCategory||"";usedIndex=true;}
+          const item=parsed[j];
+          const idx=Number.isInteger(item?._index)?item._index:indexChunk[j];
+          if(pendingIndexes.includes(idx)&&classified[idx]){
+            const main=item.mainCategory||"미분류";
+            classified[idx].mainCategory=main=== "NONE" ? "NONE" : main;
+            classified[idx].subCategory=main=== "NONE" ? "" : (item.subCategory||"");
+            usedIndex=true;
+          }
         }
         if(!usedIndex) throw new Error("AI 결과의 항목 위치를 확인하지 못했습니다.");
       }catch(chunkError){
-        errors.push(`${start+1}~${end}번: ${chunkError.message}`);
-        for(let i=start;i<end;i++){classified[i].mainCategory=classified[i].mainCategory||"";classified[i].subCategory=classified[i].subCategory||"";}
+        errors.push(`${indexChunk[0]+1}~${indexChunk[indexChunk.length-1]+1}번: ${chunkError.message}`);
+        for(const idx of indexChunk){
+          classified[idx].mainCategory=classified[idx].mainCategory||"미분류";
+          classified[idx].subCategory=classified[idx].subCategory||"";
+        }
       }
     }
+
     archive=classified;saveData();render();
-    document.getElementById("progressText").textContent=`완료 · ${archive.length}개 처리`;
-    if(errors.length){showError(`일부 북마크는 AI 분류에 실패해서 미분류로 남겨둠.\n\n${errors.join("\n")}`)}
-    else{setTimeout(()=>closeModal("aiOverlay"),500)}
+    document.getElementById("progressText").textContent=`완료 · ${archive.length}개 처리${adultSkipped?` · NONE ${adultSkipped}개`:""}`;
+    if(errors.length){
+      showError(`일부 북마크는 AI 분류에 실패해서 미분류로 남겨둠.${adultSkipped?`\n성인/야동 항목 ${adultSkipped}개는 NONE으로 건너뜀.`:""}\n\n${errors.join("\n")}`)
+    }else{
+      setTimeout(()=>closeModal("aiOverlay"),700)
+    }
   }catch(error){showError(error.message||"AI 분류 중 오류가 발생했습니다.")}
   finally{button.disabled=false;button.textContent="자동 분류 시작"}
 }
+
+function isAdultBookmark(item){
+  const text=`${item?.title||""} ${item?.url||""}`.toLowerCase();
+  const domain=`${getDomain(item?.url||"")}`.toLowerCase();
+  const adultPattern=/(porn|porno|hentai|rule34|pornhub|xvideos|xhamster|redtube|spankbang|xnxx|sexcam|camgirl|onlyfans|\bxxx\b|야동|야설|야짤|성인물|성인사이트|포르노|19금|음란|애널|오나홀|섹스|에로)/i;
+  const adultDomains=/(pornhub|xvideos|xhamster|redtube|spankbang|xnxx|onlyfans)/i;
+  return adultPattern.test(text)||adultDomains.test(domain);
+}
+
 function closeModal(id){document.getElementById(id).classList.remove("show")}
 function showError(message){const box=document.getElementById("error");box.textContent=message;box.classList.add("show")}
 function clearError(){const box=document.getElementById("error");box.textContent="";box.classList.remove("show")}
