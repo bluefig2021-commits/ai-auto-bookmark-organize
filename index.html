@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Archive</title>
+<title>Bookmarks</title>
 <style>
 *{box-sizing:border-box}
 :root{
@@ -33,6 +33,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .nav button{flex:0 0 auto;border:0;background:transparent;color:#909090;padding:8px 9px 10px;border-bottom:1px solid transparent;font-size:11px;white-space:nowrap}
 .nav button:hover{color:#222}
 .nav button.active{color:#111;border-bottom-color:#111;font-weight:700}
+.nav button.drop-target,.subnav button.drop-target{background:#f0f0f0;color:#111;box-shadow:0 0 0 2px #d8d8d8 inset}
 .nav .tool{color:#555}
 .subnav{display:flex;align-items:center;gap:1px;overflow-x:auto;scrollbar-width:none;padding:2px 0 10px 0;border-top:1px solid #f0f0f0}
 .subnav::-webkit-scrollbar{display:none}
@@ -48,6 +49,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .list{display:flex;flex-direction:column;border-top:1px solid #cfcfcf}
 .item{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--line);min-width:0}
 .item:hover{background:#fbfbfb}
+.item.dragging{opacity:.45}
 .item.child{background:linear-gradient(90deg,transparent 0,transparent 1px,#fafafa 1px,#fafafa 100%)}
 .favicon{width:20px;height:20px;object-fit:contain}
 .item-main{min-width:0}
@@ -146,7 +148,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   </div>
 </header>
 
-<main class="main">
+<main class="main" ondragover="allowMainBookmarkDrop(event)" ondrop="dropBookmark(event, '미분류', '')">
   <section id="normalView">
     <div class="toolbar">
       <div><span id="heading" class="heading">전체</span><span id="count" class="count">0개</span></div>
@@ -350,6 +352,40 @@ function makeId(){
   return "b_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
 }
 
+function isBlockedBookmark(item){
+  const domain = getDomain(item?.url || "").toLowerCase();
+  const text = [item?.title || "", item?.url || ""].join(" ").toLowerCase();
+  const blockedCommunity = domain === "theqoo.net" || domain.endsWith(".theqoo.net") ||
+    domain === "pann.nate.com" || domain.endsWith(".pann.nate.com");
+  const blockedGDragon = /지드래곤|g[-_ ]?dragon|gdragon|권지용/i.test(text);
+  return blockedCommunity || blockedGDragon;
+}
+
+function blockedReason(item){
+  const domain = getDomain(item?.url || "").toLowerCase();
+  const text = [item?.title || "", item?.url || ""].join(" ").toLowerCase();
+  if(domain === "theqoo.net" || domain.endsWith(".theqoo.net")) return "더쿠";
+  if(domain === "pann.nate.com" || domain.endsWith(".pann.nate.com")) return "네이트판";
+  if(/지드래곤|g[-_ ]?dragon|gdragon|권지용/i.test(text)) return "지드래곤 관련";
+  return "차단 목록";
+}
+
+function purgeBlockedBookmarks(showNotice=false){
+  const before = archive.length;
+  const removedItems = archive.filter(item => isBlockedBookmark(item));
+  archive = archive.filter(item => !isBlockedBookmark(item));
+  const removed = before - archive.length;
+  if(removed > 0){
+    saveData();
+    if(showNotice){
+      const community = removedItems.filter(x => ["더쿠","네이트판"].includes(blockedReason(x))).length;
+      const gd = removedItems.length - community;
+      alert(`차단된 북마크 ${removed}개를 삭제했습니다.${community ? `\n더쿠·네이트판: ${community}개` : ""}${gd ? `\n지드래곤 관련: ${gd}개` : ""}`);
+    }
+  }
+  return removed;
+}
+
 function normalizeItem(item){
   let main=String(item?.mainCategory || "").trim();
   if(main !== "NONE" && main && !categoryNames().includes(main)) main="미분류";
@@ -374,6 +410,11 @@ function loadArchive(){
     const raw=JSON.parse(saved);
     if(!Array.isArray(raw)) throw new Error("저장된 북마크 데이터가 배열이 아님");
     archive=raw.map(normalizeItem);
+    // 차단 목록(더쿠·네이트판·지드래곤 관련)은 저장된 데이터에서도 자동 제거한다.
+    const blockedRemoved = purgeBlockedBookmarks(false);
+    if(blockedRemoved > 0){
+      console.info(`차단된 북마크 ${blockedRemoved}개 자동 삭제`);
+    }
     // 정규화 후에만 같은 키에 다시 저장한다.
     saveCategories();
     saveData();
@@ -420,7 +461,7 @@ function renderCategories(){
   const box=document.getElementById("categoryButtons");
   box.innerHTML=categoryTree.map(category=>{
     const active=mode === "category:" + category.name ? "active" : "";
-    return `<button class="${active}" data-mode="${escapeAttr("category:"+category.name)}" onclick='setCategory(${JSON.stringify(category.name)})'>${escapeHTML(category.name)}</button>`;
+    return `<button class="${active}" data-mode="${escapeAttr("category:"+category.name)}" onclick='setCategory(${JSON.stringify(category.name)})' ondragover="allowBookmarkDrop(event)" ondragleave="clearDropTarget(event)" ondrop='dropBookmark(event, ${JSON.stringify(category.name)}, "")'>${escapeHTML(category.name)}</button>`;
   }).join("");
   const subNav=document.getElementById("subNav");
   const activeMain=mode.startsWith("category:") ? mode.substring(9) : "";
@@ -428,7 +469,7 @@ function renderCategories(){
   if(!cat || !cat.subs.length){ subNav.style.display="none"; subNav.innerHTML=""; return; }
   subNav.style.display="flex";
   const allActive=!selectedSubCategory;
-  subNav.innerHTML = `<button class="${allActive?"active":""}" onclick="setSubCategory('')">전체</button>` + cat.subs.map(sub=>`<button class="${selectedSubCategory===sub?"active":""}" onclick='setSubCategory(${JSON.stringify(sub)})'>${escapeHTML(sub)}</button>`).join("");
+  subNav.innerHTML = `<button class="${allActive?"active":""}" onclick="setSubCategory('')" ondragover="allowBookmarkDrop(event)" ondragleave="clearDropTarget(event)" ondrop='dropBookmark(event, ${JSON.stringify(activeMain)}, "")'>전체</button>` + cat.subs.map(sub=>`<button class="${selectedSubCategory===sub?"active":""}" onclick='setSubCategory(${JSON.stringify(sub)})' ondragover="allowBookmarkDrop(event)" ondragleave="clearDropTarget(event)" ondrop='dropBookmark(event, ${JSON.stringify(activeMain)}, ${JSON.stringify(sub)})'>${escapeHTML(sub)}</button>`).join("");
 }
 
 function setCategory(category){
@@ -515,7 +556,7 @@ function createItem(item,index){
   const favicon=getFavicon(item.url);
   const visual=favicon?`<img class="favicon" src="${favicon}" alt="" onerror="this.style.visibility='hidden'">`:`<div></div>`;
   const titleHtml=item.url?`<a class="item-title" href="${url}" target="_blank" rel="noopener">${title}</a>`:`<div class="item-title plain">${title}</div>`;
-  return `<div class="item">
+  return `<div class="item" draggable="true" ondragstart="dragExistingBookmark(event, ${index})" ondragend="clearAllDropTargets()">
     ${visual}
     <div class="item-main">${titleHtml}<div class="item-url">${domain}</div></div>
     <div class="tag">${category}${sub?" / "+sub:""}</div>
@@ -574,6 +615,11 @@ function saveBookmarkEdit(){
   const title=document.getElementById("editBookmarkTitle").value.trim();
   const url=document.getElementById("editBookmarkURL").value.trim();
   if(!title){ alert("제목을 넣어줘."); return; }
+  const candidate={title,url};
+  if(isBlockedBookmark(candidate)){
+    alert(`${blockedReason(candidate)} 북마크는 저장하지 않아.`);
+    return;
+  }
   const editedMain=normalizeCategory(document.getElementById("editMainCategory").value);
   const editedSub=normalizeSubCategory(editedMain,document.getElementById("editSubCategory").value);
   const payload={title,url,mainCategory:editedMain,subCategory:editedSub};
@@ -808,7 +854,112 @@ function chooseHTMLFile(){
   document.getElementById("htmlFile").click();
 }
 
-// Chrome/Netscape bookmarks.html은 폴더 구조가 조금 달라도 링크만 확실하게 읽어온다.
+// Chrome/Netscape bookmarks.html의 링크를 읽는다. 폴더 구조는 기존 가져오기 방식대로 평평하게 가져오고, 실제 배치는 드래그 앤 드롭으로 할 수 있다.
+function allowMainBookmarkDrop(event){
+  event.preventDefault();
+  if(event.dataTransfer) event.dataTransfer.dropEffect="copy";
+}
+
+function allowBookmarkDrop(event){
+  event.preventDefault();
+  event.stopPropagation();
+  const target=event.currentTarget;
+  if(target) target.classList.add("drop-target");
+  if(event.dataTransfer) event.dataTransfer.dropEffect="move";
+}
+
+function clearDropTarget(event){
+  const target=event.currentTarget;
+  if(target) target.classList.remove("drop-target");
+}
+
+function clearAllDropTargets(){
+  document.querySelectorAll(".drop-target").forEach(el=>el.classList.remove("drop-target"));
+}
+
+function dragExistingBookmark(event,index){
+  const item=archive[index];
+  if(!item) return;
+  event.currentTarget.classList.add("dragging");
+  try{
+    event.dataTransfer.effectAllowed="move";
+    event.dataTransfer.setData("text/x-digital-bookmark-id", item.id || "");
+    event.dataTransfer.setData("text/plain", item.url || item.title || "");
+  }catch{}
+}
+
+function parseDroppedExternalBookmarks(dataTransfer){
+  const results=[];
+  const html=dataTransfer.getData("text/html");
+  if(html){
+    try{
+      const doc=new DOMParser().parseFromString(html,"text/html");
+      [...doc.querySelectorAll("a[href]")].forEach(a=>{
+        const url=a.getAttribute("href") || "";
+        if(url) results.push({title:(a.textContent || "").trim() || "제목 없음",url});
+      });
+    }catch{}
+  }
+  if(results.length) return results;
+
+  const uriList=dataTransfer.getData("text/uri-list") || "";
+  const urls=uriList.split(/\r?\n/).map(x=>x.trim()).filter(x=>x && !x.startsWith("#"));
+  const plain=dataTransfer.getData("text/plain") || "";
+  const plainUrl=/^(https?:\/\/|javascript:|ftp:)/i.test(plain.trim()) ? plain.trim() : "";
+  if(urls.length){
+    urls.forEach(url=>results.push({title:"제목 없음",url}));
+  }else if(plainUrl){
+    results.push({title:"제목 없음",url:plainUrl});
+  }
+  return results;
+}
+
+function dropBookmark(event,mainCategory,subCategory){
+  event.preventDefault();
+  event.stopPropagation();
+  clearAllDropTargets();
+
+  const internalId=event.dataTransfer?.getData("text/x-digital-bookmark-id") || "";
+  if(internalId){
+    const item=archive.find(x=>x.id===internalId);
+    if(item){
+      if(isBlockedBookmark(item)) return;
+      item.mainCategory=normalizeCategory(mainCategory);
+      item.subCategory=normalizeSubCategory(item.mainCategory,subCategory);
+      saveData();
+      render();
+      return;
+    }
+  }
+
+  const dropped=parseDroppedExternalBookmarks(event.dataTransfer);
+  if(!dropped.length) return;
+
+  const seen=new Set(archive.map(x=>canonicalBookmarkURL(x.url)).filter(Boolean));
+  let added=0;
+  let skipped=0;
+  dropped.forEach(raw=>{
+    const candidate={title:raw.title || "제목 없음",url:raw.url || ""};
+    if(!candidate.url || isBlockedBookmark(candidate)){ skipped++; return; }
+    const key=canonicalBookmarkURL(candidate.url);
+    if(!key || seen.has(key)){ skipped++; return; }
+    seen.add(key);
+    const main=normalizeCategory(mainCategory);
+    const sub=normalizeSubCategory(main,subCategory);
+    archive.push({id:makeId(),title:candidate.title,url:candidate.url,mainCategory:main,subCategory:sub});
+    added++;
+  });
+  if(!added){
+    alert("새로 넣을 수 있는 북마크가 없어.\\n중복이거나 차단 목록일 수 있어.");
+    return;
+  }
+  saveData();
+  mode="category:"+normalizeCategory(mainCategory);
+  selectedSubCategory=subCategory || "";
+  render();
+  if(skipped) console.info(`드롭에서 건너뛴 북마크: ${skipped}개`);
+}
+
 function parseBookmarkLinks(doc){
   return [...doc.querySelectorAll("a[href]")]
     .map(a => ({
@@ -888,8 +1039,13 @@ function importBookmarkHTML(event){
 
       const uniqueImported = [];
       let duplicateCount = 0;
+      let blockedCount = 0;
 
       imported.forEach(item => {
+        if(isBlockedBookmark(item)){
+          blockedCount++;
+          return;
+        }
         const key = canonicalBookmarkURL(item.url);
         if(!key || seen.has(key)){
           duplicateCount++;
@@ -900,7 +1056,8 @@ function importBookmarkHTML(event){
       });
 
       if(!uniqueImported.length){
-        alert(`새로 추가할 북마크가 없어.\n\n중복으로 건너뛴 북마크: ${duplicateCount}개`);
+        const blockedText = blockedCount > 0 ? `\n차단 목록에서 자동 삭제: ${blockedCount}개` : "";
+        alert(`새로 추가할 북마크가 없어.\n\n중복으로 건너뛴 북마크: ${duplicateCount}개${blockedText}`);
         return;
       }
 
@@ -914,7 +1071,10 @@ function importBookmarkHTML(event){
       const duplicateText = duplicateCount > 0
         ? `\n중복으로 건너뜀: ${duplicateCount}개`
         : "";
-      alert(`새 북마크 ${uniqueImported.length}개를 가져왔습니다.${duplicateText}`);
+      const blockedText = blockedCount > 0
+        ? `\n차단 목록에서 자동 삭제: ${blockedCount}개`
+        : "";
+      alert(`새 북마크 ${uniqueImported.length}개를 가져왔습니다.${duplicateText}${blockedText}`);
     }catch(error){
       console.error(error);
       alert("북마크를 읽는 중 오류가 발생했습니다.\n\n" + (error?.message || "알 수 없는 오류"));
