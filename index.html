@@ -78,7 +78,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .random-domain{margin-top:7px;color:#999;font-size:10px}
 .random-category{margin-top:5px;color:#777;font-size:10px}
 .random-actions{display:flex;gap:7px;margin-top:15px}
-.random-next{border:1px solid #d2d2d2;background:#fff;padding:7px 11px;border-radius:11px;font-size:10px}
+.random-next{border:1px solid #d2d2d2;background:#fff;padding:7px 11px;border-radius:11px;font-size:10px}.random-next:disabled{opacity:.35;cursor:default}
 .random-open{display:inline-flex;align-items:center;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:7px 11px;border-radius:11px;font-size:10px}
 .preview-label{padding:9px 12px;border-top:1px solid #ececec;border-bottom:1px solid #ececec;background:#fafafa;color:#777;font-size:10px}
 .preview-frame{width:100%;height:410px;border:0;display:block;background:#fafafa}
@@ -167,7 +167,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
           <div id="randomDomain" class="random-domain">-</div>
           <div id="randomCategory" class="random-category">-</div>
           <div class="random-actions">
-            <button class="random-next" onclick="nextRandom()">다음 랜덤 →</button>
+            <button id="randomPrev" class="random-next" onclick="prevRandom()">← 이전</button>
+            <button id="randomNext" class="random-next" onclick="nextRandom()">다음 →</button>
             <a id="randomOpen" class="random-open" href="#" target="_blank" rel="noopener">새 탭에서 열기</a>
             <button class="random-next" onclick="openRandomEdit()">수정</button>
           </div>
@@ -310,6 +311,8 @@ let mode = "all";
 let selectedSubCategory = "";
 let currentEditIndex = -1;
 let randomIndex = -1;
+let randomHistory = [];
+let randomHistoryPos = -1;
 
 function categoryNames(){ return categoryTree.map(x => x.name); }
 function findCategory(name){ return categoryTree.find(x => x.name === name); }
@@ -651,6 +654,8 @@ function clearAllBookmarks(){
 
   archive = [];
   randomIndex = -1;
+  randomHistory = [];
+  randomHistoryPos = -1;
   selectedSubCategory = "";
   mode = "all";
   saveData();
@@ -667,6 +672,25 @@ function pickRandomIndex(){
   let next = Math.floor(Math.random() * archive.length);
   if(next === randomIndex) next = (next + 1) % archive.length;
   return next;
+}
+
+function updateRandomNav(){
+  const prev = document.getElementById("randomPrev");
+  const next = document.getElementById("randomNext");
+  if(prev) prev.disabled = randomHistoryPos <= 0;
+  if(next) next.disabled = randomHistoryPos < 0 || randomHistoryPos >= randomHistory.length - 1;
+}
+
+function goToRandomIndex(index, addToHistory = false){
+  if(index < 0 || index >= archive.length) return;
+  randomIndex = index;
+  if(addToHistory){
+    randomHistory = randomHistory.slice(0, randomHistoryPos + 1);
+    randomHistory.push(index);
+    randomHistoryPos = randomHistory.length - 1;
+  }
+  renderRandomItem();
+  updateRandomNav();
 }
 
 function renderRandomItem(){
@@ -713,17 +737,39 @@ function renderRandomItem(){
 function showRandom(){
   if(!archive.length){
     randomIndex = -1;
+    randomHistory = [];
+    randomHistoryPos = -1;
     renderRandomItem();
+    updateRandomNav();
     return;
   }
-  randomIndex = pickRandomIndex();
-  renderRandomItem();
+  if(randomHistory.length === 0){
+    goToRandomIndex(pickRandomIndex(), true);
+  }else{
+    randomIndex = randomHistory[randomHistoryPos];
+    renderRandomItem();
+    updateRandomNav();
+  }
 }
 
 function nextRandom(){
   if(!archive.length) return;
-  randomIndex = pickRandomIndex();
+  if(randomHistoryPos < randomHistory.length - 1){
+    randomHistoryPos++;
+    randomIndex = randomHistory[randomHistoryPos];
+    renderRandomItem();
+    updateRandomNav();
+    return;
+  }
+  goToRandomIndex(pickRandomIndex(), true);
+}
+
+function prevRandom(){
+  if(randomHistoryPos <= 0) return;
+  randomHistoryPos--;
+  randomIndex = randomHistory[randomHistoryPos];
   renderRandomItem();
+  updateRandomNav();
 }
 
 function openRandomEdit(){
