@@ -4,2698 +4,396 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Digital Archive</title>
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
-:root {
-  --bg: #f4f4f1;
-  --paper: #fff;
-  --text: #181818;
-  --muted: #858585;
-  --line: #deded9;
-  --soft: #ecece7;
-  --accent: #181818;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family:
-    Arial,
-    "Noto Sans KR",
-    sans-serif;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-/* =========================
-   TOP
-========================= */
-
-.top {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(244,244,241,.94);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
-}
-
-.top-inner {
-  max-width: 1280px;
-  margin: auto;
-  padding: 18px 28px 0;
-}
-
-.brand-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.brand {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -1px;
-}
-
-.brand small {
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 400;
-  margin-left: 7px;
-  letter-spacing: 0;
-}
-
-.actions {
-  display: flex;
-  gap: 7px;
-}
-
-.action {
-  border: 1px solid var(--line);
-  background: var(--paper);
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #333;
-}
-
-.action:hover {
-  background: #e9e9e4;
-}
-
-.action.dark {
-  background: #181818;
-  border-color: #181818;
-  color: white;
-}
-
-.action.dark:hover {
-  background: #000;
-}
-
-/* =========================
-   CATEGORY NAV
-========================= */
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  overflow-x: auto;
-  padding-top: 20px;
-  scrollbar-width: none;
-}
-
-.nav::-webkit-scrollbar {
-  display: none;
-}
-
-.nav button {
-  flex: 0 0 auto;
-  border: 0;
-  background: transparent;
-  color: #888;
-  padding: 9px 12px 12px;
-  border-bottom: 2px solid transparent;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.nav button:hover {
-  color: #222;
-}
-
-.nav button.active {
-  color: #111;
-  border-bottom-color: #111;
-  font-weight: 700;
-}
-
-.nav .tool {
-  color: #555;
-}
-
-.nav .tool:first-child {
-  margin-left: 0;
-}
-
-/* =========================
-   MAIN
-========================= */
-
-.main {
-  max-width: 1280px;
-  margin: auto;
-  padding: 30px 28px 70px;
-}
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 24px;
-}
-
-.heading {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -1px;
-}
-
-.count {
-  font-size: 12px;
-  color: var(--muted);
-  margin-left: 8px;
-}
-
-.search {
-  width: 270px;
-  border: 1px solid var(--line);
-  background: white;
-  padding: 9px 11px;
-  border-radius: 6px;
-  outline: none;
-  font-size: 12px;
-}
-
-.search:focus {
-  border-color: #999;
-}
-
-/* =========================
-   BOOKMARK LIST
-========================= */
-
-.list {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid #ccc;
-}
-
-.item {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 14px;
-  padding: 15px 8px;
-  border-bottom: 1px solid var(--line);
-}
-
-.item:hover {
-  background: rgba(255,255,255,.45);
-}
-
-.favicon {
-  width: 25px;
-  height: 25px;
-  object-fit: contain;
-}
-
-.item-main {
-  min-width: 0;
-}
-
-.item-title {
-  display: block;
-  color: #171717;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.35;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.item-title:hover {
-  text-decoration: underline;
-}
-
-.item-url {
-  color: #999;
-  font-size: 11px;
-  margin-top: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tag {
-  color: #777;
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-.edit-btn {
-  border: 0;
-  background: transparent;
-  color: #aaa;
-  font-size: 11px;
-  padding: 6px;
-}
-
-.edit-btn:hover {
-  color: #111;
-}
-
-/* =========================
-   EMPTY
-========================= */
-
-.empty {
-  border-top: 1px solid #ccc;
-  padding: 70px 20px;
-  text-align: center;
-  color: #999;
-  font-size: 13px;
-}
-
-.empty strong {
-  display: block;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-/* =========================
-   RANDOM
-========================= */
-
-.random-screen {
-  display: none;
-}
-
-.random-screen.show {
-  display: block;
-}
-
-.random-card {
-  min-height: 55vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.random-inner {
-  width: min(760px, 100%);
-  text-align: center;
-  padding: 50px 20px;
-}
-
-.random-number {
-  color: #aaa;
-  font-size: 11px;
-  margin-bottom: 35px;
-}
-
-.random-favicon {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  margin-bottom: 24px;
-}
-
-.random-title {
-  display: block;
-  color: #111;
-  text-decoration: none;
-  font-size: clamp(25px, 5vw, 46px);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -2px;
-  word-break: keep-all;
-}
-
-.random-title:hover {
-  text-decoration: underline;
-}
-
-.random-domain {
-  margin-top: 17px;
-  color: #999;
-  font-size: 12px;
-}
-
-.random-category {
-  margin-top: 8px;
-  color: #777;
-  font-size: 11px;
-}
-
-.random-next {
-  margin-top: 45px;
-  border: 1px solid #ccc;
-  background: white;
-  padding: 11px 18px;
-  border-radius: 6px;
-  font-size: 12px;
-}
-
-/* =========================
-   MODAL
-========================= */
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,.35);
-  padding: 20px;
-}
-
-.overlay.show {
-  display: flex;
-}
-
-.modal {
-  width: min(650px, 100%);
-  max-height: 90vh;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  box-shadow: 0 20px 70px rgba(0,0,0,.2);
-}
-
-.modal-head {
-  padding: 18px 20px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-title {
-  font-size: 15px;
-  font-weight: 800;
-}
-
-.close {
-  border: 0;
-  background: transparent;
-  font-size: 21px;
-  color: #888;
-}
-
-.modal-body {
-  padding: 20px;
-}
-
-.field {
-  margin-bottom: 17px;
-}
-
-.field:last-child {
-  margin-bottom: 0;
-}
-
-.label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #555;
-  margin-bottom: 7px;
-}
-
-.field input,
-.field textarea,
-.field select {
-  width: 100%;
-  border: 1px solid #ddd;
-  background: #fafaf8;
-  padding: 10px;
-  outline: none;
-  border-radius: 5px;
-  font-size: 12px;
-}
-
-.field textarea {
-  min-height: 210px;
-  resize: vertical;
-  font-family: monospace;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus {
-  border-color: #999;
-  background: white;
-}
-
-.help {
-  color: #999;
-  font-size: 10px;
-  line-height: 1.5;
-  margin-top: 6px;
-}
-
-.modal-foot {
-  border-top: 1px solid #eee;
-  padding: 14px 20px;
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.modal-right {
-  display: flex;
-  gap: 7px;
-}
-
-.danger {
-  color: #b33;
-  border-color: #ead0d0;
-  background: #fff;
-}
-
-/* =========================
-   PROGRESS
-========================= */
-
-.progress {
-  display: none;
-  margin-top: 15px;
-}
-
-.progress.show {
-  display: block;
-}
-
-.progress-text {
-  font-size: 11px;
-  color: #777;
-  margin-bottom: 7px;
-}
-
-.progress-bar {
-  height: 4px;
-  background: #eee;
-}
-
-.progress-fill {
-  width: 0;
-  height: 100%;
-  background: #222;
-  transition: width .2s;
-}
-
-/* =========================
-   ERROR
-========================= */
-
-.error {
-  display: none;
-  margin-top: 15px;
-  padding: 11px;
-  background: #fff3f3;
-  border: 1px solid #edd0d0;
-  color: #a33;
-  font-size: 11px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-}
-
-.error.show {
-  display: block;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 720px) {
-
-  .top-inner {
-    padding: 15px 15px 0;
-  }
-
-  .brand-row {
-    align-items: flex-start;
-  }
-
-  .brand small {
-    display: none;
-  }
-
-  .actions {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-
-  .main {
-    padding: 22px 15px 50px;
-  }
-
-  .toolbar {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .search {
-    width: 100%;
-  }
-
-  .item {
-    grid-template-columns: 28px minmax(0,1fr) auto;
-  }
-
-  .item .tag {
-    display: none;
-  }
-
-  .random-title {
-    font-size: 30px;
-  }
+*{box-sizing:border-box}
+:root{
+  --bg:#fff;
+  --paper:#fff;
+  --text:#171717;
+  --muted:#8a8a8a;
+  --line:#e6e6e6;
+  --soft:#f7f7f7;
+  --accent:#171717;
+}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans KR",sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-inner,.main{width:min(920px,calc(100% - 36px));margin:0 auto}
+.top-inner{padding:14px 0 0}
+.brand-row{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{font-size:17px;font-weight:800;letter-spacing:-.7px}
+.brand small{font-size:10px;color:var(--muted);font-weight:400;margin-left:6px;letter-spacing:0}
+.actions{display:flex;gap:6px;align-items:center}
+.action{border:1px solid #dedede;background:#fff;padding:7px 10px;border-radius:5px;font-size:11px;color:#333}
+.action:hover{background:#f6f6f6}
+.action.dark{background:#171717;border-color:#171717;color:#fff}
+.action.dark:hover{background:#000}
+.nav{display:flex;align-items:center;gap:1px;overflow-x:auto;padding-top:12px;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{flex:0 0 auto;border:0;background:transparent;color:#909090;padding:8px 9px 10px;border-bottom:1px solid transparent;font-size:11px;white-space:nowrap}
+.nav button:hover{color:#222}
+.nav button.active{color:#111;border-bottom-color:#111;font-weight:700}
+.nav .tool{color:#555}
+.main{padding:22px 0 60px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.heading{font-size:18px;font-weight:800;letter-spacing:-.7px}
+.count{font-size:11px;color:var(--muted);margin-left:6px}
+.search{width:235px;border:1px solid #e0e0e0;background:#fff;padding:8px 10px;border-radius:5px;outline:none;font-size:11px}
+.search:focus{border-color:#aaa}
+.list{display:flex;flex-direction:column;border-top:1px solid #cfcfcf}
+.item{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.item:hover{background:#fbfbfb}
+.favicon{width:21px;height:21px;object-fit:contain}
+.item-main{min-width:0}
+.item-title{display:block;color:#171717;text-decoration:none;font-size:13px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-title:hover{text-decoration:underline}
+.item-url{color:#9a9a9a;font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{color:#777;font-size:10px;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.edit-btn{border:1px solid #e2e2e2;background:#fff;color:#777;font-size:10px;padding:5px 7px;border-radius:4px}
+.edit-btn:hover{color:#111;background:#f6f6f6}
+.empty{border-top:0;padding:56px 20px;text-align:center;color:#999;font-size:11px}
+.empty strong{display:block;color:#333;margin-bottom:7px}
+.empty-action{margin-top:12px}
+.random-screen{display:none}
+.random-screen.show{display:block}
+.random-wrap{padding:6px 0 20px}
+.random-meta{display:flex;justify-content:space-between;align-items:center;color:#999;font-size:10px;margin-bottom:10px}
+.random-card{border:1px solid #dedede;background:#fff}
+.random-info{padding:22px 24px 18px}
+.random-favicon{width:28px;height:28px;object-fit:contain;margin-bottom:13px}
+.random-title{display:block;color:#111;text-decoration:none;font-size:clamp(18px,3vw,27px);font-weight:800;line-height:1.2;letter-spacing:-1px;word-break:keep-all}
+.random-title:hover{text-decoration:underline}
+.random-domain{margin-top:7px;color:#999;font-size:10px}
+.random-category{margin-top:5px;color:#777;font-size:10px}
+.random-actions{display:flex;gap:7px;margin-top:15px}
+.random-next{border:1px solid #ccc;background:#fff;padding:7px 11px;border-radius:4px;font-size:10px}
+.random-open{display:inline-flex;align-items:center;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:7px 11px;border-radius:4px;font-size:10px}
+.preview-label{padding:9px 12px;border-top:1px solid #ececec;border-bottom:1px solid #ececec;background:#fafafa;color:#777;font-size:10px}
+.preview-frame{width:100%;height:410px;border:0;display:block;background:#fafafa}
+.overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.2);padding:18px}
+.overlay.show{display:flex}
+.modal{width:min(620px,100%);max-height:88vh;overflow-y:auto;background:#fff;border:1px solid #ddd;box-shadow:0 18px 55px rgba(0,0,0,.13)}
+.modal-head{padding:15px 18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:14px;font-weight:800}
+.close{border:0;background:transparent;font-size:20px;color:#888}
+.modal-body{padding:18px}
+.field{margin-bottom:14px}.field:last-child{margin-bottom:0}
+.label{display:block;font-size:10px;font-weight:700;color:#555;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;border:1px solid #ddd;background:#fff;padding:8px 9px;outline:none;border-radius:4px;font-size:11px}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#999}
+.help{color:#999;font-size:9px;line-height:1.5;margin-top:5px}
+.modal-foot{border-top:1px solid #eee;padding:12px 18px;display:flex;justify-content:space-between;gap:7px}
+.modal-right{display:flex;gap:6px}.danger{color:#a44;border-color:#ead0d0;background:#fff}
+.progress{display:none;margin-top:13px}.progress.show{display:block}
+.progress-text{font-size:10px;color:#777;margin-bottom:6px}.progress-bar{height:3px;background:#eee}.progress-fill{width:0;height:100%;background:#222;transition:width .2s}
+.error{display:none;margin-top:13px;padding:9px;background:#fff7f7;border:1px solid #edd0d0;color:#a33;font-size:10px;line-height:1.5;white-space:pre-wrap}.error.show{display:block}
+.ai-note{font-size:11px;line-height:1.65;color:#555}.ai-note strong{color:#222}
+.manual-note{margin-top:9px;padding:9px 10px;background:#fafafa;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
+@media (max-width:720px){
+  .top-inner,.main{width:calc(100% - 28px)}
+  .brand-row{align-items:flex-start}.brand small{display:none}.actions{flex-wrap:wrap;justify-content:flex-end}
+  .main{padding-top:18px}.toolbar{align-items:stretch;flex-direction:column}.search{width:100%}
+  .item{grid-template-columns:24px minmax(0,1fr) auto}.item .tag{display:none}
+  .random-info{padding:18px}.preview-frame{height:300px}
 }
 </style>
 </head>
-
-
 <body>
-
-<!-- =========================
-     TOP
-========================= -->
-
 <header class="top">
-
   <div class="top-inner">
-
     <div class="brand-row">
-
-      <div class="brand">
-        DIGITAL ARCHIVE
-        <small>personal collection</small>
-      </div>
-
+      <div class="brand">DIGITAL ARCHIVE <small>personal collection</small></div>
       <div class="actions">
-
-        <button
-          class="action"
-          onclick="openHTMLImport()"
-        >
-          북마크 HTML
-        </button>
-
-        <button
-          class="action"
-          onclick="openJSON()"
-        >
-          JSON
-        </button>
-
-        <button
-          class="action dark"
-          onclick="openAI()"
-        >
-          AI 자동 분류
-        </button>
-
+        <button class="action" onclick="openHTMLImport()">북마크 HTML</button>
+        <button class="action dark" onclick="openAI()">AI 자동 분류</button>
       </div>
-
     </div>
-
-
-    <!-- CATEGORY / TOOLS -->
-
     <nav id="nav" class="nav">
-
-      <button
-        class="active"
-        data-mode="all"
-        onclick="setMode('all')"
-      >
-        전체
-      </button>
-
-      <button
-        class="tool"
-        data-mode="random"
-        onclick="setMode('random')"
-      >
-        랜덤 탐색
-      </button>
-
+      <button class="active" data-mode="all" onclick="setMode('all')">전체</button>
+      <button class="tool" data-mode="random" onclick="setMode('random')">랜덤 둘러보기</button>
       <span id="categoryButtons"></span>
-
     </nav>
-
   </div>
-
 </header>
 
-
-<!-- =========================
-     MAIN
-========================= -->
-
 <main class="main">
-
-  <!-- NORMAL VIEW -->
-
   <section id="normalView">
-
     <div class="toolbar">
-
-      <div>
-
-        <span id="heading" class="heading">
-          전체
-        </span>
-
-        <span id="count" class="count">
-          0개
-        </span>
-
-      </div>
-
-      <input
-        id="search"
-        class="search"
-        placeholder="검색..."
-        oninput="render()"
-      >
-
+      <div><span id="heading" class="heading">전체</span><span id="count" class="count">0개</span></div>
+      <input id="search" class="search" placeholder="검색..." oninput="render()">
     </div>
-
-
-    <div
-      id="list"
-      class="list"
-    ></div>
-
+    <div id="list" class="list"></div>
   </section>
 
-
-  <!-- RANDOM VIEW -->
-
-  <section
-    id="randomView"
-    class="random-screen"
-  >
-
-    <div class="random-card">
-
-      <div class="random-inner">
-
-        <div
-          id="randomNumber"
-          class="random-number"
-        >
-          -
+  <section id="randomView" class="random-screen">
+    <div class="random-wrap">
+      <div class="random-meta"><span id="randomNumber">-</span><span>하나씩 둘러보기</span></div>
+      <div class="random-card">
+        <div class="random-info">
+          <img id="randomFavicon" class="random-favicon" alt="">
+          <a id="randomTitle" class="random-title" href="#" target="_blank" rel="noopener">-</a>
+          <div id="randomDomain" class="random-domain">-</div>
+          <div id="randomCategory" class="random-category">-</div>
+          <div class="random-actions">
+            <button class="random-next" onclick="nextRandom()">다음 랜덤 →</button>
+            <a id="randomOpen" class="random-open" href="#" target="_blank" rel="noopener">새 탭에서 열기</a>
+            <button class="random-next" onclick="openRandomEdit()">수정</button>
+          </div>
         </div>
-
-        <img
-          id="randomFavicon"
-          class="random-favicon"
-          alt=""
-        >
-
-        <a
-          id="randomTitle"
-          class="random-title"
-          href="#"
-          target="_blank"
-          rel="noopener"
-        >
-          -
-        </a>
-
-        <div
-          id="randomDomain"
-          class="random-domain"
-        >
-          -
-        </div>
-
-        <div
-          id="randomCategory"
-          class="random-category"
-        >
-          -
-        </div>
-
-        <button
-          class="random-next"
-          onclick="nextRandom()"
-        >
-          다음 랜덤 →
-        </button>
-
+        <div class="preview-label">사이트 미리보기 · 사이트에서 iframe을 막아둔 경우 표시되지 않을 수 있음</div>
+        <iframe id="randomPreview" class="preview-frame" title="북마크 미리보기" loading="lazy" referrerpolicy="no-referrer"></iframe>
       </div>
-
     </div>
-
   </section>
-
 </main>
 
+<input id="htmlFile" type="file" accept=".html,text/html" style="display:none" onchange="importBookmarkHTML(event)">
 
-<!-- =========================
-     HIDDEN FILE INPUTS
-========================= -->
-
-<input
-  id="htmlFile"
-  type="file"
-  accept=".html,text/html"
-  style="display:none"
-  onchange="importBookmarkHTML(event)"
->
-
-<input
-  id="jsonFile"
-  type="file"
-  accept=".json,application/json"
-  style="display:none"
-  onchange="importJSONFile(event)"
->
-
-
-<!-- =========================
-     EDIT MODAL
-========================= -->
-
-<div
-  id="editOverlay"
-  class="overlay"
->
-
+<!-- EDIT -->
+<div id="editOverlay" class="overlay">
   <div class="modal">
-
-    <div class="modal-head">
-
-      <div
-        id="editTitle"
-        class="modal-title"
-      >
-        북마크 수정
-      </div>
-
-      <button
-        class="close"
-        onclick="closeModal('editOverlay')"
-      >
-        ×
-      </button>
-
-    </div>
-
-
+    <div class="modal-head"><div class="modal-title">북마크 수정</div><button class="close" onclick="closeModal('editOverlay')">×</button></div>
     <div class="modal-body">
-
-      <div class="field">
-
-        <label class="label">
-          제목
-        </label>
-
-        <input
-          id="editBookmarkTitle"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label class="label">
-          URL
-        </label>
-
-        <input
-          id="editBookmarkURL"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label class="label">
-          대분류
-        </label>
-
-        <input
-          id="editMainCategory"
-          placeholder="예: 디자인"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label class="label">
-          소분류
-        </label>
-
-        <input
-          id="editSubCategory"
-          placeholder="예: 레퍼런스"
-        >
-
-      </div>
-
+      <div class="field"><label class="label">제목</label><input id="editBookmarkTitle"></div>
+      <div class="field"><label class="label">URL</label><input id="editBookmarkURL"></div>
+      <div class="field"><label class="label">대분류</label><input id="editMainCategory" placeholder="예: 디자인"></div>
+      <div class="field"><label class="label">소분류</label><input id="editSubCategory" placeholder="예: 레퍼런스"></div>
+      <div class="manual-note">AI가 분류하지 못했거나 분류가 마음에 안 들면 여기서 직접 바꾸면 됨. 저장 즉시 카테고리에 반영됨.</div>
     </div>
-
-
     <div class="modal-foot">
-
-      <button
-        class="action danger"
-        onclick="deleteBookmark()"
-      >
-        삭제
-      </button>
-
-      <div class="modal-right">
-
-        <button
-          class="action"
-          onclick="closeModal('editOverlay')"
-        >
-          취소
-        </button>
-
-        <button
-          class="action dark"
-          onclick="saveBookmarkEdit()"
-        >
-          저장
-        </button>
-
-      </div>
-
+      <button class="action danger" onclick="deleteBookmark()">삭제</button>
+      <div class="modal-right"><button class="action" onclick="closeModal('editOverlay')">취소</button><button class="action dark" onclick="saveBookmarkEdit()">저장</button></div>
     </div>
-
   </div>
-
 </div>
 
-
-<!-- =========================
-     HTML IMPORT INFO
-========================= -->
-
-<div
-  id="htmlOverlay"
-  class="overlay"
->
-
+<!-- HTML IMPORT -->
+<div id="htmlOverlay" class="overlay">
   <div class="modal">
-
-    <div class="modal-head">
-
-      <div class="modal-title">
-        크롬 북마크 가져오기
-      </div>
-
-      <button
-        class="close"
-        onclick="closeModal('htmlOverlay')"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="modal-body">
-
-      <div style="font-size:13px;line-height:1.7;color:#555;">
-
-        크롬에서 내보낸
-        <strong>bookmarks.html</strong>
-        파일을 그대로 넣으면 됩니다.
-
-        <br><br>
-
-        기존 북마크가 있다면
-        <strong>기존 데이터 뒤에 추가</strong>됩니다.
-
-      </div>
-
-    </div>
-
-
-    <div class="modal-foot">
-
-      <button
-        class="action"
-        onclick="closeModal('htmlOverlay')"
-      >
-        취소
-      </button>
-
-      <button
-        class="action dark"
-        onclick="chooseHTMLFile()"
-      >
-        HTML 파일 선택
-      </button>
-
-    </div>
-
+    <div class="modal-head"><div class="modal-title">크롬 북마크 가져오기</div><button class="close" onclick="closeModal('htmlOverlay')">×</button></div>
+    <div class="modal-body"><div style="font-size:11px;line-height:1.7;color:#555">크롬에서 내보낸 <strong>bookmarks.html</strong> 파일을 넣으면 기존 데이터 뒤에 추가됨.</div></div>
+    <div class="modal-foot"><button class="action" onclick="closeModal('htmlOverlay')">취소</button><button class="action dark" onclick="chooseHTMLFile()">HTML 파일 선택</button></div>
   </div>
-
 </div>
 
-
-<!-- =========================
-     JSON MODAL
-========================= -->
-
-<div
-  id="jsonOverlay"
-  class="overlay"
->
-
+<!-- AI -->
+<div id="aiOverlay" class="overlay">
   <div class="modal">
-
-    <div class="modal-head">
-
-      <div class="modal-title">
-        JSON
-      </div>
-
-      <button
-        class="close"
-        onclick="closeModal('jsonOverlay')"
-      >
-        ×
-      </button>
-
-    </div>
-
-
+    <div class="modal-head"><div class="modal-title">AI 자동 분류</div><button class="close" onclick="closeModal('aiOverlay')">×</button></div>
     <div class="modal-body">
-
       <div class="field">
-
-        <label class="label">
-          JSON 데이터
-        </label>
-
-        <textarea
-          id="jsonText"
-          placeholder='북마크 JSON을 넣거나 현재 데이터를 확인할 수 있습니다.'
-        ></textarea>
-
+        <label class="label">Gemini API Key</label>
+        <input id="apiKey" type="password" placeholder="AIza...">
+        <div class="help">이 브라우저의 localStorage에 저장됨.</div>
       </div>
-
+      <div class="ai-note">현재 북마크를 AI가 보고 <strong>대분류 + 소분류</strong>를 자동 지정함. 제목과 URL은 그대로 유지함.</div>
+      <div class="manual-note">분류에 실패한 묶음이 있어도 전체가 막히지 않음. 성공한 북마크는 저장되고, 실패한 북마크는 <strong>미분류</strong>로 남아서 네가 직접 수정할 수 있음.</div>
+      <div id="progress" class="progress"><div id="progressText" class="progress-text">준비 중...</div><div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div></div>
+      <div id="error" class="error"></div>
     </div>
-
-
-    <div class="modal-foot">
-
-      <div>
-
-        <button
-          class="action"
-          onclick="chooseJSONFile()"
-        >
-          JSON 가져오기
-        </button>
-
-        <button
-          class="action"
-          onclick="exportJSON()"
-        >
-          JSON 내보내기
-        </button>
-
-      </div>
-
-      <button
-        class="action dark"
-        onclick="applyJSON()"
-      >
-        JSON 적용
-      </button>
-
-    </div>
-
+    <div class="modal-foot"><button class="action" onclick="closeModal('aiOverlay')">취소</button><button id="aiButton" class="action dark" onclick="runAI()">자동 분류 시작</button></div>
   </div>
-
 </div>
-
-
-<!-- =========================
-     AI MODAL
-========================= -->
-
-<div
-  id="aiOverlay"
-  class="overlay"
->
-
-  <div class="modal">
-
-    <div class="modal-head">
-
-      <div class="modal-title">
-        AI 자동 분류
-      </div>
-
-      <button
-        class="close"
-        onclick="closeModal('aiOverlay')"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="modal-body">
-
-      <div class="field">
-
-        <label class="label">
-          Gemini API Key
-        </label>
-
-        <input
-          id="apiKey"
-          type="password"
-          placeholder="AIza..."
-        >
-
-        <div class="help">
-          이 브라우저의 localStorage에 저장됩니다.
-        </div>
-
-      </div>
-
-
-      <div
-        style="
-          font-size:12px;
-          color:#666;
-          line-height:1.7;
-        "
-      >
-
-        현재 보관된 북마크를 AI가 보고
-        <strong>대분류 + 소분류</strong>를 자동으로 지정합니다.
-
-        <br>
-
-        제목과 URL은 그대로 유지합니다.
-
-      </div>
-
-
-      <div
-        id="progress"
-        class="progress"
-      >
-
-        <div
-          id="progressText"
-          class="progress-text"
-        >
-          준비 중...
-        </div>
-
-        <div class="progress-bar">
-
-          <div
-            id="progressFill"
-            class="progress-fill"
-          ></div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="error"
-        class="error"
-      ></div>
-
-    </div>
-
-
-    <div class="modal-foot">
-
-      <button
-        class="action"
-        onclick="closeModal('aiOverlay')"
-      >
-        취소
-      </button>
-
-      <button
-        id="aiButton"
-        class="action dark"
-        onclick="runAI()"
-      >
-        자동 분류 시작
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
 
 <script>
-
-/* =====================================================
-   DATA
-===================================================== */
-
 const DATA_KEY = "digitalArchiveData";
 const API_KEY = "digitalArchiveGeminiKey";
+let archive=[];
+let mode="all";
+let currentEditIndex=-1;
+let randomIndex=-1;
 
-let archive = [];
-let mode = "all";
-let currentEditIndex = -1;
-let randomIndex = -1;
-
-
-/* =====================================================
-   INIT
-===================================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const saved =
-    localStorage.getItem(DATA_KEY);
-
-  if (saved) {
-
-    try {
-
-      archive = JSON.parse(saved);
-
-      if (!Array.isArray(archive)) {
-        archive = [];
-      }
-
-    } catch {
-
-      archive = [];
-
-    }
-
-  }
-
-
-  const key =
-    localStorage.getItem(API_KEY);
-
-  if (key) {
-
-    document.getElementById("apiKey").value =
-      key;
-
-  }
-
-
+document.addEventListener("DOMContentLoaded",()=>{
+  const saved=localStorage.getItem(DATA_KEY);
+  if(saved){try{archive=JSON.parse(saved);if(!Array.isArray(archive)) archive=[];}catch{archive=[];}}
+  const key=localStorage.getItem(API_KEY);
+  if(key) document.getElementById("apiKey").value=key;
   render();
-
 });
-
-
-/* =====================================================
-   SAVE
-===================================================== */
-
-function saveData() {
-
-  localStorage.setItem(
-    DATA_KEY,
-    JSON.stringify(archive)
-  );
-
-}
-
-
-/* =====================================================
-   MODE
-===================================================== */
-
-function setMode(newMode) {
-
-  mode = newMode;
-
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(btn => {
-
-      btn.classList.remove("active");
-
-    });
-
-
-  const target =
-    document.querySelector(
-      `.nav button[data-mode="${newMode}"]`
-    );
-
-
-  if (target) {
-    target.classList.add("active");
-  }
-
-
-  if (newMode === "random") {
-
-    document
-      .getElementById("normalView")
-      .style.display = "none";
-
-    document
-      .getElementById("randomView")
-      .classList.add("show");
-
+function saveData(){localStorage.setItem(DATA_KEY,JSON.stringify(archive));}
+function setMode(newMode){
+  mode=newMode;
+  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
+  const target=document.querySelector(`.nav button[data-mode="${newMode}"]`);if(target) target.classList.add("active");
+  if(newMode==="random"){
+    document.getElementById("normalView").style.display="none";
+    document.getElementById("randomView").classList.add("show");
     showRandom();
-
-  } else {
-
-    document
-      .getElementById("normalView")
-      .style.display = "block";
-
-    document
-      .getElementById("randomView")
-      .classList.remove("show");
-
+  }else{
+    document.getElementById("normalView").style.display="block";
+    document.getElementById("randomView").classList.remove("show");
     render();
-
   }
-
 }
-
-
-/* =====================================================
-   CATEGORIES
-===================================================== */
-
-function renderCategories() {
-
-  const box =
-    document.getElementById("categoryButtons");
-
-
-  const categories = [
-    ...new Set(
-      archive
-        .map(x => x.mainCategory)
-        .filter(Boolean)
-    )
-  ].sort((a,b) =>
-    a.localeCompare(b, "ko")
-  );
-
-
-  box.innerHTML =
-    categories.map(category => {
-
-      const active =
-        mode === "category:" + category
-          ? "active"
-          : "";
-
-
-      return `
-
-        <button
-          class="${active}"
-          onclick='setCategory(${JSON.stringify(category)})'
-        >
-          ${escapeHTML(category)}
-        </button>
-
-      `;
-
-    }).join("");
-
+function renderCategories(){
+  const box=document.getElementById("categoryButtons");
+  const categories=[...new Set(archive.map(x=>x.mainCategory).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ko"));
+  if(archive.some(x=>!x.mainCategory)) categories.push("미분류");
+  box.innerHTML=categories.map(category=>{
+    const active=mode==="category:"+category?"active":"";
+    return `<button class="${active}" onclick='setCategory(${JSON.stringify(category)})'>${escapeHTML(category)}</button>`;
+  }).join("");
 }
-
-
-/* =====================================================
-   CATEGORY SELECT
-===================================================== */
-
-function setCategory(category) {
-
-  mode =
-    "category:" + category;
-
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(btn =>
-      btn.classList.remove("active")
-    );
-
-
-  document
-    .getElementById("normalView")
-    .style.display = "block";
-
-
-  document
-    .getElementById("randomView")
-    .classList.remove("show");
-
-
+function setCategory(category){
+  mode="category:"+category;
+  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
+  document.getElementById("normalView").style.display="block";
+  document.getElementById("randomView").classList.remove("show");
   render();
-
 }
-
-
-/* =====================================================
-   RENDER
-===================================================== */
-
-function render() {
-
+function getFiltered(){
+  const search=document.getElementById("search").value.trim().toLowerCase();
+  let filtered=archive.map((item,index)=>({...item,_index:index}));
+  if(mode.startsWith("category:")){
+    const category=mode.substring(9);
+    filtered=filtered.filter(item=>(item.mainCategory||"미분류")===category);
+  }
+  if(search){filtered=filtered.filter(item=>[item.title,item.url,item.mainCategory,item.subCategory].join(" ").toLowerCase().includes(search));}
+  return filtered;
+}
+function render(){
   renderCategories();
-
-
-  const list =
-    document.getElementById("list");
-
-
-  const search =
-    document
-      .getElementById("search")
-      .value
-      .trim()
-      .toLowerCase();
-
-
-  let filtered =
-    archive.map((item, index) => ({
-      ...item,
-      _index: index
-    }));
-
-
-  if (mode.startsWith("category:")) {
-
-    const category =
-      mode.substring(9);
-
-    filtered =
-      filtered.filter(
-        item =>
-          (item.mainCategory || "미분류")
-          === category
-      );
-
-  }
-
-
-  if (search) {
-
-    filtered =
-      filtered.filter(item => {
-
-        const text = [
-
-          item.title,
-          item.url,
-          item.mainCategory,
-          item.subCategory
-
-        ]
-          .join(" ")
-          .toLowerCase();
-
-
-        return text.includes(search);
-
-      });
-
-  }
-
-
-  let title = "전체";
-
-
-  if (mode.startsWith("category:")) {
-
-    title =
-      mode.substring(9);
-
-  }
-
-
-  document
-    .getElementById("heading")
-    .textContent = title;
-
-
-  document
-    .getElementById("count")
-    .textContent =
-      `${filtered.length}개`;
-
-
-  if (filtered.length === 0) {
-
-    list.innerHTML = `
-
-      <div class="empty">
-
-        <strong>
-          ${
-            archive.length === 0
-              ? "아직 북마크가 없음"
-              : "찾는 북마크가 없음"
-          }
-        </strong>
-
-        ${
-          archive.length === 0
-            ? "위쪽의 「북마크 HTML」에서 bookmarks.html을 넣어주세요."
-            : "검색어나 카테고리를 바꿔보세요."
-        }
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    filtered
-      .map(createItem)
-      .join("");
-
-}
-
-
-/* =====================================================
-   ITEM
-===================================================== */
-
-function createItem(item) {
-
-  const title =
-    escapeHTML(
-      item.title || "제목 없음"
-    );
-
-
-  const url =
-    escapeHTML(
-      item.url || "#"
-    );
-
-
-  const domain =
-    escapeHTML(
-      getDomain(item.url)
-    );
-
-
-  const category =
-    escapeHTML(
-      item.mainCategory || "미분류"
-    );
-
-
-  const sub =
-    escapeHTML(
-      item.subCategory || ""
-    );
-
-
-  const favicon =
-    getFavicon(item.url);
-
-
-  return `
-
-    <div class="item">
-
-      ${
-        favicon
-          ? `
-            <img
-              class="favicon"
-              src="${favicon}"
-              alt=""
-              onerror="this.style.visibility='hidden'"
-            >
-          `
-          : `
-            <div></div>
-          `
-      }
-
-
-      <div class="item-main">
-
-        <a
-          class="item-title"
-          href="${url}"
-          target="_blank"
-          rel="noopener"
-        >
-          ${title}
-        </a>
-
-        <div class="item-url">
-          ${domain}
-        </div>
-
-      </div>
-
-
-      <div class="tag">
-
-        ${category}
-
-        ${
-          sub
-            ? " / " + sub
-            : ""
-        }
-
-      </div>
-
-
-      <button
-        class="edit-btn"
-        onclick="openEdit(${item._index})"
-      >
-        수정
-      </button>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =====================================================
-   EDIT
-===================================================== */
-
-function openEdit(index) {
-
-  currentEditIndex = index;
-
-  const item =
-    archive[index];
-
-
-  document.getElementById(
-    "editBookmarkTitle"
-  ).value =
-    item.title || "";
-
-
-  document.getElementById(
-    "editBookmarkURL"
-  ).value =
-    item.url || "";
-
-
-  document.getElementById(
-    "editMainCategory"
-  ).value =
-    item.mainCategory || "";
-
-
-  document.getElementById(
-    "editSubCategory"
-  ).value =
-    item.subCategory || "";
-
-
-  document
-    .getElementById("editOverlay")
-    .classList.add("show");
-
-}
-
-
-function saveBookmarkEdit() {
-
-  if (
-    currentEditIndex < 0 ||
-    !archive[currentEditIndex]
-  ) {
+  const list=document.getElementById("list");
+  const filtered=getFiltered();
+  let title="전체";
+  if(mode.startsWith("category:")) title=mode.substring(9);
+  document.getElementById("heading").textContent=title;
+  document.getElementById("count").textContent=`${filtered.length}개`;
+  if(filtered.length===0){
+    list.innerHTML=`<div class="empty"><strong>${archive.length===0?"아직 북마크가 없음":"찾는 북마크가 없음"}</strong>${archive.length===0?"위쪽의 「북마크 HTML」에서 bookmarks.html을 넣어줘.":"검색어나 카테고리를 바꿔봐."}<div class="empty-action"><button class="action" onclick="openHTMLImport()">북마크 가져오기</button></div></div>`;
     return;
   }
-
-
-  archive[currentEditIndex] = {
-
-    title:
-      document.getElementById(
-        "editBookmarkTitle"
-      ).value.trim(),
-
-    url:
-      document.getElementById(
-        "editBookmarkURL"
-      ).value.trim(),
-
-    mainCategory:
-      document.getElementById(
-        "editMainCategory"
-      ).value.trim(),
-
-    subCategory:
-      document.getElementById(
-        "editSubCategory"
-      ).value.trim()
-
+  list.innerHTML=filtered.map(createItem).join("");
+}
+function createItem(item){
+  const title=escapeHTML(item.title||"제목 없음");
+  const url=escapeHTML(item.url||"#");
+  const domain=escapeHTML(getDomain(item.url));
+  const category=escapeHTML(item.mainCategory||"미분류");
+  const sub=escapeHTML(item.subCategory||"");
+  const favicon=getFavicon(item.url);
+  return `<div class="item">${favicon?`<img class="favicon" src="${favicon}" alt="" onerror="this.style.visibility='hidden'">`:`<div></div>`}<div class="item-main"><a class="item-title" href="${url}" target="_blank" rel="noopener">${title}</a><div class="item-url">${domain}</div></div><div class="tag">${category}${sub?" / "+sub:""}</div><button class="edit-btn" onclick="openEdit(${item._index})">수정</button></div>`;
+}
+function openEdit(index){
+  currentEditIndex=index;const item=archive[index];if(!item)return;
+  document.getElementById("editBookmarkTitle").value=item.title||"";
+  document.getElementById("editBookmarkURL").value=item.url||"";
+  document.getElementById("editMainCategory").value=item.mainCategory||"";
+  document.getElementById("editSubCategory").value=item.subCategory||"";
+  document.getElementById("editOverlay").classList.add("show");
+}
+function saveBookmarkEdit(){
+  if(currentEditIndex<0||!archive[currentEditIndex])return;
+  archive[currentEditIndex]={title:document.getElementById("editBookmarkTitle").value.trim(),url:document.getElementById("editBookmarkURL").value.trim(),mainCategory:document.getElementById("editMainCategory").value.trim(),subCategory:document.getElementById("editSubCategory").value.trim()};
+  saveData();closeModal("editOverlay");render();
+  if(mode==="random") showRandom();
+}
+function deleteBookmark(){
+  if(currentEditIndex<0||!archive[currentEditIndex])return;
+  if(!confirm("이 북마크를 삭제할까?"))return;
+  archive.splice(currentEditIndex,1);saveData();closeModal("editOverlay");render();
+  if(mode==="random") showRandom();
+}
+function pickRandomIndex(){
+  if(!archive.length)return -1;
+  let next=Math.floor(Math.random()*archive.length);
+  if(archive.length>1&&next===randomIndex) next=(next+1)%archive.length;
+  return next;
+}
+function showRandom(){
+  if(!archive.length){
+    document.getElementById("randomNumber").textContent="-";
+    document.getElementById("randomTitle").textContent="북마크가 없습니다.";
+    document.getElementById("randomTitle").removeAttribute("href");
+    document.getElementById("randomOpen").removeAttribute("href");
+    document.getElementById("randomDomain").textContent="먼저 북마크를 가져와주세요.";
+    document.getElementById("randomCategory").textContent="";
+    document.getElementById("randomFavicon").src="";
+    document.getElementById("randomPreview").src="about:blank";
+    randomIndex=-1;return;
+  }
+  randomIndex=pickRandomIndex();renderRandom();
+}
+function renderRandom(){
+  const item=archive[randomIndex];if(!item)return;
+  document.getElementById("randomNumber").textContent=`${randomIndex+1} / ${archive.length}`;
+  document.getElementById("randomTitle").textContent=item.title||"제목 없음";
+  document.getElementById("randomTitle").href=item.url||"#";
+  document.getElementById("randomOpen").href=item.url||"#";
+  document.getElementById("randomDomain").textContent=getDomain(item.url);
+  document.getElementById("randomCategory").textContent=[item.mainCategory,item.subCategory].filter(Boolean).join(" / ")||"미분류";
+  document.getElementById("randomFavicon").src=getFavicon(item.url)||"";
+  const frame=document.getElementById("randomPreview");
+  frame.src="about:blank";
+  if(item.url){setTimeout(()=>{if(randomIndex>=0&&archive[randomIndex]===item) frame.src=item.url;},20)}
+}
+function nextRandom(){if(!archive.length)return;randomIndex=pickRandomIndex();renderRandom();}
+function openRandomEdit(){if(randomIndex>=0)openEdit(randomIndex)}
+function openHTMLImport(){document.getElementById("htmlOverlay").classList.add("show")}
+function chooseHTMLFile(){closeModal("htmlOverlay");document.getElementById("htmlFile").click()}
+function importBookmarkHTML(event){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const doc=new DOMParser().parseFromString(e.target.result,"text/html");
+      const imported=[...doc.querySelectorAll("a[href]")].map(a=>({title:a.textContent.trim()||"제목 없음",url:a.getAttribute("href")||"",mainCategory:"",subCategory:""})).filter(x=>x.url);
+      if(!imported.length){alert("북마크를 찾지 못했습니다.");return;}
+      archive=archive.concat(imported);saveData();mode="all";render();alert(`${imported.length}개의 북마크를 가져왔습니다.`);
+    }catch(error){alert("HTML을 읽는 중 오류가 발생했습니다.\n\n"+error.message)}
   };
-
-
-  saveData();
-
-  closeModal("editOverlay");
-
-  render();
-
+  reader.readAsText(file);event.target.value="";
 }
-
-
-function deleteBookmark() {
-
-  if (
-    currentEditIndex < 0 ||
-    !archive[currentEditIndex]
-  ) {
-    return;
-  }
-
-
-  if (
-    !confirm(
-      "이 북마크를 삭제할까요?"
-    )
-  ) {
-    return;
-  }
-
-
-  archive.splice(
-    currentEditIndex,
-    1
-  );
-
-
-  saveData();
-
-  closeModal("editOverlay");
-
-  render();
-
-}
-
-
-/* =====================================================
-   RANDOM
-===================================================== */
-
-function showRandom() {
-
-  if (archive.length === 0) {
-
-    document.getElementById(
-      "randomNumber"
-    ).textContent = "-";
-
-
-    document.getElementById(
-      "randomTitle"
-    ).textContent =
-      "북마크가 없습니다.";
-
-
-    document.getElementById(
-      "randomTitle"
-    ).removeAttribute("href");
-
-
-    document.getElementById(
-      "randomDomain"
-    ).textContent =
-      "먼저 북마크를 가져와주세요.";
-
-
-    return;
-
-  }
-
-
-  randomIndex =
-    Math.floor(
-      Math.random() *
-      archive.length
-    );
-
-
-  const item =
-    archive[randomIndex];
-
-
-  document.getElementById(
-    "randomNumber"
-  ).textContent =
-    `${randomIndex + 1} / ${archive.length}`;
-
-
-  document.getElementById(
-    "randomTitle"
-  ).textContent =
-    item.title || "제목 없음";
-
-
-  document.getElementById(
-    "randomTitle"
-  ).href =
-    item.url || "#";
-
-
-  document.getElementById(
-    "randomDomain"
-  ).textContent =
-    getDomain(item.url);
-
-
-  document.getElementById(
-    "randomCategory"
-  ).textContent =
-    [
-      item.mainCategory,
-      item.subCategory
-    ]
-      .filter(Boolean)
-      .join(" / ") ||
-      "미분류";
-
-
-  const favicon =
-    getFavicon(item.url);
-
-
-  document.getElementById(
-    "randomFavicon"
-  ).src =
-    favicon || "";
-
-}
-
-
-function nextRandom() {
-
-  if (archive.length === 0) {
-    return;
-  }
-
-
-  let next =
-    Math.floor(
-      Math.random() *
-      archive.length
-    );
-
-
-  if (
-    archive.length > 1 &&
-    next === randomIndex
-  ) {
-
-    next =
-      (next + 1) %
-      archive.length;
-
-  }
-
-
-  randomIndex = next;
-
-  const item =
-    archive[randomIndex];
-
-
-  document.getElementById(
-    "randomNumber"
-  ).textContent =
-    `${randomIndex + 1} / ${archive.length}`;
-
-
-  document.getElementById(
-    "randomTitle"
-  ).textContent =
-    item.title || "제목 없음";
-
-
-  document.getElementById(
-    "randomTitle"
-  ).href =
-    item.url || "#";
-
-
-  document.getElementById(
-    "randomDomain"
-  ).textContent =
-    getDomain(item.url);
-
-
-  document.getElementById(
-    "randomCategory"
-  ).textContent =
-    [
-      item.mainCategory,
-      item.subCategory
-    ]
-      .filter(Boolean)
-      .join(" / ") ||
-      "미분류";
-
-
-  document.getElementById(
-    "randomFavicon"
-  ).src =
-    getFavicon(item.url) || "";
-
-}
-
-
-/* =====================================================
-   HTML BOOKMARK IMPORT
-===================================================== */
-
-function openHTMLImport() {
-
-  document
-    .getElementById("htmlOverlay")
-    .classList.add("show");
-
-}
-
-
-function chooseHTMLFile() {
-
-  closeModal("htmlOverlay");
-
-  document
-    .getElementById("htmlFile")
-    .click();
-
-}
-
-
-function importBookmarkHTML(event) {
-
-  const file =
-    event.target.files[0];
-
-
-  if (!file) {
-    return;
-  }
-
-
-  const reader =
-    new FileReader();
-
-
-  reader.onload = function(e) {
-
-    try {
-
-      const parser =
-        new DOMParser();
-
-
-      const doc =
-        parser.parseFromString(
-          e.target.result,
-          "text/html"
-        );
-
-
-      const links =
-        [...doc.querySelectorAll("a[href]")];
-
-
-      const imported =
-        links.map(a => {
-
-          return {
-
-            title:
-              a.textContent.trim() ||
-              "제목 없음",
-
-            url:
-              a.getAttribute("href") ||
-              "",
-
-            mainCategory:
-              "",
-
-            subCategory:
-              ""
-
-          };
-
-        })
-        .filter(x => x.url);
-
-
-      if (imported.length === 0) {
-
-        alert(
-          "북마크를 찾지 못했습니다."
-        );
-
-        return;
-
-      }
-
-
-      archive =
-        archive.concat(imported);
-
-
-      saveData();
-
-      mode = "all";
-
-      render();
-
-
-      alert(
-        `${imported.length}개의 북마크를 가져왔습니다.`
-      );
-
-
-    } catch (error) {
-
-      alert(
-        "HTML을 읽는 중 오류가 발생했습니다.\n\n" +
-        error.message
-      );
-
-    }
-
-  };
-
-
-  reader.readAsText(file);
-
-
-  event.target.value = "";
-
-}
-
-
-/* =====================================================
-   JSON
-===================================================== */
-
-function openJSON() {
-
-  document.getElementById(
-    "jsonText"
-  ).value =
-    JSON.stringify(
-      archive,
-      null,
-      2
-    );
-
-
-  document
-    .getElementById("jsonOverlay")
-    .classList.add("show");
-
-}
-
-
-function chooseJSONFile() {
-
-  document
-    .getElementById("jsonFile")
-    .click();
-
-}
-
-
-function importJSONFile(event) {
-
-  const file =
-    event.target.files[0];
-
-
-  if (!file) {
-    return;
-  }
-
-
-  const reader =
-    new FileReader();
-
-
-  reader.onload = function(e) {
-
-    document.getElementById(
-      "jsonText"
-    ).value =
-      e.target.result;
-
-  };
-
-
-  reader.readAsText(file);
-
-  event.target.value = "";
-
-}
-
-
-function applyJSON() {
-
-  const text =
-    document
-      .getElementById("jsonText")
-      .value
-      .trim();
-
-
-  if (!text) {
-
-    alert(
-      "JSON 데이터가 없습니다."
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    const data =
-      JSON.parse(text);
-
-
-    if (!Array.isArray(data)) {
-
-      throw new Error(
-        "JSON은 배열이어야 합니다."
-      );
-
-    }
-
-
-    archive =
-      data.map(item => ({
-
-        title:
-          item.title || "",
-
-        url:
-          item.url || "",
-
-        mainCategory:
-          item.mainCategory || "",
-
-        subCategory:
-          item.subCategory || ""
-
-      }));
-
-
-    saveData();
-
-    closeModal("jsonOverlay");
-
-    mode = "all";
-
-    render();
-
-
-  } catch (error) {
-
-    alert(
-      "JSON 형식이 올바르지 않습니다.\n\n" +
-      error.message
-    );
-
-  }
-
-}
-
-
-function exportJSON() {
-
-  const blob =
-    new Blob(
-      [
-        JSON.stringify(
-          archive,
-          null,
-          2
-        )
-      ],
-      {
-        type:
-          "application/json"
-      }
-    );
-
-
-  const url =
-    URL.createObjectURL(blob);
-
-
-  const a =
-    document.createElement("a");
-
-
-  a.href = url;
-
-  a.download =
-    "digital-archive.json";
-
-  a.click();
-
-
-  URL.revokeObjectURL(url);
-
-}
-
-
-/* =====================================================
-   AI
-===================================================== */
-
-function openAI() {
-
+function openAI(){clearError();document.getElementById("aiOverlay").classList.add("show")}
+async function runAI(){
   clearError();
-
-  document
-    .getElementById("aiOverlay")
-    .classList.add("show");
-
-}
-
-
-async function runAI() {
-
-  clearError();
-
-
-  if (archive.length === 0) {
-
-    showError(
-      "먼저 북마크를 가져와주세요."
-    );
-
-    return;
-
-  }
-
-
-  const key =
-    document
-      .getElementById("apiKey")
-      .value
-      .trim();
-
-
-  if (!key) {
-
-    showError(
-      "Gemini API Key를 입력해주세요."
-    );
-
-    return;
-
-  }
-
-
-  localStorage.setItem(
-    API_KEY,
-    key
-  );
-
-
-  const button =
-    document.getElementById(
-      "aiButton"
-    );
-
-
-  button.disabled = true;
-
-  button.textContent =
-    "분류 중...";
-
-
-  document
-    .getElementById("progress")
-    .classList.add("show");
-
-
-  try {
-
-    const chunkSize = 20;
-
-    const result = [];
-
-
-    for (
-      let start = 0;
-      start < archive.length;
-      start += chunkSize
-    ) {
-
-      const chunk =
-        archive.slice(
-          start,
-          start + chunkSize
-        );
-
-
-      const end =
-        Math.min(
-          start + chunkSize,
-          archive.length
-        );
-
-
-      document.getElementById(
-        "progressText"
-      ).textContent =
-        `AI 분류 중... ${end} / ${archive.length}`;
-
-
-      document.getElementById(
-        "progressFill"
-      ).style.width =
-        `${(end / archive.length) * 100}%`;
-
-
-      const prompt = `
-
-너는 개인 디지털 북마크를 정리하는 AI다.
-
-각 북마크를 실제 내용과 URL을 보고
-사용자가 나중에 찾기 쉽도록 분류해라.
-
-반드시 아래 JSON 배열 형식으로만 답한다.
-
-[
-  {
-    "title": "원래 제목",
-    "url": "원래 URL",
-    "mainCategory": "대분류",
-    "subCategory": "소분류"
-  }
-]
-
-규칙:
-
-- title은 절대로 바꾸지 않는다.
-- url은 절대로 바꾸지 않는다.
-- mainCategory와 subCategory만 새로 지정한다.
-- 대분류는 너무 많이 만들지 않는다.
-- 비슷한 자료는 같은 대분류로 묶는다.
-- 소분류는 필요할 때만 구체적으로 나눈다.
-- 한국어 카테고리명을 사용한다.
-- 설명문을 넣지 않는다.
-- 마크다운을 사용하지 않는다.
-- JSON 배열만 반환한다.
-
-북마크:
-
-${JSON.stringify(chunk, null, 2)}
-
-`;
-
-
-      const response =
-        await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
-          {
-
-            method: "POST",
-
-            headers: {
-
-              "Content-Type":
-                "application/json",
-
-              "x-goog-api-key":
-                key
-
-            },
-
-            body:
-              JSON.stringify({
-
-                contents: [
-
-                  {
-
-                    parts: [
-
-                      {
-                        text: prompt
-                      }
-
-                    ]
-
-                  }
-
-                ],
-
-                generationConfig: {
-
-                  responseMimeType:
-                    "application/json"
-
-                }
-
-              })
-
-          }
-        );
-
-
-      if (!response.ok) {
-
-        let message =
-          `API 오류 (${response.status})`;
-
-
-        try {
-
-          const data =
-            await response.json();
-
-
-          if (
-            data?.error?.message
-          ) {
-
-            message +=
-              `\n${data.error.message}`;
-
-          }
-
-        } catch {}
-
-
-        throw new Error(message);
-
-      }
-
-
-      const data =
-        await response.json();
-
-
-      const text =
-        data
-          ?.candidates?.[0]
-          ?.content
-          ?.parts?.[0]
-          ?.text;
-
-
-      if (!text) {
-
-        throw new Error(
-          "Gemini가 결과를 반환하지 않았습니다."
-        );
-
-      }
-
-
-      const parsed =
-        JSON.parse(text);
-
-
-      if (!Array.isArray(parsed)) {
-
-        throw new Error(
-          "Gemini 결과가 배열이 아닙니다."
-        );
-
-      }
-
-
-      result.push(
-        ...parsed
-      );
-
-    }
-
-
-    archive =
-      result.map(item => ({
-
-        title:
-          item.title || "",
-
-        url:
-          item.url || "",
-
-        mainCategory:
-          item.mainCategory ||
-          "미분류",
-
-        subCategory:
-          item.subCategory ||
-          ""
-
-      }));
-
-
-    saveData();
-
-    render();
-
-
-    document.getElementById(
-      "progressText"
-    ).textContent =
-      `완료 · ${archive.length}개 분류`;
-
-
-    setTimeout(() => {
-
-      closeModal("aiOverlay");
-
-    }, 700);
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    showError(
-      error.message ||
-      "AI 분류 중 오류가 발생했습니다."
-    );
-
-  } finally {
-
-    button.disabled = false;
-
-    button.textContent =
-      "자동 분류 시작";
-
-  }
-
-}
-
-
-/* =====================================================
-   HELPERS
-===================================================== */
-
-function closeModal(id) {
-
-  document
-    .getElementById(id)
-    .classList.remove("show");
-
-}
-
-
-function showError(message) {
-
-  const box =
-    document.getElementById(
-      "error"
-    );
-
-
-  box.textContent =
-    message;
-
-
-  box.classList.add("show");
-
-}
-
-
-function clearError() {
-
-  const box =
-    document.getElementById(
-      "error"
-    );
-
-
-  box.textContent =
-    "";
-
-
-  box.classList.remove("show");
-
-}
-
-
-function escapeHTML(value) {
-
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-function getDomain(url) {
-
-  try {
-
-    return new URL(url)
-      .hostname
-      .replace(/^www\./, "");
-
-  } catch {
-
-    return "";
-
-  }
-
-}
-
-
-function getFavicon(url) {
-
-  try {
-
-    const domain =
-      new URL(url).hostname;
-
-
-    return (
-      "https://www.google.com/s2/favicons" +
-      "?domain=" +
-      encodeURIComponent(domain) +
-      "&sz=32"
-    );
-
-  } catch {
-
-    return "";
-
-  }
-
-}
-
-
-/* =====================================================
-   CLOSE MODALS WHEN CLICK OUTSIDE
-===================================================== */
-
-document
-  .querySelectorAll(".overlay")
-  .forEach(overlay => {
-
-    overlay.addEventListener(
-      "click",
-      function(e) {
-
-        if (e.target === overlay) {
-
-          overlay.classList.remove(
-            "show"
-          );
-
+  if(!archive.length){showError("먼저 북마크를 가져와줘.");return}
+  const key=document.getElementById("apiKey").value.trim();
+  if(!key){showError("Gemini API Key를 입력해줘.");return}
+  localStorage.setItem(API_KEY,key);
+  const button=document.getElementById("aiButton");button.disabled=true;button.textContent="분류 중...";
+  document.getElementById("progress").classList.add("show");
+  const errors=[];
+  const classified=archive.map(item=>({...item}));
+  try{
+    const chunkSize=20;
+    for(let start=0;start<archive.length;start+=chunkSize){
+      const end=Math.min(start+chunkSize,archive.length);
+      const chunk=archive.slice(start,end).map((item,i)=>({...item,_index:start+i}));
+      document.getElementById("progressText").textContent=`AI 분류 중... ${start} ~ ${end} / ${archive.length}`;
+      document.getElementById("progressFill").style.width=`${(end/archive.length)*100}%`;
+      const prompt=`너는 개인 디지털 북마크를 정리하는 AI다. 각 북마크를 제목과 URL을 보고 사용자가 나중에 찾기 쉽게 분류해라. 반드시 JSON 배열만 반환한다. 각 항목에 _index를 그대로 포함해라. title과 url은 절대 바꾸지 않는다. mainCategory와 subCategory만 지정한다. 대분류는 너무 많이 만들지 말고 비슷한 자료는 같은 대분류로 묶는다. 소분류는 필요할 때만 만든다. 한국어 카테고리명을 사용한다. 설명문과 마크다운은 금지한다.\n\n형식:\n[{"_index":0,"title":"원래 제목","url":"원래 URL","mainCategory":"대분류","subCategory":"소분류"}]\n\n북마크:\n${JSON.stringify(chunk,null,2)}`;
+      try{
+        const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json"}})});
+        if(!response.ok){let msg=`API 오류 (${response.status})`;try{const data=await response.json();if(data?.error?.message)msg+=`\n${data.error.message}`}catch{}throw new Error(msg)}
+        const data=await response.json();const text=data?.candidates?.[0]?.content?.parts?.[0]?.text;if(!text)throw new Error("Gemini가 결과를 반환하지 않았습니다.");
+        const parsed=JSON.parse(text);if(!Array.isArray(parsed))throw new Error("Gemini 결과가 배열이 아닙니다.");
+        let usedIndex=false;
+        for(let j=0;j<parsed.length;j++){
+          const item=parsed[j];const idx=Number.isInteger(item?._index)?item._index:start+j;
+          if(idx>=start&&idx<end&&classified[idx]){classified[idx].mainCategory=item.mainCategory||"미분류";classified[idx].subCategory=item.subCategory||"";usedIndex=true;}
         }
-
+        if(!usedIndex) throw new Error("AI 결과의 항목 위치를 확인하지 못했습니다.");
+      }catch(chunkError){
+        errors.push(`${start+1}~${end}번: ${chunkError.message}`);
+        for(let i=start;i<end;i++){classified[i].mainCategory=classified[i].mainCategory||"";classified[i].subCategory=classified[i].subCategory||"";}
       }
-    );
-
-  });
-
-
-/* =====================================================
-   ESC
-===================================================== */
-
-document.addEventListener(
-  "keydown",
-  e => {
-
-    if (e.key === "Escape") {
-
-      document
-        .querySelectorAll(".overlay.show")
-        .forEach(x =>
-          x.classList.remove("show")
-        );
-
     }
-
-  }
-);
-
+    archive=classified;saveData();render();
+    document.getElementById("progressText").textContent=`완료 · ${archive.length}개 처리`;
+    if(errors.length){showError(`일부 북마크는 AI 분류에 실패해서 미분류로 남겨둠.\n\n${errors.join("\n")}`)}
+    else{setTimeout(()=>closeModal("aiOverlay"),500)}
+  }catch(error){showError(error.message||"AI 분류 중 오류가 발생했습니다.")}
+  finally{button.disabled=false;button.textContent="자동 분류 시작"}
+}
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+function showError(message){const box=document.getElementById("error");box.textContent=message;box.classList.add("show")}
+function clearError(){const box=document.getElementById("error");box.textContent="";box.classList.remove("show")}
+function escapeHTML(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function getDomain(url){try{return new URL(url).hostname.replace(/^www\./,"")}catch{return ""}}
+function getFavicon(url){try{const domain=new URL(url).hostname;return "https://www.google.com/s2/favicons?domain="+encodeURIComponent(domain)+"&sz=64"}catch{return ""}}
+document.querySelectorAll(".overlay").forEach(overlay=>overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.classList.remove("show")}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".overlay.show").forEach(x=>x.classList.remove("show"))});
 </script>
-
 </body>
 </html>
