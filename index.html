@@ -125,117 +125,170 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 
 /* ===== SPACE CATEGORY UI ===== */
 .space-shell{
-  width:min(960px,calc(100% - 32px));
+  width:min(760px,calc(100% - 28px));
   margin:0 auto;
-  padding:28px 0 70px;
+  padding:18px 0 60px;
 }
-.space-head{
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:18px;
-  margin-bottom:18px;
-}
-.space-kicker{font-size:10px;color:#999;letter-spacing:.14em;text-transform:uppercase}
-.space-title{font-size:23px;font-weight:800;letter-spacing:-1px;margin-top:4px}
-.space-note{font-size:10px;color:#aaa;text-align:right;line-height:1.5}
 .space-stage{
   position:relative;
-  min-height:690px;
+  min-height:700px;
   overflow:hidden;
   border:1px solid #ececec;
-  border-radius:30px;
+  border-radius:28px;
   background:#fff;
+  isolation:isolate;
 }
 .space-stage::before{
   content:"";
-  position:absolute;inset:18px;
-  border:1px dashed #f0f0f0;
+  position:absolute;
+  inset:14px;
+  border:1px dashed #f1f1f1;
   border-radius:24px;
   pointer-events:none;
 }
+.space-center-dot{
+  position:absolute;
+  left:50%; top:50%; width:4px; height:4px;
+  transform:translate(-50%,-50%);
+  border-radius:50%; background:#111; opacity:.07;
+  pointer-events:none;
+}
+.space-empty{
+  display:flex;align-items:center;justify-content:center;min-height:690px;
+  color:#aaa;font-size:11px;
+}
+.home-space.hidden{display:none}
 .planet{
   position:absolute;
-  left:0;top:0;
-  width:104px;height:104px;
-  transform:translate(-50%,-50%);
+  left:0; top:0;
+  width:82px; height:82px;
+  transform:translate(calc(-50% + var(--mx,0px)),calc(-50% + var(--my,0px)));
+  border:0;
+  padding:0;
+  background:transparent;
+  color:#171717;
+  cursor:default;
+  z-index:2;
+  will-change:transform;
+}
+.planet-body{
+  width:100%; height:100%;
   border:1px solid #d7d7d7;
   border-radius:50%;
   background:#fff;
-  box-shadow:0 8px 18px rgba(0,0,0,.06);
+  box-shadow:0 6px 16px rgba(0,0,0,.045);
   display:flex;align-items:center;justify-content:center;
   text-align:center;
-  padding:12px;
-  color:#202020;
-  transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+  padding:10px;
   animation:planetFloat var(--dur,6.2s) ease-in-out infinite;
   animation-delay:var(--delay,0s);
-  cursor:pointer;
-  z-index:2;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.planet:hover{
-  transform:translate(-50%,-50%) scale(1.08);
-  border-color:#aaa;
+.planet.active{z-index:40}
+.planet.active .planet-body{
+  transform:scale(1.11);
+  border-color:#9e9e9e;
   box-shadow:0 12px 24px rgba(0,0,0,.08);
-  z-index:20;
 }
-.planet .planet-name{font-size:11px;font-weight:800;line-height:1.15;letter-spacing:-.25px;word-break:keep-all}
-.planet .planet-count{display:block;margin-top:4px;font-size:9px;color:#999;font-weight:500}
-
-@keyframes planetFloat{0%,100%{margin-top:0}50%{margin-top:-9px}}
-.space-center-dot{
-  position:absolute;left:50%;top:50%;width:10px;height:10px;transform:translate(-50%,-50%);border-radius:50%;background:#111;opacity:.06
+.planet .planet-name{
+  font-size:10px;font-weight:800;line-height:1.15;letter-spacing:-.25px;
+  word-break:keep-all;
 }
-.space-empty{display:flex;align-items:center;justify-content:center;min-height:690px;color:#aaa;font-size:12px}
-.category-space{display:none}
-.category-space.show{display:block}
-.home-space.hidden{display:none}
-.category-focus{
-  width:min(820px,100%);margin:0 auto;padding:28px 0 70px;
+.planet .planet-count{
+  display:block;margin-top:4px;font-size:8px;color:#999;font-weight:500;
 }
-.back-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.back-btn{border:1px solid #ddd;background:#fff;border-radius:12px;padding:8px 11px;font-size:10px;color:#666}
-.back-btn:hover{background:#f7f7f7;color:#111}
-.focus-stage{
-  position:relative;
-  min-height:640px;
-  border:1px solid #ececec;border-radius:30px;overflow:hidden;
-  background:#fff;
+@keyframes planetFloat{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(0,-7px,0)}
 }
-.focus-main{
-  position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
-  width:190px;height:190px;border-radius:50%;
-  background:#fff;
-  border:1px solid #cfcfcf;
-  box-shadow:0 14px 30px rgba(0,0,0,.08);
-  display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:3;
+.hover-cloud{
+  position:absolute;
+  left:0; top:0;
+  width:1px; height:1px;
+  pointer-events:none;
+  z-index:35;
 }
-.focus-main .focus-name{font-size:24px;font-weight:900;letter-spacing:-1.2px;word-break:keep-all}
-.focus-main .focus-count{display:block;margin-top:8px;font-size:10px;color:#999;font-weight:500}
 .sub-orb{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:94px;height:94px;border-radius:50%;border:1px solid #dcdcdc;
+  position:absolute;
+  left:0; top:0;
+  width:70px; height:70px;
+  transform:translate(-50%,-50%) scale(.72);
+  opacity:0;
+  pointer-events:none;
+  border:1px solid #dcdcdc;
+  border-radius:50%;
   background:#fff;
-  box-shadow:0 8px 18px rgba(0,0,0,.06);
-  display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;cursor:pointer;
-  transition:transform .25s ease, box-shadow .25s ease,border-color .25s ease;
+  box-shadow:0 6px 14px rgba(0,0,0,.04);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:8px;
+  transition:transform .2s ease,opacity .2s ease,border-color .2s ease,box-shadow .2s ease;
 }
-.sub-orb:hover{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 16px 30px rgba(0,0,0,.12);border-color:#aaa}
-.sub-orb .sub-name{font-size:10px;font-weight:800;line-height:1.2;word-break:keep-all}
-.sub-orb .sub-count{display:block;margin-top:4px;font-size:8px;color:#999;font-weight:500}
-.sub-connector{position:absolute;height:1px;background:#e9e9e9;transform-origin:left center;left:50%;top:50%;z-index:1}
-.focus-empty{position:absolute;left:50%;top:79%;transform:translateX(-50%);font-size:10px;color:#aaa;white-space:nowrap}
-.category-bookmarks{margin-top:14px}
-.space-actions{display:flex;gap:7px}
-.space-actions .action{border-radius:12px}
+.hover-cloud.show .sub-orb{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:auto;
+}
+.sub-orb:hover{
+  transform:translate(-50%,-50%) scale(1.08) !important;
+  border-color:#aaa;
+  box-shadow:0 12px 22px rgba(0,0,0,.08);
+}
+.sub-orb .sub-name{
+  font-size:9px;font-weight:800;line-height:1.2;word-break:keep-all;
+}
+.sub-orb .sub-count{
+  display:block;margin-top:4px;font-size:7px;color:#999;font-weight:500;
+}
+.bookmark-peek{
+  position:absolute;
+  left:0; top:0;
+  width:min(280px,calc(100% - 28px));
+  transform:translate(-50%,10px);
+  opacity:0;
+  pointer-events:none;
+  padding:10px 11px;
+  background:#fff;
+  border:1px solid #dedede;
+  border-radius:14px;
+  box-shadow:0 12px 28px rgba(0,0,0,.08);
+  transition:opacity .16s ease,transform .16s ease;
+  z-index:50;
+}
+.bookmark-peek.show{
+  opacity:1;
+  pointer-events:auto;
+  transform:translate(-50%,0);
+}
+.peek-title{
+  font-size:8px;color:#999;margin-bottom:6px;font-weight:700;
+}
+.peek-list{display:flex;flex-direction:column;gap:3px;max-height:150px;overflow:auto}
+.peek-item{
+  display:block;
+  padding:6px 7px;
+  border:1px solid #f0f0f0;
+  border-radius:9px;
+  text-decoration:none;
+  color:#222;
+  background:#fff;
+}
+.peek-item:hover{background:#f7f7f7}
+.peek-item-title{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.peek-item-domain{font-size:7px;color:#aaa;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.peek-empty{font-size:9px;color:#aaa;padding:5px 0}
+.space-tip{
+  position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+  color:#b0b0b0;font-size:8px;white-space:nowrap;pointer-events:none;
+}
+.category-space{display:none}
+.category-space.show{display:none}
 @media(max-width:720px){
- .space-shell{width:calc(100% - 20px);padding-top:18px}
+ .space-shell{width:calc(100% - 20px);padding-top:10px}
  .space-stage{min-height:620px;border-radius:24px}
- .planet{width:84px;height:84px}.planet .planet-name{font-size:10px}.planet .planet-count{font-size:8px}
- .space-head{align-items:flex-start;flex-direction:column}.space-note{text-align:left}
- .focus-stage{min-height:600px;border-radius:24px}.focus-main{width:156px;height:156px}.focus-main .focus-name{font-size:20px}.sub-orb{width:78px;height:78px}.sub-orb .sub-name{font-size:9px}
+ .planet{width:72px;height:72px}.planet .planet-name{font-size:9px}.planet .planet-count{font-size:7px}
+ .sub-orb{width:62px;height:62px}.sub-orb .sub-name{font-size:8px}
+ .bookmark-peek{width:min(250px,calc(100% - 18px))}
 }
-
 
 /* home hides old horizontal category strip; it remains available on list/search views */
 body.space-home-active .nav{display:none}
@@ -1308,117 +1361,241 @@ function showSpaceHome(){
   renderPlanetHome();
 }
 
+let spaceState = {
+  activeName: "",
+  activeSub: "",
+  pointerX: -999,
+  pointerY: -999
+};
+
+function getHomeCategoryNames(){
+  const names=categoryNames().slice();
+  if(archive.some(x=>!x.mainCategory || x.mainCategory==="미분류") && !names.includes("미분류")) names.push("미분류");
+  return names;
+}
+
+function categoryItems(name, sub=""){
+  return archive.filter(item=>{
+    const main=item.mainCategory || "미분류";
+    if(main!==name) return false;
+    if(sub) return (item.subCategory || "미분류")===sub;
+    return true;
+  });
+}
+
+function categoryBookmarkCount(name, sub=""){
+  return categoryItems(name,sub).length;
+}
+
+function categoryHoverSubs(name){
+  const cat=findCategory(name);
+  const items=categoryItems(name);
+  const subs=[];
+  if(cat && Array.isArray(cat.subs)) subs.push(...cat.subs);
+  const hasUnsorted=items.some(item=>!item.subCategory);
+  if(hasUnsorted && !subs.includes("미분류")) subs.push("미분류");
+  return uniqueClean(subs);
+}
+
 function renderPlanetHome(){
   const stage=document.getElementById("planetStage");
   if(!stage) return;
-  stage.querySelectorAll(".planet").forEach(x=>x.remove());
-  const names=categoryNames().slice();
-  if(archive.some(x=>(x.mainCategory||"")==="미분류") && !names.includes("미분류")) names.push("미분류");
+  stage.querySelectorAll(".planet,.hover-cloud,.bookmark-peek,.space-tip").forEach(x=>x.remove());
+  const names=getHomeCategoryNames();
   if(!names.length){ document.getElementById("planetEmpty").style.display="flex"; return; }
   document.getElementById("planetEmpty").style.display="none";
-  const cols = window.innerWidth < 720 ? 3 : 5;
-  const rows = Math.ceil(names.length / cols);
-  const stageW=stage.clientWidth || 900;
-  const stageH=stage.clientHeight || 690;
-  const cellW=stageW/(cols+0.35);
-  const cellH=Math.max(112, Math.min(138, stageH/(Math.max(rows,5)+0.35)));
+  const cols = window.innerWidth < 720 ? 4 : 7;
+  const stageW=stage.clientWidth || 760;
+  const stageH=stage.clientHeight || 700;
+  const top=72, bottom=78;
+  const rows=Math.ceil(names.length/cols);
+  const usableH=Math.max(420,stageH-top-bottom);
+  const cellW=stageW/cols;
+  const cellH=usableH/Math.max(rows,1);
+
   names.forEach((name,i)=>{
     const col=i%cols,row=Math.floor(i/cols);
-    const jitterX=((i*37)%17)-8;
-    const jitterY=((i*53)%13)-6;
-    const x=cellW*(col+0.68)+jitterX;
-    const y=cellH*(row+0.72)+jitterY;
-    const btn=document.createElement("button");
+    const jitterX=((i*31)%13)-6;
+    const jitterY=((i*47)%11)-5;
+    const x=Math.min(stageW-50,Math.max(50,cellW*(col+.5)+jitterX));
+    const y=Math.min(stageH-bottom,Math.max(top,row*cellH+top+cellH*.5+jitterY));
+
+    const btn=document.createElement("div");
     btn.className="planet";
-    btn.dataset.tone=((i%5)+1).toString();
-    btn.style.left=`${Math.min(stageW-58,Math.max(58,x))}px`;
-    btn.style.top=`${Math.min(stageH-58,Math.max(58,y))}px`;
+    btn.dataset.name=name;
+    btn.dataset.x=x;
+    btn.dataset.y=y;
+    btn.style.left=`${x}px`;
+    btn.style.top=`${y}px`;
     btn.style.setProperty("--dur",`${5.6+(i%5)*.45}s`);
     btn.style.setProperty("--delay",`${-(i%7)*.45}s`);
     const count=categoryBookmarkCount(name);
-    btn.innerHTML=`<span><span class="planet-name">${escapeHTML(name)}</span><span class="planet-count">${count}개</span></span>`;
-    btn.addEventListener("click",()=>openCategorySpace(name));
+    btn.innerHTML=`<div class="planet-body"><span><span class="planet-name">${escapeHTML(name)}</span><span class="planet-count">${count}개</span></span></div>`;
     stage.appendChild(btn);
   });
+
+  const tip=document.createElement("div");
+  tip.className="space-tip";
+  tip.textContent="커서를 가까이 가져가면 펼쳐짐";
+  stage.appendChild(tip);
+  bindSpacePointer(stage);
 }
 
-function makeConnector(x1,y1,x2,y2){
-  const line=document.createElement("div");
-  line.className="sub-connector";
-  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),angle=Math.atan2(dy,dx)*180/Math.PI;
-  line.style.width=`${Math.max(18,len)}px`;
-  line.style.left=`${x1}px`; line.style.top=`${y1}px`; line.style.transform=`rotate(${angle}deg)`;
-  return line;
-}
-
-function openCategorySpace(name){
-  document.body.classList.remove("space-home-active");
-  const cat=findCategory(name);
-  if(!cat) return;
-  mode="category:"+name;
-  selectedSubCategory="";
-  document.getElementById("spaceHome").classList.add("hidden");
-  document.getElementById("categorySpace").classList.add("show");
-  document.getElementById("normalView").style.display="none";
-  document.getElementById("randomView").classList.remove("show");
-  document.getElementById("subNav").style.display="none";
-  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
-  renderCategorySpace(name);
-}
-
-function renderCategorySpace(name){
-  const stage=document.getElementById("focusStage");
-  const box=document.getElementById("categoryBookmarks");
-  stage.innerHTML=""; box.innerHTML="";
-  const cat=findCategory(name) || {name,subs:[]};
-  const mainCount=categoryBookmarkCount(name);
-  const main=document.createElement("div");
-  main.className="focus-main";
-  main.innerHTML=`<div><div class="focus-name">${escapeHTML(name)}</div><span class="focus-count">${mainCount}개 북마크 · ${cat.subs.length}개 소분류</span></div>`;
-  stage.appendChild(main);
-
-  const subs=(cat.subs||[]).slice();
-  if(!subs.length){
-    const msg=document.createElement("div"); msg.className="focus-empty"; msg.textContent="소분류 없음 · 카테고리 관리에서 만들 수 있음"; stage.appendChild(msg); return;
-  }
-  const cx=stage.clientWidth/2, cy=stage.clientHeight*.46;
-  const radiusX=Math.min(300, stage.clientWidth*.37), radiusY=Math.min(210, stage.clientHeight*.32);
+function createHoverCloud(stage,name,centerX,centerY){
+  const cloud=document.createElement("div");
+  cloud.className="hover-cloud show";
+  cloud.dataset.name=name;
+  cloud.style.left=`${centerX}px`;
+  cloud.style.top=`${centerY}px`;
+  const subs=categoryHoverSubs(name);
+  const radius=Math.min(125, Math.max(96, 32+subs.length*7));
   subs.forEach((sub,i)=>{
-    const angle=(-Math.PI/2)+(Math.PI*2*i/subs.length);
-    const x=cx+Math.cos(angle)*radiusX;
-    const y=cy+Math.sin(angle)*radiusY;
-    stage.appendChild(makeConnector(cx,cy,x,y));
-    const orb=document.createElement("button");
+    const orb=document.createElement("div");
     orb.className="sub-orb";
-    orb.style.left=`${x}px`;orb.style.top=`${y}px`;
+    orb.dataset.sub=sub;
+    const angle=(-Math.PI/2)+(Math.PI*2*i/Math.max(subs.length,1));
+    const x=Math.cos(angle)*radius;
+    const y=Math.sin(angle)*radius;
+    orb.style.left=`${x}px`;
+    orb.style.top=`${y}px`;
     const count=categoryBookmarkCount(name,sub);
     orb.innerHTML=`<span><span class="sub-name">${escapeHTML(sub)}</span><span class="sub-count">${count}개</span></span>`;
-    orb.addEventListener("click",()=>openSubBookmarkView(name,sub));
-    stage.appendChild(orb);
+    orb.addEventListener("mouseenter",()=>{
+      spaceState.activeSub=sub;
+      renderBookmarkPeek(stage,name,sub,centerX,centerY+radius+84);
+    });
+    orb.addEventListener("mouseleave",()=>{
+      spaceState.activeSub="";
+      if(spaceState.activeName===name) renderBookmarkPeek(stage,name,"",centerX,centerY+radius+84,false);
+    });
+    cloud.appendChild(orb);
   });
+  stage.appendChild(cloud);
+  return cloud;
 }
 
-function openSubBookmarkView(name,sub){
-  document.body.classList.remove("space-home-active");
-  mode="category:"+name;
-  selectedSubCategory=sub;
-  document.getElementById("spaceHome").classList.add("hidden");
-  document.getElementById("categorySpace").classList.remove("show");
-  document.getElementById("normalView").style.display="block";
-  document.getElementById("randomView").classList.remove("show");
-  const heading=document.getElementById("heading");
-  heading.textContent=`${name} / ${sub}`;
-  render();
-  window.scrollTo({top:0,behavior:"smooth"});
+function renderBookmarkPeek(stage,name,sub,x,y,show=true){
+  let peek=stage.querySelector(".bookmark-peek[data-name="+CSS.escape(name)+"]");
+  if(!peek){
+    peek=document.createElement("div");
+    peek.className="bookmark-peek";
+    peek.dataset.name=name;
+    stage.appendChild(peek);
+  }
+  const items=categoryItems(name,sub);
+  const label=sub ? `${name} / ${sub}` : `${name} · 전체`;
+  peek.innerHTML=`<div class="peek-title">${escapeHTML(label)} · ${items.length}개</div><div class="peek-list"></div>`;
+  const list=peek.querySelector(".peek-list");
+  if(!items.length){
+    list.innerHTML=`<div class="peek-empty">이 영역엔 북마크가 없음</div>`;
+  }else{
+    items.slice(0,8).forEach(item=>{
+      const a=document.createElement(item.url ? "a":"div");
+      a.className="peek-item";
+      if(item.url){ a.href=item.url; a.target="_blank"; a.rel="noopener"; }
+      a.innerHTML=`<div class="peek-item-title">${escapeHTML(item.title||"제목 없음")}</div><div class="peek-item-domain">${escapeHTML(getDomain(item.url)||item.url||"")}</div>`;
+      list.appendChild(a);
+    });
+  }
+  const stageW=stage.clientWidth||760, stageH=stage.clientHeight||700;
+  const halfW=Math.min(140,stageW/2-10);
+  const safeX=Math.max(halfW+10,Math.min(stageW-halfW-10,x));
+  const safeY=Math.max(120,Math.min(stageH-105,y));
+  peek.style.left=`${safeX}px`;peek.style.top=`${safeY}px`;peek.classList.toggle("show",!!show);
 }
 
+function clearHoverCloud(stage){
+  stage.querySelectorAll(".hover-cloud,.bookmark-peek").forEach(x=>x.remove());
+  stage.querySelectorAll(".planet").forEach(x=>x.classList.remove("active"));
+  spaceState.activeName="";
+  spaceState.activeSub="";
+}
+
+function bindSpacePointer(stage){
+  stage.onpointermove=(e)=>{
+    const rect=stage.getBoundingClientRect();
+    spaceState.pointerX=e.clientX-rect.left;
+    spaceState.pointerY=e.clientY-rect.top;
+    const planets=[...stage.querySelectorAll(".planet")];
+    let nearest=null, nearestDist=Infinity;
+    planets.forEach(planet=>{
+      const x=Number(planet.dataset.x), y=Number(planet.dataset.y);
+      const dx=spaceState.pointerX-x,dy=spaceState.pointerY-y;
+      const d=Math.hypot(dx,dy);
+      if(d<nearestDist){nearestDist=d;nearest=planet;}
+      const maxDist=150;
+      let mx=0,my=0;
+      if(d<maxDist){
+        const strength=(1-d/maxDist)*(1-d/maxDist);
+        if(d>0){ mx=-(dx/d)*20*strength; my=-(dy/d)*20*strength; }
+      }
+      planet.style.setProperty("--mx",`${mx}px`);
+      planet.style.setProperty("--my",`${my}px`);
+    });
+
+    const normalThreshold=window.innerWidth<720?116:128;
+    const stickyThreshold=window.innerWidth<720?195:215;
+    const activePlanet=spaceState.activeName ? planets.find(p=>p.dataset.name===spaceState.activeName) : null;
+    const activeDistance=activePlanet ? Math.hypot(spaceState.pointerX-Number(activePlanet.dataset.x),spaceState.pointerY-Number(activePlanet.dataset.y)) : Infinity;
+    const keepActive=activePlanet && activeDistance<=stickyThreshold;
+
+    if((nearest && nearestDist<=normalThreshold) || keepActive){
+      const target=keepActive ? activePlanet : nearest;
+      const name=target.dataset.name;
+      target.classList.add("active");
+      planets.filter(p=>p!==target).forEach(p=>p.classList.remove("active"));
+
+      const mx=Number((target.style.getPropertyValue("--mx")||"0").replace("px",""))||0;
+      const my=Number((target.style.getPropertyValue("--my")||"0").replace("px",""))||0;
+      const x=Number(target.dataset.x)+mx;
+      const y=Number(target.dataset.y)+my;
+
+      if(spaceState.activeName!==name){
+        clearHoverCloud(stage);
+        spaceState.activeName=name;
+        spaceState.activeSub="";
+        createHoverCloud(stage,name,x,y);
+        renderBookmarkPeek(stage,name,"",x,y+185,false);
+      }else{
+        const cloud=stage.querySelector(`.hover-cloud[data-name=\"${CSS.escape(name)}\"]`);
+        if(cloud){ cloud.style.left=`${x}px`; cloud.style.top=`${y}px`; }
+        const peek=stage.querySelector(`.bookmark-peek[data-name=\"${CSS.escape(name)}\"]`);
+        if(peek){
+          const sub=spaceState.activeSub||"";
+          renderBookmarkPeek(stage,name,sub,x,y+185,peek.classList.contains("show"));
+        }
+      }
+    }else{
+      clearHoverCloud(stage);
+    }
+  };
+  stage.onpointerleave=()=>{
+    [...stage.querySelectorAll(".planet")].forEach(planet=>{
+      planet.style.setProperty("--mx","0px");
+      planet.style.setProperty("--my","0px");
+    });
+    clearHoverCloud(stage);
+  };
+}
+
+function showCategorySpaceFromUI(name){
+  // 기존 클릭형 카테고리 화면 대신 동일한 공간에서 호버 방식으로 탐색한다.
+  showSpaceHome();
+}
+
+// 기존 카테고리 버튼을 눌렀을 때도 화면을 바꾸지 않고 공간형 화면으로 돌아간다.
 const originalSetCategory=setCategory;
-setCategory=function(category){ openCategorySpace(category); };
+setCategory=function(category){ showCategorySpaceFromUI(category); };
 
 const originalSetMode=setMode;
 setMode=function(newMode){
   if(newMode === "all") { showSpaceHome(); return; }
-  if(newMode === "random") { originalSetMode(newMode); document.getElementById("spaceHome").classList.add("hidden"); document.getElementById("categorySpace").classList.remove("show"); return; }
+  if(newMode === "random") {
+    originalSetMode(newMode);
+    document.getElementById("spaceHome").classList.add("hidden");
+    document.getElementById("categorySpace").classList.remove("show");
+    return;
+  }
   originalSetMode(newMode);
 };
 
@@ -1429,7 +1606,6 @@ render=function(){
 };
 
 window.addEventListener("resize",()=>{ if(mode === "home") renderPlanetHome(); });
-
 
 document.addEventListener("DOMContentLoaded", () => {
   // 저장된 카테고리와 북마크를 먼저 복구한 뒤 화면을 그린다.
