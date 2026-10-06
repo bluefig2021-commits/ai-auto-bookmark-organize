@@ -132,7 +132,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .space-stage{
   position:relative;
   min-height:700px;
-  overflow:hidden;
+  overflow:visible;
   border:1px solid #ececec;
   border-radius:28px;
   background:#fff;
@@ -170,10 +170,13 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   cursor:default;
   z-index:2;
   will-change:transform;
+  overflow:visible;
 }
 .planet-body{
-  position:relative;
-  width:100%; height:100%;
+  position:absolute;
+  left:50%; top:50%;
+  width:82px; height:82px;
+  transform:translate(-50%,-50%);
   border:1px solid #d7d7d7;
   border-radius:50%;
   background:#fff;
@@ -184,13 +187,14 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   overflow:visible;
   animation:planetFloat var(--dur,6.2s) ease-in-out infinite;
   animation-delay:var(--delay,0s);
-  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  transition:width .28s ease,height .28s ease,box-shadow .22s ease,border-color .22s ease;
 }
-.planet.active{z-index:40}
+.planet.active{z-index:60}
 .planet.active .planet-body{
-  transform:scale(1.55);
-  border-color:#8e8e8e;
-  box-shadow:0 14px 28px rgba(0,0,0,.09);
+  width:var(--expanded-size,180px);
+  height:var(--expanded-size,180px);
+  border-color:#888;
+  box-shadow:0 18px 34px rgba(0,0,0,.11);
 }
 .planet-label{
   position:relative;
@@ -213,7 +217,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 }
 .inner-bookmarks{
   position:absolute;
-  inset:7px;
+  inset:20px;
   z-index:3;
   opacity:0;
   pointer-events:none;
@@ -225,8 +229,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 }
 .inner-bookmark{
   position:absolute;
-  width:29px;height:29px;
-  transform:translate(-50%,-50%) scale(.55);
+  width:36px;height:36px;
+  transform:translate(-50%,-50%);
   border:1px solid #cfcfcf;
   border-radius:50%;
   background:#fff;
@@ -236,19 +240,15 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:3px;
+  padding:4px;
   box-shadow:0 4px 10px rgba(0,0,0,.05);
-  opacity:0;
-  transition:transform .2s ease,opacity .2s ease,border-color .16s ease,box-shadow .16s ease;
-}
-.planet.active .inner-bookmark{
-  transform:translate(-50%,-50%) scale(1);
   opacity:1;
+  transition:transform .15s ease,border-color .16s ease,box-shadow .16s ease;
 }
 .inner-bookmark:hover{
-  transform:translate(-50%,-50%) scale(1.18) !important;
-  border-color:#9e9e9e;
-  box-shadow:0 7px 15px rgba(0,0,0,.08);
+  transform:translate(-50%,-50%) scale(1.14);
+  border-color:#8d8d8d;
+  box-shadow:0 8px 16px rgba(0,0,0,.09);
 }
 .inner-bookmark-title{
   display:-webkit-box;
@@ -266,8 +266,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   font-weight:700;
 }
 @keyframes planetFloat{
-  0%,100%{transform:translate3d(0,0,0)}
-  50%{transform:translate3d(0,-7px,0)}
+  0%,100%{transform:translate(-50%,-50%) translate3d(0,0,0)}
+  50%{transform:translate(-50%,-50%) translate3d(0,-7px,0)}
 }
 .hover-cloud{
   position:absolute;
@@ -316,7 +316,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 @media(max-width:720px){
  .space-shell{width:calc(100% - 20px);padding-top:10px}
  .space-stage{min-height:620px;border-radius:24px}
- .planet{width:72px;height:72px}.planet .planet-name{font-size:9px}.planet .planet-count{font-size:7px}
+ .planet{width:72px;height:72px}.planet .planet-body{width:72px;height:72px}.planet .planet-name{font-size:9px}.planet .planet-count{font-size:7px}.planet.active .planet-body{width:var(--expanded-size,180px);height:var(--expanded-size,180px)}
  .sub-orb{width:62px;height:62px}.sub-orb .sub-name{font-size:8px}
  .bookmark-peek{width:min(250px,calc(100% - 18px))}
 }
@@ -1480,6 +1480,18 @@ function getInnerBookmarkItems(name,sub="") {
   return items.filter(item => name === "미분류" || !String(item.subCategory || "").trim());
 }
 
+function getExpandedSizeForItems(count, isMobile=false){
+  // 북마크를 억지로 우겨넣지 않고, 개수만큼 큰 원을 만든다.
+  // 36px 원 + 10px 간격 기준의 격자 크기를 원 안에 담는다.
+  if(count <= 0) return isMobile ? 150 : 180;
+  const cell = isMobile ? 44 : 48;
+  const cols = Math.ceil(Math.sqrt(count));
+  const rows = Math.ceil(count / cols);
+  const maxSide = Math.max(cols, rows);
+  const diameter = maxSide * cell + (isMobile ? 48 : 64);
+  return Math.max(isMobile ? 170 : 210, diameter);
+}
+
 function renderInnerBookmarks(stage,name,sub="") {
   const planet = [...stage.querySelectorAll(".planet")].find(p => p.dataset.name === name);
   if(!planet) return;
@@ -1491,23 +1503,39 @@ function renderInnerBookmarks(stage,name,sub="") {
   }
   layer.innerHTML = "";
 
-  const items = getInnerBookmarkItems(name,sub);
-  const max = 8;
-  const visible = items.slice(0,max);
-  const extra = Math.max(0, items.length - max);
-  const total = visible.length + (extra ? 1 : 0);
+  const items = getInnerBookmarkItems(name, sub);
+  const isMobile = window.innerWidth < 720;
+  const expandedSize = getExpandedSizeForItems(items.length, isMobile);
+  planet.style.setProperty("--expanded-size", `${expandedSize}px`);
 
-  if(!total) return;
+  if(!items.length) return;
 
-  const radius = total <= 3 ? 24 : total <= 6 ? 27 : 29;
-  visible.forEach((item,index)=>{
-    const angle = (-Math.PI/2) + (Math.PI*2*index/total);
-    const x = 50 + Math.cos(angle)*radius/0.68;
-    const y = 50 + Math.sin(angle)*radius/0.68;
+  const cols = Math.ceil(Math.sqrt(items.length));
+  const rows = Math.ceil(items.length / cols);
+  const gap = isMobile ? 44 : 48;
+  const gridWidth = (cols - 1) * gap;
+  const gridHeight = (rows - 1) * gap;
+  const available = Math.max(120, expandedSize - (isMobile ? 54 : 70));
+  const scale = Math.min(1, available / Math.max(gridWidth, gridHeight, 1));
+  const step = gap * scale;
+  const startX = 50 - ((cols - 1) * step) / (2 * Math.max(1, layer.clientWidth || expandedSize));
+  const startY = 50 - ((rows - 1) * step) / (2 * Math.max(1, layer.clientHeight || expandedSize));
+
+  // layer 크기는 CSS의 inset을 제외한 실제 내부 영역에 맞춰 퍼센트로 배치한다.
+  const innerWidth = Math.max(80, expandedSize - 40);
+  const innerHeight = Math.max(80, expandedSize - 40);
+  const leftPad = (innerWidth - (cols - 1) * step) / 2;
+  const topPad = (innerHeight - (rows - 1) * step) / 2;
+
+  items.forEach((item,index)=>{
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+    const x = leftPad + col * step;
+    const y = topPad + row * step;
     const el = document.createElement(item.url ? "a" : "div");
     el.className = "inner-bookmark";
-    el.style.left = `${x}%`;
-    el.style.top = `${y}%`;
+    el.style.left = `${(x / innerWidth) * 100}%`;
+    el.style.top = `${(y / innerHeight) * 100}%`;
     el.title = item.title || "제목 없음";
     if(item.url){
       el.href = item.url;
@@ -1517,20 +1545,6 @@ function renderInnerBookmarks(stage,name,sub="") {
     el.innerHTML = `<span class="inner-bookmark-title">${escapeHTML(item.title || "제목 없음")}</span>`;
     layer.appendChild(el);
   });
-
-  if(extra){
-    const index = visible.length;
-    const angle = (-Math.PI/2) + (Math.PI*2*index/total);
-    const x = 50 + Math.cos(angle)*radius/0.68;
-    const y = 50 + Math.sin(angle)*radius/0.68;
-    const more = document.createElement("div");
-    more.className = "inner-bookmark more";
-    more.style.left = `${x}%`;
-    more.style.top = `${y}%`;
-    more.textContent = `+${extra}`;
-    more.title = `이 카테고리에 ${extra}개의 북마크가 더 있음`;
-    layer.appendChild(more);
-  }
 }
 
 function createHoverCloud(stage,name,centerX,centerY){
