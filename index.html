@@ -34,6 +34,11 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .nav button:hover{color:#222}
 .nav button.active{color:#111;border-bottom-color:#111;font-weight:700}
 .nav .tool{color:#555}
+.subnav{display:flex;align-items:center;gap:1px;overflow-x:auto;scrollbar-width:none;padding:2px 0 10px 0;border-top:1px solid #f0f0f0}
+.subnav::-webkit-scrollbar{display:none}
+.subnav button{flex:0 0 auto;border:0;background:transparent;color:#aaa;padding:6px 8px;font-size:10px;white-space:nowrap;border-radius:9px}
+.subnav button:hover{color:#222;background:#f7f7f7}
+.subnav button.active{color:#111;background:#f1f1f1;font-weight:700}
 .main{padding:22px 0 60px}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
 .heading{font-size:18px;font-weight:800;letter-spacing:-.7px}
@@ -41,16 +46,21 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .search{width:220px;border:1px solid #dedede;background:#fff;padding:8px 11px;border-radius:12px;outline:none;font-size:11px}
 .search:focus{border-color:#aaa}
 .list{display:flex;flex-direction:column;border-top:1px solid #cfcfcf}
-.item{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.item{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--line);min-width:0}
 .item:hover{background:#fbfbfb}
-.favicon{width:21px;height:21px;object-fit:contain}
+.item.child{background:linear-gradient(90deg,transparent 0,transparent 1px,#fafafa 1px,#fafafa 100%)}
+.favicon{width:20px;height:20px;object-fit:contain}
 .item-main{min-width:0}
-.item-title{display:block;color:#171717;text-decoration:none;font-size:13px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-title{display:block;color:#171717;text-decoration:none;font-size:12px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-title.plain{cursor:default}
 .item-title:hover{text-decoration:underline}
+.item-title.plain:hover{text-decoration:none}
 .item-url{color:#9a9a9a;font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tag{color:#777;font-size:10px;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis}
-.edit-btn{border:1px solid #dcdcdc;background:#fff;color:#777;font-size:10px;padding:5px 8px;border-radius:10px}
-.edit-btn:hover{color:#111;background:#f6f6f6}
+.tag{color:#777;font-size:10px;white-space:nowrap;max-width:170px;overflow:hidden;text-overflow:ellipsis}
+.item-actions{display:flex;gap:4px;align-items:center}
+.edit-btn,.child-btn{border:1px solid #dcdcdc;background:#fff;color:#777;font-size:9px;padding:5px 7px;border-radius:10px;white-space:nowrap}
+.edit-btn:hover,.child-btn:hover{color:#111;background:#f6f6f6}
+.group-marker{font-size:9px;color:#777;margin-left:5px}
 .empty{border-top:0;padding:56px 20px;text-align:center;color:#999;font-size:11px}
 .empty strong{display:block;color:#333;margin-bottom:7px}
 .empty-action{margin-top:12px}
@@ -89,11 +99,27 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .error{display:none;margin-top:13px;padding:9px;background:#fff7f7;border:1px solid #edd0d0;color:#a33;font-size:10px;line-height:1.5;white-space:pre-wrap}.error.show{display:block}
 .ai-note{font-size:11px;line-height:1.65;color:#555}.ai-note strong{color:#222}
 .manual-note{margin-top:9px;padding:9px 10px;background:#fafafa;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
+.category-list{display:flex;flex-direction:column;gap:9px;max-height:55vh;overflow:auto}
+.category-row{border:1px solid #e5e5e5;border-radius:12px;padding:9px;background:#fff}
+.category-main-row{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+.category-row input{width:100%;border:1px solid #ddd;background:#fff;padding:7px 9px;border-radius:10px;font-size:11px;outline:none}
+.category-row input:focus{border-color:#999}
+.category-remove{border:1px solid #ddd;background:#fff;color:#999;padding:6px 8px;border-radius:10px;font-size:9px}
+.category-remove:hover{color:#a44}
+.category-sub-list{display:flex;flex-direction:column;gap:5px;margin:7px 0 0 10px;padding-left:9px;border-left:2px solid #f1f1f1}
+.category-sub-row{display:grid;grid-template-columns:1fr auto;gap:5px;align-items:center}
+.category-sub-row input{font-size:10px;padding:6px 8px}
+.add-sub-row{display:flex;gap:5px;margin:7px 0 0 10px}
+.add-sub-row input{flex:1;font-size:10px;padding:6px 8px}
+.add-category-row{display:flex;gap:6px;margin-top:10px}
+.add-category-row input{flex:1;border:1px solid #ddd;padding:7px 9px;border-radius:10px;font-size:11px}
+.hierarchy-note{margin-top:7px;padding:8px 9px;background:#fafafa;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
 @media (max-width:720px){
   .top-inner,.main{width:calc(100% - 28px)}
   .brand-row{align-items:flex-start}.brand small{display:none}.actions{flex-wrap:wrap;justify-content:flex-end}
   .main{padding-top:18px}.toolbar{align-items:stretch;flex-direction:column}.search{width:100%}
-  .item{grid-template-columns:24px minmax(0,1fr) auto}.item .tag{display:none}
+  .item{grid-template-columns:22px minmax(0,1fr) auto}.item .tag{display:none}
+  .item-actions{gap:3px}.child-btn{display:none}
   .random-info{padding:18px}.preview-frame{height:300px}
 }
 </style>
@@ -105,6 +131,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
       <div class="brand">DIGITAL ARCHIVE <small>personal collection</small></div>
       <div class="actions">
         <button class="action" onclick="openHTMLImport()">북마크 HTML</button>
+        <button class="action" onclick="openCategoryManager()">카테고리</button>
+        <button class="action" onclick="openAddBookmark()">북마크 추가</button>
         <button class="action dark" onclick="openAI()">AI 자동 분류</button>
       </div>
     </div>
@@ -113,6 +141,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
       <button class="tool" data-mode="random" onclick="setMode('random')">랜덤 둘러보기</button>
       <span id="categoryButtons"></span>
     </nav>
+    <div id="subNav" class="subnav" style="display:none"></div>
   </div>
 </header>
 
@@ -149,20 +178,22 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 
 <input id="htmlFile" type="file" accept=".html,text/html" style="display:none" onchange="importBookmarkHTML(event)">
 
-<!-- EDIT -->
+<!-- EDIT / ADD -->
 <div id="editOverlay" class="overlay">
   <div class="modal">
-    <div class="modal-head"><div class="modal-title">북마크 수정</div><button class="close" onclick="closeModal('editOverlay')">×</button></div>
+    <div class="modal-head"><div id="editModalTitle" class="modal-title">북마크 수정</div><button class="close" onclick="closeModal('editOverlay')">×</button></div>
     <div class="modal-body">
       <div class="field"><label class="label">제목</label><input id="editBookmarkTitle"></div>
-      <div class="field"><label class="label">URL</label><input id="editBookmarkURL"></div>
-      <div class="field"><label class="label">대분류</label><input id="editMainCategory" placeholder="예: 디자인"></div>
-      <div class="field"><label class="label">소분류</label><input id="editSubCategory" placeholder="예: 레퍼런스"></div>
-      <div class="manual-note">AI가 분류하지 못했거나 분류가 마음에 안 들면 여기서 직접 바꾸면 됨. 저장 즉시 카테고리에 반영됨.</div>
+      <div class="field"><label class="label">URL</label><input id="editBookmarkURL" placeholder="https://..."></div>
+      <div class="field"><label class="label">대분류</label><select id="editMainCategory" onchange="fillSubCategorySelect(this.value,'')"></select></div>
+      <div class="field"><label class="label">소분류</label><select id="editSubCategory"><option value="">소분류 없음</option></select><div class="help">소분류를 새로 만들려면 위쪽 「카테고리」에서 추가해.</div></div>
     </div>
     <div class="modal-foot">
-      <button class="action danger" onclick="deleteBookmark()">삭제</button>
-      <div class="modal-right"><button class="action" onclick="closeModal('editOverlay')">취소</button><button class="action dark" onclick="saveBookmarkEdit()">저장</button></div>
+      <div><button id="deleteBookmarkBtn" class="action danger" onclick="deleteBookmark()">삭제</button></div>
+      <div class="modal-right">
+        <button class="action" onclick="closeModal('editOverlay')">취소</button>
+        <button class="action dark" onclick="saveBookmarkEdit()">저장</button>
+      </div>
     </div>
   </div>
 </div>
@@ -173,6 +204,25 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
     <div class="modal-head"><div class="modal-title">크롬 북마크 가져오기</div><button class="close" onclick="closeModal('htmlOverlay')">×</button></div>
     <div class="modal-body"><div style="font-size:11px;line-height:1.7;color:#555">크롬에서 내보낸 <strong>bookmarks.html</strong> 파일을 넣으면 기존 데이터 뒤에 추가됨.</div></div>
     <div class="modal-foot"><button class="action" onclick="closeModal('htmlOverlay')">취소</button><button class="action dark" onclick="chooseHTMLFile()">HTML 파일 선택</button></div>
+  </div>
+</div>
+
+<!-- CATEGORY MANAGER -->
+<div id="categoryOverlay" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">카테고리 관리</div><button class="close" onclick="closeModal('categoryOverlay')">×</button></div>
+    <div class="modal-body">
+      <div class="manual-note">카테고리는 <strong>대분류 → 소분류</strong> 구조야. 네가 직접 대분류를 추가하고, 각 대분류 안에 소분류를 여러 개 만들 수 있어. 이름 변경·삭제도 여기서 함. AI는 여기 등록된 카테고리만 선택함.</div>
+      <div id="categoryEditorList" class="category-list"></div>
+      <div class="add-category-row">
+        <input id="newCategoryName" placeholder="새 대분류 이름">
+        <button class="action" onclick="addCategoryRow()">+ 대분류</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div></div>
+      <div class="modal-right"><button class="action" onclick="closeModal('categoryOverlay')">취소</button><button class="action dark" onclick="saveCategoriesFromManager()">저장</button></div>
+    </div>
   </div>
 </div>
 
@@ -187,7 +237,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
         <div class="help">이 브라우저의 localStorage에 저장됨.</div>
       </div>
       <div class="ai-note">현재 북마크를 AI가 보고 <strong>대분류 + 소분류</strong>를 자동 지정함. 제목과 URL은 그대로 유지함.</div>
-      <div class="manual-note">분류에 실패한 묶음이 있어도 전체가 막히지 않음. 성공한 북마크는 저장되고, 실패한 북마크는 <strong>미분류</strong>로 남아서 네가 직접 수정할 수 있음.</div>
+      <div class="manual-note">대분류는 <strong>현재 카테고리 목록 안에서만</strong> 선택함. 네가 카테고리를 추가/수정하면 AI 기준도 같이 바뀜. 성인물은 AI에 보내지 않고 NONE 처리함.</div>
       <div id="progress" class="progress"><div id="progressText" class="progress-text">준비 중...</div><div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div></div>
       <div id="error" class="error"></div>
     </div>
@@ -198,171 +248,547 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 <script>
 const DATA_KEY = "digitalArchiveData";
 const API_KEY = "digitalArchiveGeminiKey";
-let archive=[];
-let mode="all";
-let currentEditIndex=-1;
-let randomIndex=-1;
+const CATEGORY_KEY = "digitalArchiveCategories";
+const CATEGORY_TREE_KEY = "digitalArchiveCategoryTree";
 
-document.addEventListener("DOMContentLoaded",()=>{
+const DEFAULT_CATEGORIES = [
+  "블로그","앱테크","읽을것","경제","일","퓨처리즘","AI","사진 AI","게임","디자인",
+  "다이어트","여성","영화","패션","자취","관심","방구석여행","뷰티","연예","중국",
+  "도움","남자","정치","음악","ASMR","볼만한 유튜브","심심","책","영화드라마","성교육",
+  "건강","여성건강","불면증","먹방","레시피","쇼핑","사고싶은것","살만한거","운세","사주"
+];
+
+const CATEGORY_GUIDE = {
+  "블로그":"블로그 운영, 글쓰기, 블로그 플랫폼/최적화",
+  "앱테크":"설문, 리워드, 포인트, 수익형 앱/부업형 앱",
+  "읽을것":"나중에 읽을 기사·글·자료, 읽기 대기",
+  "경제":"경제, 금융, 투자, 주식, 금리, 물가",
+  "일":"업무·직장·일거리·작업. work 의미",
+  "퓨처리즘":"미래사회, 미래기술, 포스트휴먼, SF적 미래상",
+  "AI":"AI 일반, 생성형 AI, AI 서비스/기술",
+  "사진 AI":"AI 이미지 생성·편집·사진 관련 AI",
+  "게임":"게임, 게임 정보·공략·커뮤니티",
+  "디자인":"그래픽, UI/UX, 시각디자인, 레퍼런스",
+  "다이어트":"체중 감량, 식단 관리, 운동 감량",
+  "여성":"여성 일반 관심사·여성 관련 정보",
+  "영화":"영화 단독",
+  "패션":"옷, 코디, 스타일, 패션 브랜드",
+  "자취":"자취 생활, 집안일, 1인 생활",
+  "관심":"특정 다른 카테고리에 넣기 애매하지만 개인적으로 관심 있는 것",
+  "방구석여행":"여행지 탐색, 랜선 여행, 지도/가상 여행",
+  "뷰티":"화장, 스킨케어, 헤어, 미용",
+  "연예":"연예인, 연예 뉴스, 유명인 이야기",
+  "중국":"중국·중국 사회/문화/인터넷/제품 등 중국이 핵심 주제. 중국 사이트라는 이유만으로 넣지 않음",
+  "도움":"문제 해결법, 사용법, 생활 팁, 어떻게 하는지 알려주는 자료",
+  "남자":"남성 일반 관심사·남자 관련 정보",
+  "정치":"정치, 정책, 선거, 정당, 정치 뉴스",
+  "음악":"음악, 노래, 아티스트, 작곡/사운드",
+  "ASMR":"ASMR, 백색소음, 수면용 소리",
+  "볼만한 유튜브":"유튜브 영상 중 따로 볼 가치가 있어 저장한 것",
+  "심심":"가볍게 볼거리, 킬링타임, 인터넷 잡것",
+  "책":"책 자체, 도서, 서평, 독서",
+  "영화드라마":"영화와 드라마를 함께 다루거나 드라마 중심 콘텐츠",
+  "성교육":"성 건강·성 지식·피임·관계 교육. 포르노/야동은 NONE",
+  "건강":"일반 건강·질환·건강 정보",
+  "여성건강":"여성의 몸, 산부인과, 생리, 여성 질환 등",
+  "불면증":"수면, 불면, 잠드는 법",
+  "먹방":"먹방, 음식 먹는 영상",
+  "레시피":"요리법, 조리법, 레시피",
+  "쇼핑":"쇼핑 정보, 구매처, 상품 비교/구매 관련 일반 정보",
+  "사고싶은것":"지금 당장 사고 싶은 물건을 저장한 것",
+  "살만한거":"구매할 가치가 있어 보이는 상품 추천/발견",
+  "운세":"오늘의 운세, 별자리, 점성술 등 운세 콘텐츠",
+  "사주":"사주, 명리학, 사주풀이"
+};
+
+let categoryTree = DEFAULT_CATEGORIES.map(name => ({name, subs: []}));
+let archive = [];
+let mode = "all";
+let selectedSubCategory = "";
+let currentEditIndex = -1;
+let randomIndex = -1;
+
+function categoryNames(){ return categoryTree.map(x => x.name); }
+function findCategory(name){ return categoryTree.find(x => x.name === name); }
+function saveCategories(){ localStorage.setItem(CATEGORY_KEY, JSON.stringify(categoryNames())); localStorage.setItem(CATEGORY_TREE_KEY, JSON.stringify(categoryTree)); }
+function uniqueClean(list){ return [...new Set(list.map(x => String(x || "").trim()).filter(Boolean))]; }
+function uniqueTree(tree){
+  const out=[];
+  const seenMain=new Set();
+  (Array.isArray(tree)?tree:[]).forEach(entry=>{
+    const name=String(entry?.name || "").trim();
+    if(!name || seenMain.has(name)) return;
+    seenMain.add(name);
+    const subs=uniqueClean(Array.isArray(entry?.subs)?entry.subs:[]).slice(0,50);
+    out.push({name,subs});
+  });
+  return out;
+}
+
+function loadCategories(){
+  try{
+    const treeSaved=JSON.parse(localStorage.getItem(CATEGORY_TREE_KEY) || "null");
+    const legacy=JSON.parse(localStorage.getItem(CATEGORY_KEY) || "null");
+    if(Array.isArray(treeSaved) && treeSaved.length){
+      categoryTree=uniqueTree(treeSaved);
+    }else if(Array.isArray(legacy) && legacy.length){
+      categoryTree=uniqueClean(legacy).map(name=>({name,subs:[]}));
+      saveCategories();
+    }else{
+      categoryTree=DEFAULT_CATEGORIES.map(name=>({name,subs:[]}));
+      saveCategories();
+    }
+  }catch{
+    categoryTree=DEFAULT_CATEGORIES.map(name=>({name,subs:[]}));
+    saveCategories();
+  }
+}
+
+function makeId(){
+  try{ if(crypto.randomUUID) return crypto.randomUUID(); }catch{}
+  return "b_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
+}
+
+function normalizeItem(item){
+  let main=String(item?.mainCategory || "").trim();
+  if(main !== "NONE" && main && !categoryNames().includes(main)) main="미분류";
+  let sub=String(item?.subCategory || "").trim();
+  if(main !== "NONE" && main !== "미분류" && sub){
+    const cat=findCategory(main);
+    if(cat && !cat.subs.includes(sub)) cat.subs.push(sub);
+  }
+  return {
+    id:item?.id || makeId(),
+    title:String(item?.title || ""),
+    url:String(item?.url || ""),
+    mainCategory:main,
+    subCategory:main === "NONE" || main === "미분류" ? "" : cleanSubCategory(sub)
+  };
+}
+
+function loadArchive(){
   const saved=localStorage.getItem(DATA_KEY);
-  if(saved){try{archive=JSON.parse(saved);if(!Array.isArray(archive)) archive=[];}catch{archive=[];}}
-  const key=localStorage.getItem(API_KEY);
-  if(key) document.getElementById("apiKey").value=key;
-  render();
-});
-function saveData(){localStorage.setItem(DATA_KEY,JSON.stringify(archive));}
+  if(!saved){ archive=[]; return; }
+  try{
+    const raw=JSON.parse(saved);
+    archive=Array.isArray(raw)?raw.map(normalizeItem):[];
+    saveCategories();
+    saveData();
+  }catch{ archive=[]; }
+}
+
+function saveData(){ localStorage.setItem(DATA_KEY, JSON.stringify(archive)); }
+
+function normalizeCategory(value){
+  const main=String(value || "").trim();
+  if(main === "NONE") return "NONE";
+  return categoryNames().includes(main) ? main : "미분류";
+}
+function cleanSubCategory(value){
+  const sub=String(value || "").trim();
+  return sub.length>18 ? sub.slice(0,18) : sub;
+}
+function normalizeSubCategory(main, value){
+  const sub=cleanSubCategory(value);
+  if(!sub || main === "NONE" || main === "미분류") return "";
+  const cat=findCategory(main);
+  return cat && cat.subs.includes(sub) ? sub : "";
+}
+
 function setMode(newMode){
-  mode=newMode;
-  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
-  const target=document.querySelector(`.nav button[data-mode="${newMode}"]`);if(target) target.classList.add("active");
-  if(newMode==="random"){
-    document.getElementById("normalView").style.display="none";
+  mode = newMode;
+  document.querySelectorAll(".nav button").forEach(btn => btn.classList.remove("active"));
+  if(newMode === "random"){
+    document.getElementById("normalView").style.display = "none";
     document.getElementById("randomView").classList.add("show");
     showRandom();
   }else{
+    document.getElementById("normalView").style.display = "block";
+    document.getElementById("randomView").classList.remove("show");
+    render();
+  }
+}
+
+function renderCategories(){
+  const box=document.getElementById("categoryButtons");
+  box.innerHTML=categoryTree.map(category=>{
+    const active=mode === "category:" + category.name ? "active" : "";
+    return `<button class="${active}" data-mode="${escapeAttr("category:"+category.name)}" onclick='setCategory(${JSON.stringify(category.name)})'>${escapeHTML(category.name)}</button>`;
+  }).join("");
+  const subNav=document.getElementById("subNav");
+  const activeMain=mode.startsWith("category:") ? mode.substring(9) : "";
+  const cat=findCategory(activeMain);
+  if(!cat || !cat.subs.length){ subNav.style.display="none"; subNav.innerHTML=""; return; }
+  subNav.style.display="flex";
+  const allActive=!selectedSubCategory;
+  subNav.innerHTML = `<button class="${allActive?"active":""}" onclick="setSubCategory('')">전체</button>` + cat.subs.map(sub=>`<button class="${selectedSubCategory===sub?"active":""}" onclick='setSubCategory(${JSON.stringify(sub)})'>${escapeHTML(sub)}</button>`).join("");
+}
+
+function setCategory(category){
+  mode="category:"+category;
+  selectedSubCategory="";
+  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
+  const target=document.querySelector(`.nav button[data-mode="${CSS.escape("category:"+category)}"]`);
+  if(target) target.classList.add("active");
+  document.getElementById("normalView").style.display="block";
+  document.getElementById("randomView").classList.remove("show");
+  render();
+}
+
+function setSubCategory(sub){
+  selectedSubCategory=sub;
+  render();
+}
+
+function setMode(newMode){
+  mode=newMode;
+  selectedSubCategory="";
+  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
+  if(newMode === "random"){
+    const target=document.querySelector('.nav button[data-mode="random"]');
+    if(target) target.classList.add("active");
+    document.getElementById("normalView").style.display="none";
+    document.getElementById("randomView").classList.add("show");
+    document.getElementById("subNav").style.display="none";
+    showRandom();
+  }else{
+    if(newMode === "all"){
+      const target=document.querySelector('.nav button[data-mode="all"]');
+      if(target) target.classList.add("active");
+    }
     document.getElementById("normalView").style.display="block";
     document.getElementById("randomView").classList.remove("show");
     render();
   }
 }
-function renderCategories(){
-  const box=document.getElementById("categoryButtons");
-  const categories=[...new Set(archive.map(x=>x.mainCategory).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ko"));
-  if(archive.some(x=>!x.mainCategory)) categories.push("미분류");
-  box.innerHTML=categories.map(category=>{
-    const active=mode==="category:"+category?"active":"";
-    return `<button class="${active}" onclick='setCategory(${JSON.stringify(category)})'>${escapeHTML(category)}</button>`;
-  }).join("");
-}
-function setCategory(category){
-  mode="category:"+category;
-  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
-  document.getElementById("normalView").style.display="block";
-  document.getElementById("randomView").classList.remove("show");
-  render();
-}
-function getFiltered(){
+
+function getFilteredIndexes(){
   const search=document.getElementById("search").value.trim().toLowerCase();
-  let filtered=archive.map((item,index)=>({...item,_index:index}));
+  let indexes=archive.map((_,index)=>index);
   if(mode.startsWith("category:")){
     const category=mode.substring(9);
-    filtered=filtered.filter(item=>(item.mainCategory||"미분류")===category);
+    indexes=indexes.filter(index=>{
+      const item=archive[index];
+      return (item.mainCategory||"미분류")===category && (!selectedSubCategory || item.subCategory===selectedSubCategory);
+    });
   }
-  if(search){filtered=filtered.filter(item=>[item.title,item.url,item.mainCategory,item.subCategory].join(" ").toLowerCase().includes(search));}
-  return filtered;
+  if(search){
+    indexes=indexes.filter(index=>{
+      const item=archive[index];
+      return [item.title,item.url,item.mainCategory,item.subCategory].join(" ").toLowerCase().includes(search);
+    });
+  }
+  return indexes;
 }
+
 function render(){
   renderCategories();
   const list=document.getElementById("list");
-  const filtered=getFiltered();
+  const filtered=getFilteredIndexes();
   let title="전체";
-  if(mode.startsWith("category:")) title=mode.substring(9);
+  if(mode.startsWith("category:")){
+    title=mode.substring(9);
+    if(selectedSubCategory) title += " / " + selectedSubCategory;
+  }
   document.getElementById("heading").textContent=title;
   document.getElementById("count").textContent=`${filtered.length}개`;
   if(filtered.length===0){
-    list.innerHTML=`<div class="empty"><strong>${archive.length===0?"아직 북마크가 없음":"찾는 북마크가 없음"}</strong>${archive.length===0?"위쪽의 「북마크 HTML」에서 bookmarks.html을 넣어줘.":"검색어나 카테고리를 바꿔봐."}<div class="empty-action"><button class="action" onclick="openHTMLImport()">북마크 가져오기</button></div></div>`;
+    list.innerHTML=`<div class="empty"><strong>${archive.length===0?"아직 북마크가 없음":"찾는 북마크가 없음"}</strong>${archive.length===0?"위쪽의 「북마크 HTML」이나 「북마크 추가」에서 시작해.":"검색어나 카테고리를 바꿔봐."}<div class="empty-action"><button class="action" onclick="openHTMLImport()">북마크 가져오기</button></div></div>`;
     return;
   }
-  list.innerHTML=filtered.map(createItem).join("");
+  list.innerHTML=filtered.map(index=>createItem(archive[index],index)).join("");
 }
-function createItem(item){
-  const title=escapeHTML(item.title||"제목 없음");
-  const url=escapeHTML(item.url||"#");
+
+function createItem(item,index){
+  const title=escapeHTML(item.title || "제목 없음");
+  const url=escapeHTML(item.url || "#");
   const domain=escapeHTML(getDomain(item.url));
-  const category=escapeHTML(item.mainCategory||"미분류");
-  const sub=escapeHTML(item.subCategory||"");
+  const category=escapeHTML(item.mainCategory || "미분류");
+  const sub=escapeHTML(item.subCategory || "");
   const favicon=getFavicon(item.url);
-  return `<div class="item">${favicon?`<img class="favicon" src="${favicon}" alt="" onerror="this.style.visibility='hidden'">`:`<div></div>`}<div class="item-main"><a class="item-title" href="${url}" target="_blank" rel="noopener">${title}</a><div class="item-url">${domain}</div></div><div class="tag">${category}${sub?" / "+sub:""}</div><button class="edit-btn" onclick="openEdit(${item._index})">수정</button></div>`;
+  const visual=favicon?`<img class="favicon" src="${favicon}" alt="" onerror="this.style.visibility='hidden'">`:`<div></div>`;
+  const titleHtml=item.url?`<a class="item-title" href="${url}" target="_blank" rel="noopener">${title}</a>`:`<div class="item-title plain">${title}</div>`;
+  return `<div class="item">
+    ${visual}
+    <div class="item-main">${titleHtml}<div class="item-url">${domain}</div></div>
+    <div class="tag">${category}${sub?" / "+sub:""}</div>
+    <div class="item-actions"><button class="edit-btn" onclick="openEdit(${index})">수정</button></div>
+  </div>`;
 }
-function openEdit(index){
-  currentEditIndex=index;const item=archive[index];if(!item)return;
-  document.getElementById("editBookmarkTitle").value=item.title||"";
-  document.getElementById("editBookmarkURL").value=item.url||"";
-  document.getElementById("editMainCategory").value=item.mainCategory||"";
-  document.getElementById("editSubCategory").value=item.subCategory||"";
+
+function fillCategorySelect(selectId,currentValue){
+  const select=document.getElementById(selectId);
+  const current=currentValue || "미분류";
+  const options=[...categoryNames(),"NONE","미분류"];
+  select.innerHTML=options.map(x=>`<option value="${escapeAttr(x)}">${escapeHTML(x)}</option>`).join("");
+  select.value=options.includes(current)?current:"미분류";
+}
+
+function fillSubCategorySelect(main,currentValue){
+  const select=document.getElementById("editSubCategory");
+  if(main === "NONE" || main === "미분류" || !main){
+    select.innerHTML='<option value="">소분류 없음</option>';
+    select.value="";
+    select.disabled=true;
+    return;
+  }
+  const cat=findCategory(main);
+  const options=["",...(cat?.subs || [])];
+  select.disabled=false;
+  select.innerHTML=options.map(x=>`<option value="${escapeAttr(x)}">${escapeHTML(x || "소분류 없음")}</option>`).join("");
+  select.value=options.includes(currentValue||"")?currentValue||"":"";
+}
+
+function openAddBookmark(){
+  currentEditIndex=-1;
+  document.getElementById("editModalTitle").textContent="북마크 추가";
+  document.getElementById("editBookmarkTitle").value="";
+  document.getElementById("editBookmarkURL").value="";
+  fillCategorySelect("editMainCategory","");
+  fillSubCategorySelect("","");
+  document.getElementById("deleteBookmarkBtn").style.display="none";
   document.getElementById("editOverlay").classList.add("show");
 }
+
+function openEdit(index){
+  currentEditIndex=index;
+  const item=archive[index];
+  if(!item) return;
+  document.getElementById("editModalTitle").textContent="북마크 수정";
+  document.getElementById("editBookmarkTitle").value=item.title || "";
+  document.getElementById("editBookmarkURL").value=item.url || "";
+  fillCategorySelect("editMainCategory",item.mainCategory || "미분류");
+  fillSubCategorySelect(item.mainCategory || "미분류",item.subCategory || "");
+  document.getElementById("deleteBookmarkBtn").style.display="";
+  document.getElementById("editOverlay").classList.add("show");
+}
+
 function saveBookmarkEdit(){
-  if(currentEditIndex<0||!archive[currentEditIndex])return;
-  archive[currentEditIndex]={title:document.getElementById("editBookmarkTitle").value.trim(),url:document.getElementById("editBookmarkURL").value.trim(),mainCategory:document.getElementById("editMainCategory").value.trim(),subCategory:document.getElementById("editSubCategory").value.trim()};
-  saveData();closeModal("editOverlay");render();
-  if(mode==="random") showRandom();
+  const title=document.getElementById("editBookmarkTitle").value.trim();
+  const url=document.getElementById("editBookmarkURL").value.trim();
+  if(!title){ alert("제목을 넣어줘."); return; }
+  const editedMain=normalizeCategory(document.getElementById("editMainCategory").value);
+  const editedSub=normalizeSubCategory(editedMain,document.getElementById("editSubCategory").value);
+  const payload={title,url,mainCategory:editedMain,subCategory:editedSub};
+  if(currentEditIndex>=0 && archive[currentEditIndex]) archive[currentEditIndex]={...archive[currentEditIndex],...payload};
+  else archive.push({id:makeId(),...payload});
+  saveData();
+  closeModal("editOverlay");
+  render();
+  if(mode === "random") showRandom();
 }
+
 function deleteBookmark(){
-  if(currentEditIndex<0||!archive[currentEditIndex])return;
-  if(!confirm("이 북마크를 삭제할까?"))return;
-  archive.splice(currentEditIndex,1);saveData();closeModal("editOverlay");render();
-  if(mode==="random") showRandom();
+  if(currentEditIndex<0 || !archive[currentEditIndex]) return;
+  if(!confirm("이 북마크를 삭제할까?")) return;
+  archive.splice(currentEditIndex,1);
+  saveData();
+  closeModal("editOverlay");
+  render();
+  if(mode === "random") showRandom();
 }
-function pickRandomIndex(){
-  if(!archive.length)return -1;
-  let next=Math.floor(Math.random()*archive.length);
-  if(archive.length>1&&next===randomIndex) next=(next+1)%archive.length;
-  return next;
+
+function openCategoryManager(){
+  renderCategoryEditor();
+  document.getElementById("newCategoryName").value="";
+  document.getElementById("categoryOverlay").classList.add("show");
 }
-function showRandom(){
-  if(!archive.length){
-    document.getElementById("randomNumber").textContent="-";
-    document.getElementById("randomTitle").textContent="북마크가 없습니다.";
-    document.getElementById("randomTitle").removeAttribute("href");
-    document.getElementById("randomOpen").removeAttribute("href");
-    document.getElementById("randomDomain").textContent="먼저 북마크를 가져와주세요.";
-    document.getElementById("randomCategory").textContent="";
-    document.getElementById("randomFavicon").src="";
-    document.getElementById("randomPreview").src="about:blank";
-    randomIndex=-1;return;
-  }
-  randomIndex=pickRandomIndex();renderRandom();
+
+function renderCategoryEditor(){
+  const box=document.getElementById("categoryEditorList");
+  box.innerHTML=categoryTree.map(cat=>`
+    <div class="category-row" data-old-main="${escapeAttr(cat.name)}">
+      <div class="category-main-row">
+        <input value="${escapeAttr(cat.name)}" aria-label="대분류">
+        <button class="category-remove" onclick="removeCategoryRow(this)">삭제</button>
+      </div>
+      <div class="category-sub-list">
+        ${(cat.subs||[]).map(sub=>`<div class="category-sub-row" data-old-sub="${escapeAttr(sub)}"><input value="${escapeAttr(sub)}" aria-label="소분류"><button class="category-remove" onclick="removeSubCategoryRow(this)">삭제</button></div>`).join("")}
+      </div>
+      <div class="add-sub-row"><input placeholder="이 대분류의 소분류 추가"><button class="action" onclick="addSubCategoryRow(this)">+ 소분류</button></div>
+    </div>
+  `).join("");
 }
-function renderRandom(){
-  const item=archive[randomIndex];if(!item)return;
-  document.getElementById("randomNumber").textContent=`${randomIndex+1} / ${archive.length}`;
-  document.getElementById("randomTitle").textContent=item.title||"제목 없음";
-  document.getElementById("randomTitle").href=item.url||"#";
-  document.getElementById("randomOpen").href=item.url||"#";
-  document.getElementById("randomDomain").textContent=getDomain(item.url);
-  document.getElementById("randomCategory").textContent=[item.mainCategory,item.subCategory].filter(Boolean).join(" / ")||"미분류";
-  document.getElementById("randomFavicon").src=getFavicon(item.url)||"";
-  const frame=document.getElementById("randomPreview");
-  frame.src="about:blank";
-  if(item.url){setTimeout(()=>{if(randomIndex>=0&&archive[randomIndex]===item) frame.src=item.url;},20)}
+
+function addCategoryRow(){
+  const input=document.getElementById("newCategoryName");
+  const name=input.value.trim();
+  if(!name) return;
+  const existing=[...document.querySelectorAll("#categoryEditorList .category-row > .category-main-row input")].map(x=>x.value.trim()).filter(Boolean);
+  if(existing.includes(name)){ alert("이미 있는 대분류야."); return; }
+  const box=document.getElementById("categoryEditorList");
+  const row=document.createElement("div");
+  row.className="category-row";
+  row.dataset.oldMain="";
+  row.innerHTML=`<div class="category-main-row"><input value="${escapeAttr(name)}" aria-label="새 대분류"><button class="category-remove" onclick="removeCategoryRow(this)">삭제</button></div><div class="category-sub-list"></div><div class="add-sub-row"><input placeholder="이 대분류의 소분류 추가"><button class="action" onclick="addSubCategoryRow(this)">+ 소분류</button></div>`;
+  box.appendChild(row);
+  input.value="";
+  input.focus();
 }
-function nextRandom(){if(!archive.length)return;randomIndex=pickRandomIndex();renderRandom();}
-function openRandomEdit(){if(randomIndex>=0)openEdit(randomIndex)}
-function openHTMLImport(){document.getElementById("htmlOverlay").classList.add("show")}
-function chooseHTMLFile(){closeModal("htmlOverlay");document.getElementById("htmlFile").click()}
+
+function addSubCategoryRow(button){
+  const row=button.closest(".category-row");
+  const input=button.previousElementSibling;
+  const name=input.value.trim();
+  if(!row || !name) return;
+  const existing=[...row.querySelectorAll(".category-sub-row input")].map(x=>x.value.trim()).filter(Boolean);
+  if(existing.includes(name)){ alert("이미 있는 소분류야."); return; }
+  const list=row.querySelector(".category-sub-list");
+  const sub=document.createElement("div");
+  sub.className="category-sub-row";
+  sub.dataset.oldSub="";
+  sub.innerHTML=`<input value="${escapeAttr(name)}" aria-label="새 소분류"><button class="category-remove" onclick="removeSubCategoryRow(this)">삭제</button>`;
+  list.appendChild(sub);
+  input.value="";
+  input.focus();
+}
+
+function removeCategoryRow(button){ const row=button.closest(".category-row"); if(row) row.remove(); }
+function removeSubCategoryRow(button){ const row=button.closest(".category-sub-row"); if(row) row.remove(); }
+
+function saveCategoriesFromManager(){
+  const rows=[...document.querySelectorAll("#categoryEditorList .category-row")];
+  const newTree=[];
+  const mainNames=new Set();
+  const mainMap=new Map();
+  let invalid=false;
+  rows.forEach(row=>{
+    const oldMain=row.dataset.oldMain || "";
+    const mainName=row.querySelector(".category-main-row input")?.value.trim() || "";
+    if(!mainName) return;
+    if(mainNames.has(mainName)){ invalid=true; return; }
+    mainNames.add(mainName);
+    const subs=[]; const subNames=new Set();
+    [...row.querySelectorAll(".category-sub-row")].forEach(subRow=>{
+      const name=subRow.querySelector("input")?.value.trim() || "";
+      if(!name) return;
+      if(subNames.has(name)){ invalid=true; return; }
+      subNames.add(name); subs.push({oldName:subRow.dataset.oldSub || "", newName:name});
+    });
+    newTree.push({oldName,newName:mainName,subs});
+    if(oldMain) mainMap.set(oldMain,mainName);
+  });
+  if(invalid){ alert("같은 이름의 대분류/소분류가 있어."); return; }
+  if(!newTree.length){ alert("대분류는 최소 1개 있어야 해."); return; }
+
+  archive.forEach(item=>{
+    if(item.mainCategory === "NONE" || !item.mainCategory) return;
+    const entry=newTree.find(x=>x.oldName && x.oldName===item.mainCategory);
+    if(!entry){ item.mainCategory="미분류"; item.subCategory=""; return; }
+    const oldMain=item.mainCategory;
+    item.mainCategory=mainMap.get(oldMain) || entry.newName || "미분류";
+    if(item.mainCategory === "미분류"){ item.subCategory=""; return; }
+    const subInfo=entry.subs.find(x=>x.oldName && x.oldName===item.subCategory);
+    if(subInfo) item.subCategory=subInfo.newName;
+    else if(!item.subCategory){ item.subCategory=""; }
+    else {
+      const newSubs=entry.subs.map(x=>x.newName);
+      if(!newSubs.includes(item.subCategory)) item.subCategory="";
+    }
+  });
+
+  categoryTree=newTree.map(x=>({name:x.newName,subs:uniqueClean(x.subs.map(s=>s.newName))}));
+  // 기존 북마크의 소분류가 새 카테고리 관리자에 없는 경우에는 자동으로 지우지 않고 현재 분류에 다시 등록해 보존한다.
+  archive.forEach(item=>{
+    if(!item.mainCategory || item.mainCategory === "NONE" || item.mainCategory === "미분류" || !item.subCategory) return;
+    const cat=findCategory(item.mainCategory);
+    if(cat && !cat.subs.includes(item.subCategory)) cat.subs.push(item.subCategory);
+  });
+  saveCategories();
+  saveData();
+  selectedSubCategory="";
+  mode="all";
+  closeModal("categoryOverlay");
+  render();
+}
+
+function openHTMLImport(){
+  document.getElementById("htmlOverlay").classList.add("show");
+}
+
+function chooseHTMLFile(){
+  closeModal("htmlOverlay");
+  document.getElementById("htmlFile").click();
+}
+
+// Chrome/Netscape bookmarks.html은 링크만 가져오고, 카테고리는 나중에 AI/수동으로 지정함.
+function parseBookmarkDL(dl, output){
+  [...dl.querySelectorAll("a[href]")].forEach(a=>{
+    output.push({
+      id:makeId(),
+      title:a.textContent.trim() || "제목 없음",
+      url:a.getAttribute("href") || "",
+      mainCategory:"",
+      subCategory:""
+    });
+  });
+}
+
 function importBookmarkHTML(event){
-  const file=event.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(e){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e){
     try{
-      const doc=new DOMParser().parseFromString(e.target.result,"text/html");
-      const imported=[...doc.querySelectorAll("a[href]")].map(a=>({title:a.textContent.trim()||"제목 없음",url:a.getAttribute("href")||"",mainCategory:"",subCategory:""})).filter(x=>x.url);
-      if(!imported.length){alert("북마크를 찾지 못했습니다.");return;}
-      archive=archive.concat(imported);saveData();mode="all";render();alert(`${imported.length}개의 북마크를 가져왔습니다.`);
-    }catch(error){alert("HTML을 읽는 중 오류가 발생했습니다.\n\n"+error.message)}
+      const doc = new DOMParser().parseFromString(e.target.result, "text/html");
+      const root = doc.querySelector("dl");
+      if(!root){
+        alert("북마크 구조를 찾지 못했습니다.");
+        return;
+      }
+
+      const imported = [];
+      parseBookmarkDL(root, "", imported);
+
+      if(!imported.length){
+        alert("북마크를 찾지 못했습니다.");
+        return;
+      }
+
+      archive = archive.concat(imported);
+      saveData();
+      mode = "all";
+      render();
+      alert(`${imported.length}개의 북마크를 가져왔습니다.`);
+    }catch(error){
+      alert("HTML을 읽는 중 오류가 발생했습니다.\n\n" + error.message);
+    }
   };
-  reader.readAsText(file);event.target.value="";
+
+  reader.readAsText(file);
+  event.target.value = "";
 }
-function openAI(){clearError();document.getElementById("aiOverlay").classList.add("show")}
+
+function openAI(){
+  clearError();
+  document.getElementById("progress").classList.remove("show");
+  document.getElementById("progressFill").style.width = "0";
+  document.getElementById("aiOverlay").classList.add("show");
+}
+
 async function runAI(){
   clearError();
   if(!archive.length){showError("먼저 북마크를 가져와줘.");return}
-  const key=document.getElementById("apiKey").value.trim();
+
+  const key = document.getElementById("apiKey").value.trim();
   if(!key){showError("Gemini API Key를 입력해줘.");return}
+
   localStorage.setItem(API_KEY,key);
-  const button=document.getElementById("aiButton");button.disabled=true;button.textContent="분류 중...";
+  const button = document.getElementById("aiButton");
+  button.disabled = true;
+  button.textContent = "분류 중...";
   document.getElementById("progress").classList.add("show");
 
-  const classified=archive.map(item=>({...item}));
-  const pendingIndexes=[];
-  let adultSkipped=0;
+  const classified = archive.map(item => ({...item}));
+  const pendingIndexes = [];
+  let adultSkipped = 0;
 
-  // 성인/야동 북마크는 Gemini에 아예 보내지 않고 NONE으로 처리.
+  // 성인물은 Gemini에 아예 보내지 않음.
   for(let i=0;i<classified.length;i++){
     if(isAdultBookmark(classified[i])){
-      classified[i].mainCategory="NONE";
-      classified[i].subCategory="";
+      classified[i].mainCategory = "NONE";
+      classified[i].subCategory = "";
       adultSkipped++;
     }else{
       pendingIndexes.push(i);
@@ -370,86 +796,194 @@ async function runAI(){
   }
 
   if(!pendingIndexes.length){
-    archive=classified;saveData();render();
-    document.getElementById("progressText").textContent=`완료 · NONE ${adultSkipped}개`;
-    setTimeout(()=>closeModal("aiOverlay"),700);
-    button.disabled=false;button.textContent="자동 분류 시작";
+    archive = classified;
+    saveData();
+    render();
+    document.getElementById("progressText").textContent = `완료 · NONE ${adultSkipped}개`;
+    setTimeout(() => closeModal("aiOverlay"),700);
+    button.disabled = false;
+    button.textContent = "자동 분류 시작";
     return;
   }
 
-  const errors=[];
+  const errors = [];
+
   try{
-    const chunkSize=20;
-    for(let start=0;start<pendingIndexes.length;start+=chunkSize){
-      const indexChunk=pendingIndexes.slice(start,start+chunkSize);
-      const chunk=indexChunk.map(idx=>({...classified[idx],_index:idx}));
-      const end=start+indexChunk.length;
-      document.getElementById("progressText").textContent=`AI 분류 중... ${end} / ${pendingIndexes.length}${adultSkipped?` · NONE ${adultSkipped}개`:""}`;
-      document.getElementById("progressFill").style.width=`${(end/pendingIndexes.length)*100}%`;
+    const chunkSize = 20;
 
-      const prompt=`너는 개인 디지털 북마크를 정리하는 AI다. 각 북마크를 제목과 URL을 보고 사용자가 나중에 찾기 쉽게 분류해라. 반드시 JSON 배열만 반환한다. 각 항목에 _index를 그대로 포함해라. title과 url은 절대 바꾸지 않는다. mainCategory와 subCategory만 지정한다. 대분류는 너무 많이 만들지 말고 비슷한 자료는 같은 대분류로 묶는다. 소분류는 필요할 때만 만든다. 한국어 카테고리명을 사용한다. 설명문과 마크다운은 금지한다.
+    for(let start=0; start<pendingIndexes.length; start+=chunkSize){
+      const indexChunk = pendingIndexes.slice(start,start+chunkSize);
+      const chunk = indexChunk.map(idx => ({...classified[idx],_index:idx}));
+      const end = start + indexChunk.length;
 
-중요: 성인물/포르노/야동/성인 사이트로 보이는 항목은 분류하지 말고 mainCategory를 NONE으로 지정한다. 다만 그런 항목은 이 요청에 원래 포함되지 않을 수 있다.
+      document.getElementById("progressText").textContent = `AI 분류 중... ${end} / ${pendingIndexes.length}${adultSkipped ? ` · NONE ${adultSkipped}개` : ""}`;
+      document.getElementById("progressFill").style.width = `${(end/pendingIndexes.length)*100}%`;
+
+      const categoryRules = categoryTree
+        .map((cat,i) => {
+          const subs = cat.subs.length ? `\n   소분류: ${cat.subs.join(", ")}` : "\n   소분류: 없음";
+          return `${i+1}. ${cat.name} — ${CATEGORY_GUIDE[cat.name] || "사용자가 만든 개인 카테고리"}${subs}`;
+        })
+        .join("\n");
+
+      const prompt = `너는 개인 디지털 북마크를 정리하는 AI다.
+
+절대 규칙:
+1. mainCategory는 아래 대분류 중 정확히 하나만 선택한다. 새 대분류 이름을 절대로 만들지 마라.
+${categoryRules}
+2. subCategory는 선택한 대분류 아래에 실제로 존재하는 소분류 중 하나만 선택한다. 목록에 없는 소분류를 절대로 만들지 마라. 소분류가 없거나 굳이 필요하지 않으면 빈 문자열 \"\"을 사용한다.
+3. 대분류와 소분류가 이미 비슷한 자료를 묶고 있으면 새로운 이름을 만들지 말고 기존 것을 사용한다.
+4. 애매하면 기존 대분류 중 가장 가까운 것을 선택한다. 개인적으로 애매하면 \"관심\"을 우선 고려한다.
+5. \"일\"은 work/업무/직장 의미다.
+6. \"중국\"은 중국 자체가 핵심 주제일 때만 사용한다. 중국 사이트라는 이유만으로 중국으로 분류하지 마라.
+7. \"영화\"는 영화 단독, \"영화드라마\"는 드라마 또는 영화+드라마를 다루는 콘텐츠다.
+8. \"성교육\"은 교육·건강 목적의 성 지식이고 포르노/야동은 NONE이다.
+9. 이 요청에 포함된 포르노/야동/성인물은 분류하지 말고 NONE으로 반환한다.
+10. 제목과 URL은 절대로 바꾸지 마라.
+11. 반드시 JSON 배열만 반환한다.
 
 형식:
-[{"_index":0,"title":"원래 제목","url":"원래 URL","mainCategory":"대분류","subCategory":"소분류"}]
+[{"_index":0,"mainCategory":"디자인","subCategory":"레퍼런스"}]
 
 북마크:
 ${JSON.stringify(chunk,null,2)}`;
 
       try{
-        const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json"}})});
-        if(!response.ok){let msg=`API 오류 (${response.status})`;try{const data=await response.json();if(data?.error?.message)msg+=`\n${data.error.message}`}catch{}throw new Error(msg)}
-        const data=await response.json();const text=data?.candidates?.[0]?.content?.parts?.[0]?.text;if(!text)throw new Error("Gemini가 결과를 반환하지 않았습니다.");
-        const parsed=JSON.parse(text);if(!Array.isArray(parsed))throw new Error("Gemini 결과가 배열이 아닙니다.");
-        let usedIndex=false;
-        for(let j=0;j<parsed.length;j++){
-          const item=parsed[j];
-          const idx=Number.isInteger(item?._index)?item._index:indexChunk[j];
-          if(pendingIndexes.includes(idx)&&classified[idx]){
-            const main=item.mainCategory||"미분류";
-            classified[idx].mainCategory=main=== "NONE" ? "NONE" : main;
-            classified[idx].subCategory=main=== "NONE" ? "" : (item.subCategory||"");
-            usedIndex=true;
+        const response = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+          {
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json",
+              "x-goog-api-key":key
+            },
+            body:JSON.stringify({
+              contents:[{parts:[{text:prompt}]}],
+              generationConfig:{responseMimeType:"application/json"}
+            })
           }
+        );
+
+        if(!response.ok){
+          let msg = `API 오류 (${response.status})`;
+          try{
+            const data = await response.json();
+            if(data?.error?.message) msg += `\n${data.error.message}`;
+          }catch{}
+          throw new Error(msg);
         }
-        if(!usedIndex) throw new Error("AI 결과의 항목 위치를 확인하지 못했습니다.");
+
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if(!text) throw new Error("Gemini가 결과를 반환하지 않았습니다.");
+
+        const parsed = JSON.parse(text);
+        if(!Array.isArray(parsed)) throw new Error("Gemini 결과가 배열이 아닙니다.");
+
+        let applied = 0;
+        parsed.forEach((result,indexInChunk) => {
+          const idx = Number.isInteger(result?._index) ? result._index : indexChunk[indexInChunk];
+          if(!pendingIndexes.includes(idx) || !classified[idx]) return;
+
+          const main = normalizeCategory(result.mainCategory);
+          classified[idx].mainCategory = main;
+          classified[idx].subCategory = main === "NONE" ? "" : normalizeSubCategory(main, result.subCategory);
+          applied++;
+        });
+
+        if(!applied) throw new Error("AI 결과를 적용하지 못했습니다.");
       }catch(chunkError){
         errors.push(`${indexChunk[0]+1}~${indexChunk[indexChunk.length-1]+1}번: ${chunkError.message}`);
         for(const idx of indexChunk){
-          classified[idx].mainCategory=classified[idx].mainCategory||"미분류";
-          classified[idx].subCategory=classified[idx].subCategory||"";
+          classified[idx].mainCategory = "미분류";
+          classified[idx].subCategory = "";
         }
       }
     }
 
-    archive=classified;saveData();render();
-    document.getElementById("progressText").textContent=`완료 · ${archive.length}개 처리${adultSkipped?` · NONE ${adultSkipped}개`:""}`;
+    archive = classified;
+    saveData();
+    render();
+    document.getElementById("progressText").textContent = `완료 · ${archive.length}개 처리${adultSkipped ? ` · NONE ${adultSkipped}개` : ""}`;
+
     if(errors.length){
-      showError(`일부 북마크는 AI 분류에 실패해서 미분류로 남겨둠.${adultSkipped?`\n성인/야동 항목 ${adultSkipped}개는 NONE으로 건너뜀.`:""}\n\n${errors.join("\n")}`)
+      showError(`일부 북마크는 AI 분류에 실패해서 미분류로 남겨둠.${adultSkipped ? `\n성인/야동 ${adultSkipped}개는 NONE으로 건너뜀.` : ""}\n\n${errors.join("\n")}`);
     }else{
-      setTimeout(()=>closeModal("aiOverlay"),700)
+      setTimeout(() => closeModal("aiOverlay"),700);
     }
-  }catch(error){showError(error.message||"AI 분류 중 오류가 발생했습니다.")}
-  finally{button.disabled=false;button.textContent="자동 분류 시작"}
+  }catch(error){
+    showError(error.message || "AI 분류 중 오류가 발생했습니다.");
+  }finally{
+    button.disabled = false;
+    button.textContent = "자동 분류 시작";
+  }
 }
 
 function isAdultBookmark(item){
-  const text=`${item?.title||""} ${item?.url||""}`.toLowerCase();
-  const domain=`${getDomain(item?.url||"")}`.toLowerCase();
-  const adultPattern=/(porn|porno|hentai|rule34|pornhub|xvideos|xhamster|redtube|spankbang|xnxx|sexcam|camgirl|onlyfans|\bxxx\b|야동|야설|야짤|성인물|성인사이트|포르노|19금|음란|애널|오나홀|섹스|에로)/i;
-  const adultDomains=/(pornhub|xvideos|xhamster|redtube|spankbang|xnxx|onlyfans)/i;
-  return adultPattern.test(text)||adultDomains.test(domain);
+  const text = `${item?.title||""} ${item?.url||""}`.toLowerCase();
+  const domain = `${getDomain(item?.url||"")}`.toLowerCase();
+  const adultPattern = /(porn|porno|hentai|rule34|pornhub|xvideos|xhamster|redtube|spankbang|xnxx|sexcam|camgirl|onlyfans|\bxxx\b|야동|야설|야짤|성인물|성인사이트|성인영상|포르노|음란물|야한영상)/i;
+  const adultDomains = /(pornhub|xvideos|xhamster|redtube|spankbang|xnxx|onlyfans|rule34)/i;
+  return adultPattern.test(text) || adultDomains.test(domain);
 }
 
-function closeModal(id){document.getElementById(id).classList.remove("show")}
-function showError(message){const box=document.getElementById("error");box.textContent=message;box.classList.add("show")}
-function clearError(){const box=document.getElementById("error");box.textContent="";box.classList.remove("show")}
-function escapeHTML(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function getDomain(url){try{return new URL(url).hostname.replace(/^www\./,"")}catch{return ""}}
-function getFavicon(url){try{const domain=new URL(url).hostname;return "https://www.google.com/s2/favicons?domain="+encodeURIComponent(domain)+"&sz=64"}catch{return ""}}
-document.querySelectorAll(".overlay").forEach(overlay=>overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.classList.remove("show")}));
-document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".overlay.show").forEach(x=>x.classList.remove("show"))});
+function closeModal(id){
+  document.getElementById(id).classList.remove("show");
+}
+
+function showError(message){
+  const box = document.getElementById("error");
+  box.textContent = message;
+  box.classList.add("show");
+}
+
+function clearError(){
+  const box = document.getElementById("error");
+  box.textContent = "";
+  box.classList.remove("show");
+}
+
+function escapeHTML(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function escapeAttr(value){
+  return escapeHTML(value);
+}
+
+function getDomain(url){
+  try{
+    return new URL(url).hostname.replace(/^www\./,"");
+  }catch{
+    return "";
+  }
+}
+
+function getFavicon(url){
+  try{
+    const domain = new URL(url).hostname;
+    return "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(domain) + "&sz=64";
+  }catch{
+    return "";
+  }
+}
+
+document.querySelectorAll(".overlay").forEach(overlay => {
+  overlay.addEventListener("click", e => {
+    if(e.target === overlay) overlay.classList.remove("show");
+  });
+});
+
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){
+    document.querySelectorAll(".overlay.show").forEach(x => x.classList.remove("show"));
+  }
+});
 </script>
 </body>
 </html>
