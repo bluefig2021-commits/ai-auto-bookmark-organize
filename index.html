@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Archive</title>
+<title>Bookmarks</title>
 <style>
 *{box-sizing:border-box}
 :root{
@@ -48,7 +48,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .list{display:flex;flex-direction:column;border-top:1px solid #cfcfcf}
 .item{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--line);min-width:0}
 .item:hover{background:#fbfbfb}
-.item.child{background:linear-gradient(90deg,transparent 0,transparent 1px,#fafafa 1px,#fafafa 100%)}
+.item.child{background:#fff}
 .favicon{width:20px;height:20px;object-fit:contain}
 .item-main{min-width:0}
 .item-title{display:block;color:#171717;text-decoration:none;font-size:12px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -78,7 +78,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .random-actions{display:flex;gap:7px;margin-top:15px}
 .random-next{border:1px solid #d2d2d2;background:#fff;padding:7px 11px;border-radius:11px;font-size:10px}
 .random-open{display:inline-flex;align-items:center;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:7px 11px;border-radius:11px;font-size:10px}
-.preview-label{padding:9px 12px;border-top:1px solid #ececec;border-bottom:1px solid #ececec;background:#fafafa;color:#777;font-size:10px}
+.preview-label{padding:9px 12px;border-top:1px solid #ececec;border-bottom:1px solid #ececec;background:#fff;color:#777;font-size:10px}
 .preview-frame{width:100%;height:410px;border:0;display:block;background:#fafafa}
 .overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.2);padding:18px}
 .overlay.show{display:flex}
@@ -98,7 +98,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .progress-text{font-size:10px;color:#777;margin-bottom:6px}.progress-bar{height:3px;background:#eee}.progress-fill{width:0;height:100%;background:#222;transition:width .2s}
 .error{display:none;margin-top:13px;padding:9px;background:#fff7f7;border:1px solid #edd0d0;color:#a33;font-size:10px;line-height:1.5;white-space:pre-wrap}.error.show{display:block}
 .ai-note{font-size:11px;line-height:1.65;color:#555}.ai-note strong{color:#222}
-.manual-note{margin-top:9px;padding:9px 10px;background:#fafafa;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
+.manual-note{margin-top:9px;padding:9px 10px;background:#fff;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
 .category-list{display:flex;flex-direction:column;gap:9px;max-height:55vh;overflow:auto}
 .category-row{border:1px solid #e5e5e5;border-radius:12px;padding:9px;background:#fff}
 .category-main-row{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
@@ -113,7 +113,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .add-sub-row input{flex:1;font-size:10px;padding:6px 8px}
 .add-category-row{display:flex;gap:6px;margin-top:10px}
 .add-category-row input{flex:1;border:1px solid #ddd;padding:7px 9px;border-radius:10px;font-size:11px}
-.hierarchy-note{margin-top:7px;padding:8px 9px;background:#fafafa;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
+.hierarchy-note{margin-top:7px;padding:8px 9px;background:#fff;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
 @media (max-width:720px){
   .top-inner,.main{width:calc(100% - 28px)}
   .brand-row{align-items:flex-start}.brand small{display:none}.actions{flex-wrap:wrap;justify-content:flex-end}
@@ -122,13 +122,131 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   .item-actions{gap:3px}.child-btn{display:none}
   .random-info{padding:18px}.preview-frame{height:300px}
 }
+
+/* ===== SPACE CATEGORY UI ===== */
+.space-shell{
+  width:min(960px,calc(100% - 32px));
+  margin:0 auto;
+  padding:28px 0 70px;
+}
+.space-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+.space-kicker{font-size:10px;color:#999;letter-spacing:.14em;text-transform:uppercase}
+.space-title{font-size:23px;font-weight:800;letter-spacing:-1px;margin-top:4px}
+.space-note{font-size:10px;color:#aaa;text-align:right;line-height:1.5}
+.space-stage{
+  position:relative;
+  min-height:690px;
+  overflow:hidden;
+  border:1px solid #ececec;
+  border-radius:30px;
+  background:#fff;
+}
+.space-stage::before{
+  content:"";
+  position:absolute;inset:18px;
+  border:1px dashed #f0f0f0;
+  border-radius:24px;
+  pointer-events:none;
+}
+.planet{
+  position:absolute;
+  left:0;top:0;
+  width:104px;height:104px;
+  transform:translate(-50%,-50%);
+  border:1px solid #d7d7d7;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 8px 18px rgba(0,0,0,.06);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  padding:12px;
+  color:#202020;
+  transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+  animation:planetFloat var(--dur,6.2s) ease-in-out infinite;
+  animation-delay:var(--delay,0s);
+  cursor:pointer;
+  z-index:2;
+}
+.planet:hover{
+  transform:translate(-50%,-50%) scale(1.08);
+  border-color:#aaa;
+  box-shadow:0 12px 24px rgba(0,0,0,.08);
+  z-index:20;
+}
+.planet .planet-name{font-size:11px;font-weight:800;line-height:1.15;letter-spacing:-.25px;word-break:keep-all}
+.planet .planet-count{display:block;margin-top:4px;font-size:9px;color:#999;font-weight:500}
+
+@keyframes planetFloat{0%,100%{margin-top:0}50%{margin-top:-9px}}
+.space-center-dot{
+  position:absolute;left:50%;top:50%;width:10px;height:10px;transform:translate(-50%,-50%);border-radius:50%;background:#111;opacity:.06
+}
+.space-empty{display:flex;align-items:center;justify-content:center;min-height:690px;color:#aaa;font-size:12px}
+.category-space{display:none}
+.category-space.show{display:block}
+.home-space.hidden{display:none}
+.category-focus{
+  width:min(820px,100%);margin:0 auto;padding:28px 0 70px;
+}
+.back-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.back-btn{border:1px solid #ddd;background:#fff;border-radius:12px;padding:8px 11px;font-size:10px;color:#666}
+.back-btn:hover{background:#f7f7f7;color:#111}
+.focus-stage{
+  position:relative;
+  min-height:640px;
+  border:1px solid #ececec;border-radius:30px;overflow:hidden;
+  background:#fff;
+}
+.focus-main{
+  position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+  width:190px;height:190px;border-radius:50%;
+  background:#fff;
+  border:1px solid #cfcfcf;
+  box-shadow:0 14px 30px rgba(0,0,0,.08);
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:3;
+}
+.focus-main .focus-name{font-size:24px;font-weight:900;letter-spacing:-1.2px;word-break:keep-all}
+.focus-main .focus-count{display:block;margin-top:8px;font-size:10px;color:#999;font-weight:500}
+.sub-orb{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:94px;height:94px;border-radius:50%;border:1px solid #dcdcdc;
+  background:#fff;
+  box-shadow:0 8px 18px rgba(0,0,0,.06);
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;cursor:pointer;
+  transition:transform .25s ease, box-shadow .25s ease,border-color .25s ease;
+}
+.sub-orb:hover{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 16px 30px rgba(0,0,0,.12);border-color:#aaa}
+.sub-orb .sub-name{font-size:10px;font-weight:800;line-height:1.2;word-break:keep-all}
+.sub-orb .sub-count{display:block;margin-top:4px;font-size:8px;color:#999;font-weight:500}
+.sub-connector{position:absolute;height:1px;background:#e9e9e9;transform-origin:left center;left:50%;top:50%;z-index:1}
+.focus-empty{position:absolute;left:50%;top:79%;transform:translateX(-50%);font-size:10px;color:#aaa;white-space:nowrap}
+.category-bookmarks{margin-top:14px}
+.space-actions{display:flex;gap:7px}
+.space-actions .action{border-radius:12px}
+@media(max-width:720px){
+ .space-shell{width:calc(100% - 20px);padding-top:18px}
+ .space-stage{min-height:620px;border-radius:24px}
+ .planet{width:84px;height:84px}.planet .planet-name{font-size:10px}.planet .planet-count{font-size:8px}
+ .space-head{align-items:flex-start;flex-direction:column}.space-note{text-align:left}
+ .focus-stage{min-height:600px;border-radius:24px}.focus-main{width:156px;height:156px}.focus-main .focus-name{font-size:20px}.sub-orb{width:78px;height:78px}.sub-orb .sub-name{font-size:9px}
+}
+
+
+/* home hides old horizontal category strip; it remains available on list/search views */
+body.space-home-active .nav{display:none}
+
 </style>
 </head>
 <body>
 <header class="top">
   <div class="top-inner">
     <div class="brand-row">
-      <div class="brand">DIGITAL ARCHIVE <small>personal collection</small></div>
+      <div></div>
       <div class="actions">
         <button class="action" onclick="openHTMLImport()">북마크 HTML</button>
         <button class="action danger" onclick="clearAllBookmarks()">전체 삭제</button>
@@ -145,6 +263,33 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
     <div id="subNav" class="subnav" style="display:none"></div>
   </div>
 </header>
+
+
+
+<!-- PLANET HOME -->
+<section id="spaceHome" class="home-space">
+  <div class="space-shell">
+    <div id="planetStage" class="space-stage">
+      <div class="space-center-dot"></div>
+      <div id="planetEmpty" class="space-empty" style="display:none">카테고리가 없음</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY FOCUS -->
+<section id="categorySpace" class="category-space">
+  <div class="category-focus">
+    <div class="back-line">
+      <button class="back-btn" onclick="showSpaceHome()">← 카테고리로</button>
+      <div class="space-actions">
+        <button class="action" onclick="openCategoryManager()">카테고리 관리</button>
+        <button class="action" onclick="openAddBookmark()">북마크 추가</button>
+      </div>
+    </div>
+    <div id="focusStage" class="focus-stage"></div>
+    <div id="categoryBookmarks" class="category-bookmarks"></div>
+  </div>
+</section>
 
 <main class="main">
   <section id="normalView">
@@ -1138,6 +1283,154 @@ function getFavicon(url){
   }
 }
 
+
+
+function categoryBookmarkCount(name, sub=""){
+  return archive.filter(x=>{
+    const main = x.mainCategory || "미분류";
+    if(main !== name) return false;
+    return !sub || (x.subCategory || "") === sub;
+  }).length;
+}
+
+function showSpaceHome(){
+  document.body.classList.add("space-home-active");
+  mode="home";
+  selectedSubCategory="";
+  document.getElementById("spaceHome").classList.remove("hidden");
+  document.getElementById("categorySpace").classList.remove("show");
+  document.getElementById("normalView").style.display="none";
+  document.getElementById("randomView").classList.remove("show");
+  document.getElementById("subNav").style.display="none";
+  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
+  const all=document.querySelector('.nav button[data-mode="all"]');
+  if(all) all.classList.add("active");
+  renderPlanetHome();
+}
+
+function renderPlanetHome(){
+  const stage=document.getElementById("planetStage");
+  if(!stage) return;
+  stage.querySelectorAll(".planet").forEach(x=>x.remove());
+  const names=categoryNames().slice();
+  if(archive.some(x=>(x.mainCategory||"")==="미분류") && !names.includes("미분류")) names.push("미분류");
+  if(!names.length){ document.getElementById("planetEmpty").style.display="flex"; return; }
+  document.getElementById("planetEmpty").style.display="none";
+  const cols = window.innerWidth < 720 ? 3 : 5;
+  const rows = Math.ceil(names.length / cols);
+  const stageW=stage.clientWidth || 900;
+  const stageH=stage.clientHeight || 690;
+  const cellW=stageW/(cols+0.35);
+  const cellH=Math.max(112, Math.min(138, stageH/(Math.max(rows,5)+0.35)));
+  names.forEach((name,i)=>{
+    const col=i%cols,row=Math.floor(i/cols);
+    const jitterX=((i*37)%17)-8;
+    const jitterY=((i*53)%13)-6;
+    const x=cellW*(col+0.68)+jitterX;
+    const y=cellH*(row+0.72)+jitterY;
+    const btn=document.createElement("button");
+    btn.className="planet";
+    btn.dataset.tone=((i%5)+1).toString();
+    btn.style.left=`${Math.min(stageW-58,Math.max(58,x))}px`;
+    btn.style.top=`${Math.min(stageH-58,Math.max(58,y))}px`;
+    btn.style.setProperty("--dur",`${5.6+(i%5)*.45}s`);
+    btn.style.setProperty("--delay",`${-(i%7)*.45}s`);
+    const count=categoryBookmarkCount(name);
+    btn.innerHTML=`<span><span class="planet-name">${escapeHTML(name)}</span><span class="planet-count">${count}개</span></span>`;
+    btn.addEventListener("click",()=>openCategorySpace(name));
+    stage.appendChild(btn);
+  });
+}
+
+function makeConnector(x1,y1,x2,y2){
+  const line=document.createElement("div");
+  line.className="sub-connector";
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),angle=Math.atan2(dy,dx)*180/Math.PI;
+  line.style.width=`${Math.max(18,len)}px`;
+  line.style.left=`${x1}px`; line.style.top=`${y1}px`; line.style.transform=`rotate(${angle}deg)`;
+  return line;
+}
+
+function openCategorySpace(name){
+  document.body.classList.remove("space-home-active");
+  const cat=findCategory(name);
+  if(!cat) return;
+  mode="category:"+name;
+  selectedSubCategory="";
+  document.getElementById("spaceHome").classList.add("hidden");
+  document.getElementById("categorySpace").classList.add("show");
+  document.getElementById("normalView").style.display="none";
+  document.getElementById("randomView").classList.remove("show");
+  document.getElementById("subNav").style.display="none";
+  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
+  renderCategorySpace(name);
+}
+
+function renderCategorySpace(name){
+  const stage=document.getElementById("focusStage");
+  const box=document.getElementById("categoryBookmarks");
+  stage.innerHTML=""; box.innerHTML="";
+  const cat=findCategory(name) || {name,subs:[]};
+  const mainCount=categoryBookmarkCount(name);
+  const main=document.createElement("div");
+  main.className="focus-main";
+  main.innerHTML=`<div><div class="focus-name">${escapeHTML(name)}</div><span class="focus-count">${mainCount}개 북마크 · ${cat.subs.length}개 소분류</span></div>`;
+  stage.appendChild(main);
+
+  const subs=(cat.subs||[]).slice();
+  if(!subs.length){
+    const msg=document.createElement("div"); msg.className="focus-empty"; msg.textContent="소분류 없음 · 카테고리 관리에서 만들 수 있음"; stage.appendChild(msg); return;
+  }
+  const cx=stage.clientWidth/2, cy=stage.clientHeight*.46;
+  const radiusX=Math.min(300, stage.clientWidth*.37), radiusY=Math.min(210, stage.clientHeight*.32);
+  subs.forEach((sub,i)=>{
+    const angle=(-Math.PI/2)+(Math.PI*2*i/subs.length);
+    const x=cx+Math.cos(angle)*radiusX;
+    const y=cy+Math.sin(angle)*radiusY;
+    stage.appendChild(makeConnector(cx,cy,x,y));
+    const orb=document.createElement("button");
+    orb.className="sub-orb";
+    orb.style.left=`${x}px`;orb.style.top=`${y}px`;
+    const count=categoryBookmarkCount(name,sub);
+    orb.innerHTML=`<span><span class="sub-name">${escapeHTML(sub)}</span><span class="sub-count">${count}개</span></span>`;
+    orb.addEventListener("click",()=>openSubBookmarkView(name,sub));
+    stage.appendChild(orb);
+  });
+}
+
+function openSubBookmarkView(name,sub){
+  document.body.classList.remove("space-home-active");
+  mode="category:"+name;
+  selectedSubCategory=sub;
+  document.getElementById("spaceHome").classList.add("hidden");
+  document.getElementById("categorySpace").classList.remove("show");
+  document.getElementById("normalView").style.display="block";
+  document.getElementById("randomView").classList.remove("show");
+  const heading=document.getElementById("heading");
+  heading.textContent=`${name} / ${sub}`;
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+const originalSetCategory=setCategory;
+setCategory=function(category){ openCategorySpace(category); };
+
+const originalSetMode=setMode;
+setMode=function(newMode){
+  if(newMode === "all") { showSpaceHome(); return; }
+  if(newMode === "random") { originalSetMode(newMode); document.getElementById("spaceHome").classList.add("hidden"); document.getElementById("categorySpace").classList.remove("show"); return; }
+  originalSetMode(newMode);
+};
+
+const originalRender=render;
+render=function(){
+  if(mode === "home") { renderPlanetHome(); return; }
+  originalRender();
+};
+
+window.addEventListener("resize",()=>{ if(mode === "home") renderPlanetHome(); });
+
+
 document.addEventListener("DOMContentLoaded", () => {
   // 저장된 카테고리와 북마크를 먼저 복구한 뒤 화면을 그린다.
   // 이 순서가 뒤집히면 새로고침 시 archive가 빈 배열인 상태로 저장될 수 있다.
@@ -1149,7 +1442,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("apiKey").value = savedKey;
   }
 
-  render();
+  showSpaceHome();
 });
 
 document.querySelectorAll(".overlay").forEach(overlay => {
