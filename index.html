@@ -36,8 +36,7 @@
         }
         .login-box {
             background: var(--card-bg);
-            padding: 40px;
-            border-radius: 12px;
+            padding: 40px; border-radius: 12px;
             border: 1px solid var(--border);
             width: 100%; max-width: 380px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
@@ -70,6 +69,7 @@
         input:focus { outline: none; border-color: var(--accent); background: #ffffff; }
         button:not(.google-btn) { background: var(--accent); color: #ffffff; font-weight: 500; cursor: pointer; border: none; }
         button:not(.google-btn):hover { opacity: 0.85; }
+        button.ghost { background: transparent !important; color: var(--text-main) !important; border: 1px solid var(--border) !important; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 14px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--border); }
         th { font-weight: 600; color: var(--text-sub); background: #fafafa; }
@@ -80,6 +80,15 @@
             border-radius: 8px; border: 1px solid var(--border);
             font-size: 14px; white-space: pre-wrap;
         }
+        .chip {
+            display: inline-block; padding: 5px 12px; margin: 4px 6px 0 0;
+            border: 1px solid var(--border); border-radius: 999px;
+            font-size: 13px; cursor: pointer;
+            background: #fafafa; color: var(--text-sub);
+            user-select: none;
+        }
+        .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .tag { font-size: 12px; background: #f0f0ec; border-radius: 6px; padding: 2px 8px; white-space: nowrap; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -118,9 +127,11 @@
 
         <div class="box">
             <h3 style="margin-top: 0;">BOOKMARK UPLOAD & AI SORTING</h3>
-            <p style="font-size: 13px; color: var(--text-sub);">북마크 파일을 올리면 AI가 카테고리별로 자동 분류하고 정돈한다.</p>
+            <p style="font-size: 13px; color: var(--text-sub);">북마크 파일을 올리면 AI가 항목 하나하나를 카테고리로 분류해서 저장한다.</p>
             <input type="file" id="fileInput" accept=".html,.csv" style="background: transparent; border: none; padding: 0;">
             <button onclick="handleFileUpload()" style="margin-top: 15px;">북마크 밀어넣기 & AI 분류 시작</button>
+            <button class="ghost" onclick="classifyUnsorted()">이미 저장된 미분류 북마크 AI 분류</button>
+            <button class="ghost" onclick="classifyAll()">전체 다시 분류</button>
             <div id="aiSortResult"></div>
         </div>
 
@@ -136,10 +147,11 @@
                 <h3 style="margin: 0;">ARCHIVE (<span id="count">0</span>)</h3>
                 <button onclick="clearBookmarks()" style="width: auto; padding: 6px 12px; background: transparent; color: var(--danger); border: 1px solid var(--danger);">전체 초기화</button>
             </div>
-            <div style="max-height: 400px; overflow-y: auto; margin-top: 15px;">
+            <div id="catFilter" style="margin-top: 14px;"></div>
+            <div style="max-height: 500px; overflow-y: auto; margin-top: 10px;">
                 <table id="bookmarkTable">
                     <thead>
-                        <tr><th>TITLE</th><th>LINK</th></tr>
+                        <tr><th style="width:110px;">CATEGORY</th><th>TITLE</th><th style="width:80px;">LINK</th></tr>
                     </thead>
                     <tbody></tbody>
                 </table>
@@ -150,9 +162,8 @@
     <script>
         // --- 설정 영역 ---
         const ALLOWED_EMAIL = "raizn199x@gmail.com";
-        // 'gemini-flash-latest' 별칭은 항상 최신 Flash 모델을 가리킨다 (무료 티어 대상).
-        // 특정 버전을 고정하고 싶으면 AI Studio에서 확인한 모델 ID로 교체해라.
         const GEMINI_MODEL = "gemini-flash-latest";
+        const CHUNK = 80; // 한 번에 AI에 보내는 북마크 수
 
         const firebaseConfig = {
             apiKey: "AIzaSyB3Q6m-FvP_0AH2h-whLc6ckp7H-3kNMyg",
@@ -170,12 +181,17 @@
         const bookmarksRef = db.collection('bookmarks');
 
         let bookmarks = [];
+        let currentCat = '전체';
+        let busy = false;
 
         // --- 유틸 ---
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
         function esc(s) {
             return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
-        // URL -> 문서 ID (중복 방지용 해시)
+        function hostOf(url) {
+            try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; }
+        }
         function hashId(str) {
             let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
             for (let i = 0; i < str.length; i++) {
@@ -194,6 +210,7 @@
                 await batch.commit();
             }
         }
+        function getApiKey() { return document.getElementById('apiKey').value.trim(); }
 
         // --- 인증 ---
         auth.onAuthStateChanged(async (user) => {
@@ -220,7 +237,6 @@
                 alert('구글 로그인 실패: ' + error.message);
             });
         }
-
         function logout() { auth.signOut(); }
 
         // --- 데이터 (Firestore) ---
@@ -237,28 +253,127 @@
         document.getElementById('apiKey').addEventListener('input', (e) => {
             localStorage.setItem('gemini_api_key', e.target.value);
         });
-
         function loadApiKey() {
             const savedKey = localStorage.getItem('gemini_api_key');
             if (savedKey) document.getElementById('apiKey').value = savedKey;
         }
 
-        async function callGemini(apiKey, prompt) {
+        // --- Gemini ---
+        async function callGemini(apiKey, prompt, asJson = false) {
+            const body = { contents: [{ parts: [{ text: prompt }] }] };
+            if (asJson) body.generationConfig = { responseMimeType: 'application/json' };
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                body: JSON.stringify(body)
             });
             const data = await response.json();
             if (!data.candidates) throw new Error(data.error?.message || '응답 없음');
-            return data.candidates[0].content.parts[0].text;
+            return data.candidates[0].content.parts.map(p => p.text || '').join('');
+        }
+        async function callWithRetry(fn, tries = 3) {
+            for (let i = 0; ; i++) {
+                try { return await fn(); }
+                catch (e) {
+                    if (i >= tries - 1) throw e;
+                    await sleep(15000 * (i + 1)); // 무료 티어 분당 한도 대비 대기 후 재시도
+                }
+            }
         }
 
+        // --- 핵심: 실제 자동 분류 ---
+        async function classifyItems(items, apiKey, onProgress) {
+            const cats = new Set(bookmarks.map(b => b.category).filter(Boolean));
+            let done = 0;
+
+            for (let s = 0; s < items.length; s += CHUNK) {
+                const chunk = items.slice(s, s + CHUNK);
+                const list = chunk.map((b, i) => `${i}|${(b.title || '').slice(0, 80)}|${hostOf(b.url)}`).join('\n');
+                const prompt =
+`너는 북마크 정리 도우미다. 아래 북마크 각각을 정확히 하나의 카테고리로 분류해라.
+
+규칙:
+- 카테고리 이름은 짧은 한국어(2~8자). 예: 개발, AI 도구, 쇼핑, 영상, 금융, 디자인, 뉴스, 부업, 생활, 음악, 학습
+- 전체 카테고리 수는 12개 안팎으로 유지해라. 비슷한 건 합치고, 이미 있는 카테고리는 반드시 재사용해라.
+- 현재 존재하는 카테고리: ${cats.size ? [...cats].join(', ') : '(없음)'}
+- 판단이 불가능하면 '기타'로 분류해라.
+- 입력 형식은 "번호|제목|도메인" 이다.
+- 출력은 JSON 배열만. 형식: [{"i":0,"c":"카테고리"}, ...]
+- 입력된 모든 번호를 빠짐없이 포함해라.
+
+북마크:
+${list}`;
+
+                const text = await callWithRetry(() => callGemini(apiKey, prompt, true));
+                let arr;
+                try {
+                    arr = JSON.parse(text.replace(/```json|```/g, '').trim());
+                } catch {
+                    throw new Error('AI 응답을 JSON으로 읽지 못했다. 다시 시도해라.');
+                }
+
+                const ops = [];
+                (Array.isArray(arr) ? arr : []).forEach(r => {
+                    const b = chunk[r.i];
+                    if (!b || !r.c) return;
+                    const c = String(r.c).trim().slice(0, 20) || '기타';
+                    b.category = c;
+                    cats.add(c);
+                    ops.push(batch => batch.set(bookmarksRef.doc(hashId(b.url)), { category: c }, { merge: true }));
+                });
+                await commitInChunks(ops);
+
+                done += chunk.length;
+                onProgress(done, items.length);
+                updateTable();
+                if (s + CHUNK < items.length) await sleep(4000);
+            }
+        }
+
+        function categorySummary() {
+            const counts = {};
+            bookmarks.forEach(b => { const c = b.category || '미분류'; counts[c] = (counts[c] || 0) + 1; });
+            return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+        }
+
+        async function runClassify(targets) {
+            const resultDiv = document.getElementById('aiSortResult');
+            if (busy) { alert('이미 분류 중이다. 기다려라.'); return; }
+            const apiKey = getApiKey();
+            if (!apiKey) { alert('제미나이 API 키를 먼저 입력해라.'); return; }
+            if (targets.length === 0) {
+                resultDiv.innerHTML = `<div class="result-card">분류할 북마크가 없다.</div>`;
+                return;
+            }
+            busy = true;
+            try {
+                await classifyItems(targets, apiKey, (d, t) => {
+                    resultDiv.innerHTML = `<div class="result-card">AI 분류 중... ${d} / ${t}</div>`;
+                });
+                const left = targets.filter(b => !b.category).length;
+                const summary = categorySummary().map(([c, n]) => `${esc(c)} ${n}`).join(' · ');
+                resultDiv.innerHTML = `<div class="result-card"><b>분류 완료</b> (${targets.length - left}개 처리)\n\n${summary}` +
+                    (left ? `\n\n<span style="color:var(--danger);">${left}개는 AI가 빼먹었다. "미분류 북마크 AI 분류"를 다시 눌러라.</span>` : '') +
+                    `</div>`;
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="result-card" style="color:var(--danger);">분류 에러: ${esc(err.message)}\n(이미 처리된 항목은 저장됐다. "미분류 북마크 AI 분류"로 이어서 하면 된다.)</div>`;
+            }
+            busy = false;
+            updateTable();
+        }
+
+        function classifyUnsorted() { runClassify(bookmarks.filter(b => !b.category)); }
+        function classifyAll() {
+            if (!confirm('기존 분류를 무시하고 전부 다시 분류하겠냐?')) return;
+            bookmarks.forEach(b => { b.category = null; });
+            runClassify(bookmarks);
+        }
+
+        // --- 업로드 ---
         async function handleFileUpload() {
             const fileInput = document.getElementById('fileInput');
             if (fileInput.files.length === 0) { alert('파일을 선택해라.'); return; }
-            const apiKey = document.getElementById('apiKey').value.trim();
-            if (!apiKey) { alert('AI 자동 분류를 하려면 제미나이 API 키를 먼저 입력해라.'); return; }
+            if (!getApiKey()) { alert('AI 자동 분류를 하려면 제미나이 API 키를 먼저 입력해라.'); return; }
 
             const file = fileInput.files[0];
             const reader = new FileReader();
@@ -292,50 +407,55 @@
                     return true;
                 });
 
-                const sortResultDiv = document.getElementById('aiSortResult');
-                sortResultDiv.innerHTML = `<div class="result-card">${uniqueNewItems.length}개 북마크를 저장하는 중이다...</div>`;
-
-                try {
-                    const now = Date.now();
-                    await commitInChunks(uniqueNewItems.map((item, i) => (batch) => {
-                        batch.set(bookmarksRef.doc(hashId(item.url)), {
-                            title: item.title, url: item.url, addedAt: now + i
-                        });
-                    }));
-                    uniqueNewItems.forEach((item, i) => bookmarks.push({ ...item, addedAt: now + i }));
-                    updateTable();
-                } catch (err) {
-                    sortResultDiv.innerHTML = `<div class="result-card" style="color:var(--danger);">저장 에러: ${esc(err.message)}</div>`;
-                    return;
-                }
-
+                const resultDiv = document.getElementById('aiSortResult');
                 if (uniqueNewItems.length === 0) {
-                    sortResultDiv.innerHTML = `<div class="result-card">새로 추가된 북마크가 없다.</div>`;
+                    resultDiv.innerHTML = `<div class="result-card">새로 추가된 북마크가 없다.</div>`;
                     fileInput.value = '';
                     return;
                 }
+                resultDiv.innerHTML = `<div class="result-card">${uniqueNewItems.length}개 북마크를 저장하는 중이다...</div>`;
 
-                sortResultDiv.innerHTML = `<div class="result-card">총 ${uniqueNewItems.length}개의 북마크를 AI가 분석하고 분류하는 중이다...</div>`;
-                const titlesSnippet = uniqueNewItems.slice(0, 15).map(b => `- ${b.title}`).join('\n');
-                const prompt = `다음 북마크 제목들을 보고, 성격에 맞게 카테고리별로 자동 분류해 주고, 전반적인 취향에 대해 시니컬하게 반말 팩폭을 날려줘.\n\n${titlesSnippet}`;
-
+                const now = Date.now();
+                const objs = uniqueNewItems.map((item, i) => ({ title: item.title, url: item.url, addedAt: now + i, category: null }));
                 try {
-                    const aiText = await callGemini(apiKey, prompt);
-                    sortResultDiv.innerHTML = `<div class="result-card"><b>AI 자동 분류 및 심판 결과:</b><br><br>${esc(aiText)}</div>`;
+                    await commitInChunks(objs.map(o => (batch) => {
+                        batch.set(bookmarksRef.doc(hashId(o.url)), { title: o.title, url: o.url, addedAt: o.addedAt });
+                    }));
+                    bookmarks.push(...objs);
+                    updateTable();
                 } catch (err) {
-                    sortResultDiv.innerHTML = `<div class="result-card" style="color:var(--danger);">AI 분석 통신 에러: ${esc(err.message)}</div>`;
+                    resultDiv.innerHTML = `<div class="result-card" style="color:var(--danger);">저장 에러: ${esc(err.message)}</div>`;
+                    return;
                 }
+
                 fileInput.value = '';
+                await runClassify(objs);
             };
         }
 
+        // --- 화면 ---
+        function setCat(c) { currentCat = c; updateTable(); }
+
         function updateTable() {
+            document.getElementById('count').textContent = bookmarks.length;
+
+            // 카테고리 필터 칩
+            const summary = categorySummary();
+            if (currentCat !== '전체' && !summary.some(([c]) => c === currentCat)) currentCat = '전체';
+            const chips = [`<span class="chip ${currentCat === '전체' ? 'active' : ''}" data-cat="전체" onclick="setCat(this.dataset.cat)">전체 ${bookmarks.length}</span>`]
+                .concat(summary.map(([c, n]) =>
+                    `<span class="chip ${currentCat === c ? 'active' : ''}" data-cat="${esc(c)}" onclick="setCat(this.dataset.cat)">${esc(c)} ${n}</span>`));
+            document.getElementById('catFilter').innerHTML = chips.join('');
+
+            // 표
             const tbody = document.querySelector('#bookmarkTable tbody');
             tbody.innerHTML = '';
-            document.getElementById('count').textContent = bookmarks.length;
-            [...bookmarks].reverse().forEach(b => {
+            const rows = [...bookmarks].reverse().filter(b => currentCat === '전체' || (b.category || '미분류') === currentCat);
+            rows.forEach(b => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${esc(b.title)}</td><td><a href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">ACCESS</a></td>`;
+                tr.innerHTML = `<td><span class="tag">${esc(b.category || '미분류')}</span></td>` +
+                    `<td>${esc(b.title)}</td>` +
+                    `<td><a href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">ACCESS</a></td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -346,6 +466,7 @@
                 const snap = await bookmarksRef.get();
                 await commitInChunks(snap.docs.map(d => (batch) => batch.delete(d.ref)));
                 bookmarks = [];
+                currentCat = '전체';
                 updateTable();
                 document.getElementById('resultArea').innerHTML = '';
                 document.getElementById('aiSortResult').innerHTML = '';
@@ -356,12 +477,13 @@
 
         async function pickRandomBookmark() {
             if (bookmarks.length === 0) { alert('데이터가 없다. 북마크부터 올려라.'); return; }
-            const apiKey = document.getElementById('apiKey').value.trim();
+            const apiKey = getApiKey();
             if (!apiKey) { alert('API 키를 먼저 입력해라.'); return; }
 
             const picked = bookmarks[Math.floor(Math.random() * bookmarks.length)];
             const resultArea = document.getElementById('resultArea');
-            const target = `<b>TARGET:</b> <a href="${esc(picked.url)}" target="_blank" rel="noopener noreferrer">${esc(picked.title)}</a>`;
+            const target = `<b>TARGET:</b> <a href="${esc(picked.url)}" target="_blank" rel="noopener noreferrer">${esc(picked.title)}</a>` +
+                (picked.category ? ` <span class="tag">${esc(picked.category)}</span>` : '');
             resultArea.innerHTML = `<div class="result-card">${target}<br>AI 검열관이 내용을 분석하는 중이다...</div>`;
 
             const prompt = `다음 북마크 내용을 분석해라. 
