@@ -172,6 +172,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   will-change:transform;
 }
 .planet-body{
+  position:relative;
   width:100%; height:100%;
   border:1px solid #d7d7d7;
   border-radius:50%;
@@ -180,22 +181,89 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   display:flex;align-items:center;justify-content:center;
   text-align:center;
   padding:10px;
+  overflow:visible;
   animation:planetFloat var(--dur,6.2s) ease-in-out infinite;
   animation-delay:var(--delay,0s);
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
 }
 .planet.active{z-index:40}
 .planet.active .planet-body{
-  transform:scale(1.11);
-  border-color:#9e9e9e;
-  box-shadow:0 12px 24px rgba(0,0,0,.08);
+  transform:scale(1.55);
+  border-color:#8e8e8e;
+  box-shadow:0 14px 28px rgba(0,0,0,.09);
+}
+.planet-label{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  max-width:54px;
+  padding:4px 5px;
+  border-radius:9px;
+  background:rgba(255,255,255,.9);
 }
 .planet .planet-name{
   font-size:10px;font-weight:800;line-height:1.15;letter-spacing:-.25px;
   word-break:keep-all;
 }
 .planet .planet-count{
-  display:block;margin-top:4px;font-size:8px;color:#999;font-weight:500;
+  display:block;margin-top:3px;font-size:7px;color:#999;font-weight:500;
+}
+.inner-bookmarks{
+  position:absolute;
+  inset:7px;
+  z-index:3;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .16s ease;
+}
+.planet.active .inner-bookmarks{
+  opacity:1;
+  pointer-events:auto;
+}
+.inner-bookmark{
+  position:absolute;
+  width:29px;height:29px;
+  transform:translate(-50%,-50%) scale(.55);
+  border:1px solid #cfcfcf;
+  border-radius:50%;
+  background:#fff;
+  color:#222;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:3px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  opacity:0;
+  transition:transform .2s ease,opacity .2s ease,border-color .16s ease,box-shadow .16s ease;
+}
+.planet.active .inner-bookmark{
+  transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+}
+.inner-bookmark:hover{
+  transform:translate(-50%,-50%) scale(1.18) !important;
+  border-color:#9e9e9e;
+  box-shadow:0 7px 15px rgba(0,0,0,.08);
+}
+.inner-bookmark-title{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  font-size:6.5px;
+  line-height:1.08;
+  font-weight:700;
+  word-break:keep-all;
+}
+.inner-bookmark.more{
+  color:#888;
+  font-size:7px;
+  font-weight:700;
 }
 @keyframes planetFloat{
   0%,100%{transform:translate3d(0,0,0)}
@@ -239,43 +307,6 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .sub-orb .sub-count{
   display:block;margin-top:4px;font-size:7px;color:#999;font-weight:500;
 }
-.bookmark-peek{
-  position:absolute;
-  left:0; top:0;
-  width:min(280px,calc(100% - 28px));
-  transform:translate(-50%,10px);
-  opacity:0;
-  pointer-events:none;
-  padding:10px 11px;
-  background:#fff;
-  border:1px solid #dedede;
-  border-radius:14px;
-  box-shadow:0 12px 28px rgba(0,0,0,.08);
-  transition:opacity .16s ease,transform .16s ease;
-  z-index:50;
-}
-.bookmark-peek.show{
-  opacity:1;
-  pointer-events:auto;
-  transform:translate(-50%,0);
-}
-.peek-title{
-  font-size:8px;color:#999;margin-bottom:6px;font-weight:700;
-}
-.peek-list{display:flex;flex-direction:column;gap:3px;max-height:150px;overflow:auto}
-.peek-item{
-  display:block;
-  padding:6px 7px;
-  border:1px solid #f0f0f0;
-  border-radius:9px;
-  text-decoration:none;
-  color:#222;
-  background:#fff;
-}
-.peek-item:hover{background:#f7f7f7}
-.peek-item-title{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.peek-item-domain{font-size:7px;color:#aaa;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.peek-empty{font-size:9px;color:#aaa;padding:5px 0}
 .space-tip{
   position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
   color:#b0b0b0;font-size:8px;white-space:nowrap;pointer-events:none;
@@ -1430,7 +1461,7 @@ function renderPlanetHome(){
     btn.style.setProperty("--dur",`${5.6+(i%5)*.45}s`);
     btn.style.setProperty("--delay",`${-(i%7)*.45}s`);
     const count=categoryBookmarkCount(name);
-    btn.innerHTML=`<div class="planet-body"><span><span class="planet-name">${escapeHTML(name)}</span><span class="planet-count">${count}개</span></span></div>`;
+    btn.innerHTML=`<div class="planet-body"><div class="planet-label"><span class="planet-name">${escapeHTML(name)}</span><span class="planet-count">${count}개</span></div><div class="inner-bookmarks"></div></div>`;
     stage.appendChild(btn);
   });
 
@@ -1439,6 +1470,67 @@ function renderPlanetHome(){
   tip.textContent="커서를 가까이 가져가면 펼쳐짐";
   stage.appendChild(tip);
   bindSpacePointer(stage);
+}
+
+function getInnerBookmarkItems(name,sub="") {
+  const items = categoryItems(name, sub);
+  if (sub) return items;
+  // 대분류 안에서 소분류로 따로 분리하지 않은 북마크만 안쪽에 띄운다.
+  // '미분류' 대분류는 애초에 전부 소분류가 없는 것으로 취급한다.
+  return items.filter(item => name === "미분류" || !String(item.subCategory || "").trim());
+}
+
+function renderInnerBookmarks(stage,name,sub="") {
+  const planet = [...stage.querySelectorAll(".planet")].find(p => p.dataset.name === name);
+  if(!planet) return;
+  let layer = planet.querySelector(".inner-bookmarks");
+  if(!layer){
+    layer = document.createElement("div");
+    layer.className = "inner-bookmarks";
+    planet.querySelector(".planet-body")?.appendChild(layer);
+  }
+  layer.innerHTML = "";
+
+  const items = getInnerBookmarkItems(name,sub);
+  const max = 8;
+  const visible = items.slice(0,max);
+  const extra = Math.max(0, items.length - max);
+  const total = visible.length + (extra ? 1 : 0);
+
+  if(!total) return;
+
+  const radius = total <= 3 ? 24 : total <= 6 ? 27 : 29;
+  visible.forEach((item,index)=>{
+    const angle = (-Math.PI/2) + (Math.PI*2*index/total);
+    const x = 50 + Math.cos(angle)*radius/0.68;
+    const y = 50 + Math.sin(angle)*radius/0.68;
+    const el = document.createElement(item.url ? "a" : "div");
+    el.className = "inner-bookmark";
+    el.style.left = `${x}%`;
+    el.style.top = `${y}%`;
+    el.title = item.title || "제목 없음";
+    if(item.url){
+      el.href = item.url;
+      el.target = "_blank";
+      el.rel = "noopener";
+    }
+    el.innerHTML = `<span class="inner-bookmark-title">${escapeHTML(item.title || "제목 없음")}</span>`;
+    layer.appendChild(el);
+  });
+
+  if(extra){
+    const index = visible.length;
+    const angle = (-Math.PI/2) + (Math.PI*2*index/total);
+    const x = 50 + Math.cos(angle)*radius/0.68;
+    const y = 50 + Math.sin(angle)*radius/0.68;
+    const more = document.createElement("div");
+    more.className = "inner-bookmark more";
+    more.style.left = `${x}%`;
+    more.style.top = `${y}%`;
+    more.textContent = `+${extra}`;
+    more.title = `이 카테고리에 ${extra}개의 북마크가 더 있음`;
+    layer.appendChild(more);
+  }
 }
 
 function createHoverCloud(stage,name,centerX,centerY){
@@ -1462,11 +1554,11 @@ function createHoverCloud(stage,name,centerX,centerY){
     orb.innerHTML=`<span><span class="sub-name">${escapeHTML(sub)}</span><span class="sub-count">${count}개</span></span>`;
     orb.addEventListener("mouseenter",()=>{
       spaceState.activeSub=sub;
-      renderBookmarkPeek(stage,name,sub,centerX,centerY+radius+84);
+      renderInnerBookmarks(stage,name,sub);
     });
     orb.addEventListener("mouseleave",()=>{
       spaceState.activeSub="";
-      if(spaceState.activeName===name) renderBookmarkPeek(stage,name,"",centerX,centerY+radius+84,false);
+      if(spaceState.activeName===name) renderInnerBookmarks(stage,name,"");
     });
     cloud.appendChild(orb);
   });
@@ -1474,39 +1566,13 @@ function createHoverCloud(stage,name,centerX,centerY){
   return cloud;
 }
 
-function renderBookmarkPeek(stage,name,sub,x,y,show=true){
-  let peek=stage.querySelector(".bookmark-peek[data-name="+CSS.escape(name)+"]");
-  if(!peek){
-    peek=document.createElement("div");
-    peek.className="bookmark-peek";
-    peek.dataset.name=name;
-    stage.appendChild(peek);
-  }
-  const items=categoryItems(name,sub);
-  const label=sub ? `${name} / ${sub}` : `${name} · 전체`;
-  peek.innerHTML=`<div class="peek-title">${escapeHTML(label)} · ${items.length}개</div><div class="peek-list"></div>`;
-  const list=peek.querySelector(".peek-list");
-  if(!items.length){
-    list.innerHTML=`<div class="peek-empty">이 영역엔 북마크가 없음</div>`;
-  }else{
-    items.slice(0,8).forEach(item=>{
-      const a=document.createElement(item.url ? "a":"div");
-      a.className="peek-item";
-      if(item.url){ a.href=item.url; a.target="_blank"; a.rel="noopener"; }
-      a.innerHTML=`<div class="peek-item-title">${escapeHTML(item.title||"제목 없음")}</div><div class="peek-item-domain">${escapeHTML(getDomain(item.url)||item.url||"")}</div>`;
-      list.appendChild(a);
-    });
-  }
-  const stageW=stage.clientWidth||760, stageH=stage.clientHeight||700;
-  const halfW=Math.min(140,stageW/2-10);
-  const safeX=Math.max(halfW+10,Math.min(stageW-halfW-10,x));
-  const safeY=Math.max(120,Math.min(stageH-105,y));
-  peek.style.left=`${safeX}px`;peek.style.top=`${safeY}px`;peek.classList.toggle("show",!!show);
-}
-
 function clearHoverCloud(stage){
   stage.querySelectorAll(".hover-cloud,.bookmark-peek").forEach(x=>x.remove());
-  stage.querySelectorAll(".planet").forEach(x=>x.classList.remove("active"));
+  stage.querySelectorAll(".planet").forEach(x=>{
+    x.classList.remove("active");
+    const layer=x.querySelector(".inner-bookmarks");
+    if(layer) layer.innerHTML="";
+  });
   spaceState.activeName="";
   spaceState.activeSub="";
 }
@@ -1555,15 +1621,12 @@ function bindSpacePointer(stage){
         spaceState.activeName=name;
         spaceState.activeSub="";
         createHoverCloud(stage,name,x,y);
-        renderBookmarkPeek(stage,name,"",x,y+185,false);
+        renderInnerBookmarks(stage,name,"");
       }else{
         const cloud=stage.querySelector(`.hover-cloud[data-name=\"${CSS.escape(name)}\"]`);
         if(cloud){ cloud.style.left=`${x}px`; cloud.style.top=`${y}px`; }
-        const peek=stage.querySelector(`.bookmark-peek[data-name=\"${CSS.escape(name)}\"]`);
-        if(peek){
-          const sub=spaceState.activeSub||"";
-          renderBookmarkPeek(stage,name,sub,x,y+185,peek.classList.contains("show"));
-        }
+        const inner=document.querySelector(`.planet[data-name=\"${CSS.escape(name)}\"] .inner-bookmarks`);
+        if(inner && !inner.children.length) renderInnerBookmarks(stage,name,spaceState.activeSub||"");
       }
     }else{
       clearHoverCloud(stage);
