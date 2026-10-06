@@ -371,10 +371,16 @@ function loadArchive(){
   if(!saved){ archive=[]; return; }
   try{
     const raw=JSON.parse(saved);
-    archive=Array.isArray(raw)?raw.map(normalizeItem):[];
+    if(!Array.isArray(raw)) throw new Error("저장된 북마크 데이터가 배열이 아님");
+    archive=raw.map(normalizeItem);
+    // 정규화 후에만 같은 키에 다시 저장한다.
     saveCategories();
     saveData();
-  }catch{ archive=[]; }
+  }catch(error){
+    console.error("북마크 불러오기 실패", error);
+    // 기존 localStorage를 여기서 삭제하지 않는다.
+    archive=[];
+  }
 }
 
 function saveData(){ localStorage.setItem(DATA_KEY, JSON.stringify(archive)); }
@@ -1000,6 +1006,20 @@ function getFavicon(url){
     return "";
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  // 저장된 카테고리와 북마크를 먼저 복구한 뒤 화면을 그린다.
+  // 이 순서가 뒤집히면 새로고침 시 archive가 빈 배열인 상태로 저장될 수 있다.
+  loadCategories();
+  loadArchive();
+
+  const savedKey = localStorage.getItem(API_KEY);
+  if(savedKey){
+    document.getElementById("apiKey").value = savedKey;
+  }
+
+  render();
+});
 
 document.querySelectorAll(".overlay").forEach(overlay => {
   overlay.addEventListener("click", e => {
