@@ -131,6 +131,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
       <div class="brand">DIGITAL ARCHIVE <small>personal collection</small></div>
       <div class="actions">
         <button class="action" onclick="openHTMLImport()">북마크 HTML</button>
+        <button class="action danger" onclick="clearAllBookmarks()">전체 삭제</button>
         <button class="action" onclick="openCategoryManager()">카테고리</button>
         <button class="action" onclick="openAddBookmark()">북마크 추가</button>
         <button class="action dark" onclick="openAI()">AI 자동 분류</button>
@@ -592,6 +593,96 @@ function deleteBookmark(){
   closeModal("editOverlay");
   render();
   if(mode === "random") showRandom();
+}
+
+function clearAllBookmarks(){
+  if(!archive.length){
+    alert("삭제할 북마크가 없어.");
+    return;
+  }
+  const ok = confirm(`북마크 ${archive.length}개를 전부 삭제할까?\n\n카테고리는 삭제되지 않아.`);
+  if(!ok) return;
+
+  archive = [];
+  randomIndex = -1;
+  selectedSubCategory = "";
+  mode = "all";
+  saveData();
+  closeModal("editOverlay");
+  document.getElementById("normalView").style.display = "block";
+  document.getElementById("randomView").classList.remove("show");
+  document.getElementById("subNav").style.display = "none";
+  render();
+}
+
+function pickRandomIndex(){
+  if(!archive.length) return -1;
+  if(archive.length === 1) return 0;
+  let next = Math.floor(Math.random() * archive.length);
+  if(next === randomIndex) next = (next + 1) % archive.length;
+  return next;
+}
+
+function renderRandomItem(){
+  if(randomIndex < 0 || randomIndex >= archive.length){
+    document.getElementById("randomNumber").textContent = "-";
+    document.getElementById("randomTitle").textContent = "북마크가 없어.";
+    document.getElementById("randomTitle").removeAttribute("href");
+    document.getElementById("randomDomain").textContent = "먼저 북마크를 가져와줘.";
+    document.getElementById("randomCategory").textContent = "-";
+    document.getElementById("randomOpen").style.display = "none";
+    document.getElementById("randomPreview").src = "about:blank";
+    document.getElementById("randomFavicon").src = "";
+    return;
+  }
+
+  const item = archive[randomIndex];
+  const titleEl = document.getElementById("randomTitle");
+  const openEl = document.getElementById("randomOpen");
+  const previewEl = document.getElementById("randomPreview");
+
+  document.getElementById("randomNumber").textContent = `${randomIndex + 1} / ${archive.length}`;
+  titleEl.textContent = item.title || "제목 없음";
+  titleEl.href = item.url || "#";
+  titleEl.style.pointerEvents = item.url ? "auto" : "none";
+  document.getElementById("randomDomain").textContent = getDomain(item.url) || "URL 없음";
+  document.getElementById("randomCategory").textContent = [item.mainCategory, item.subCategory].filter(Boolean).join(" / ") || "미분류";
+
+  if(item.url){
+    openEl.href = item.url;
+    openEl.style.display = "inline-flex";
+    previewEl.src = item.url;
+  }else{
+    openEl.removeAttribute("href");
+    openEl.style.display = "none";
+    previewEl.src = "about:blank";
+  }
+
+  const favicon = getFavicon(item.url);
+  const faviconEl = document.getElementById("randomFavicon");
+  faviconEl.src = favicon || "";
+  faviconEl.style.display = favicon ? "block" : "none";
+}
+
+function showRandom(){
+  if(!archive.length){
+    randomIndex = -1;
+    renderRandomItem();
+    return;
+  }
+  randomIndex = pickRandomIndex();
+  renderRandomItem();
+}
+
+function nextRandom(){
+  if(!archive.length) return;
+  randomIndex = pickRandomIndex();
+  renderRandomItem();
+}
+
+function openRandomEdit(){
+  if(randomIndex < 0 || randomIndex >= archive.length) return;
+  openEdit(randomIndex);
 }
 
 function openCategoryManager(){
