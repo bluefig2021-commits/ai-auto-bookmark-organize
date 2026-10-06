@@ -10,22 +10,32 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #f4f4f1;
+  --paper: #fff;
+  --text: #181818;
+  --muted: #858585;
+  --line: #deded9;
+  --soft: #ecece7;
+  --accent: #181818;
+}
+
+html,
 body {
   margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
+    Arial,
     "Noto Sans KR",
     sans-serif;
-  background: #f7f7f5;
-  color: #222;
 }
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -33,82 +43,118 @@ button {
   cursor: pointer;
 }
 
-.app {
-  display: flex;
-  min-height: 100vh;
-}
-
 /* =========================
-   SIDEBAR
+   TOP
 ========================= */
 
-.sidebar {
-  width: 240px;
-  min-height: 100vh;
-  background: #fff;
-  border-right: 1px solid #e5e5e5;
-  padding: 24px 16px;
-  position: fixed;
-  left: 0;
+.top {
+  position: sticky;
   top: 0;
-  bottom: 0;
+  z-index: 50;
+  background: rgba(244,244,241,.94);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
 }
 
-.logo {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  padding: 0 10px;
-  margin-bottom: 28px;
+.top-inner {
+  max-width: 1280px;
+  margin: auto;
+  padding: 18px 28px 0;
 }
 
-.logo span {
-  color: #999;
-  font-weight: 400;
-}
-
-.category-title {
-  font-size: 11px;
-  color: #999;
-  font-weight: 600;
-  padding: 0 10px;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
-}
-
-.category-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.category-btn {
-  border: 0;
-  background: transparent;
-  width: 100%;
-  text-align: left;
-  padding: 9px 10px;
-  border-radius: 7px;
-  color: #555;
+.brand-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  gap: 20px;
 }
 
-.category-btn:hover {
-  background: #f3f3f2;
+.brand {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
 
-.category-btn.active {
-  background: #eeeeec;
-  color: #111;
-  font-weight: 600;
-}
-
-.category-count {
-  color: #aaa;
+.brand small {
   font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 7px;
+  letter-spacing: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 7px;
+}
+
+.action {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #333;
+}
+
+.action:hover {
+  background: #e9e9e4;
+}
+
+.action.dark {
+  background: #181818;
+  border-color: #181818;
+  color: white;
+}
+
+.action.dark:hover {
+  background: #000;
+}
+
+/* =========================
+   CATEGORY NAV
+========================= */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  padding-top: 20px;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav button {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: #888;
+  padding: 9px 12px 12px;
+  border-bottom: 2px solid transparent;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.nav button:hover {
+  color: #222;
+}
+
+.nav button.active {
+  color: #111;
+  border-bottom-color: #111;
+  font-weight: 700;
+}
+
+.nav .tool {
+  color: #555;
+}
+
+.nav .tool:first-child {
+  margin-left: 0;
 }
 
 /* =========================
@@ -116,193 +162,119 @@ button {
 ========================= */
 
 .main {
-  margin-left: 240px;
-  width: calc(100% - 240px);
-  min-height: 100vh;
+  max-width: 1280px;
+  margin: auto;
+  padding: 30px 28px 70px;
 }
 
-.header {
-  height: 70px;
-  background: rgba(247,247,245,.9);
-  border-bottom: 1px solid #e5e5e5;
+.toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 36px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  backdrop-filter: blur(10px);
+  gap: 15px;
+  margin-bottom: 24px;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.heading {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
 
-.header-title {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.header-count {
+.count {
   font-size: 12px;
-  color: #999;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.btn {
-  border: 1px solid #ddd;
-  background: #fff;
-  color: #333;
-  border-radius: 7px;
-  padding: 8px 13px;
-  font-size: 12px;
-}
-
-.btn:hover {
-  background: #f1f1ef;
-}
-
-.btn.primary {
-  background: #222;
-  color: #fff;
-  border-color: #222;
-}
-
-.btn.primary:hover {
-  background: #000;
-}
-
-.content {
-  padding: 34px 36px 60px;
-  max-width: 1100px;
-}
-
-/* =========================
-   SEARCH
-========================= */
-
-.search-box {
-  margin-bottom: 26px;
+  color: var(--muted);
+  margin-left: 8px;
 }
 
 .search {
-  width: 100%;
-  border: 1px solid #ddd;
-  background: #fff;
-  border-radius: 8px;
-  padding: 12px 14px;
+  width: 270px;
+  border: 1px solid var(--line);
+  background: white;
+  padding: 9px 11px;
+  border-radius: 6px;
   outline: none;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .search:focus {
-  border-color: #aaa;
+  border-color: #999;
 }
 
 /* =========================
-   CATEGORY HEADER
+   BOOKMARK LIST
 ========================= */
 
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.section-name {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.section-count {
-  font-size: 12px;
-  color: #999;
-}
-
-/* =========================
-   BOOKMARK
-========================= */
-
-.bookmark-list {
+.list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  border-top: 1px solid #ccc;
 }
 
-.bookmark {
-  background: #fff;
-  border: 1px solid #e7e7e5;
-  border-radius: 9px;
-  padding: 14px 16px;
-  display: flex;
+.item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 13px;
-  transition: .15s;
+  gap: 14px;
+  padding: 15px 8px;
+  border-bottom: 1px solid var(--line);
 }
 
-.bookmark:hover {
-  border-color: #ccc;
-  transform: translateY(-1px);
+.item:hover {
+  background: rgba(255,255,255,.45);
 }
 
 .favicon {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  flex-shrink: 0;
-  background: #f3f3f3;
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
 }
 
-.bookmark-info {
+.item-main {
   min-width: 0;
-  flex: 1;
 }
 
-.bookmark-title {
+.item-title {
   display: block;
-  color: #222;
+  color: #171717;
   text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 5px;
 }
 
-.bookmark-title:hover {
+.item-title:hover {
   text-decoration: underline;
 }
 
-.bookmark-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
+.item-url {
   color: #999;
-}
-
-.domain {
-  overflow: hidden;
+  font-size: 11px;
+  margin-top: 5px;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 250px;
 }
 
-.subcategory {
-  padding: 3px 7px;
-  border-radius: 5px;
-  background: #f2f2f0;
+.tag {
   color: #777;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.edit-btn {
+  border: 0;
+  background: transparent;
+  color: #aaa;
+  font-size: 11px;
+  padding: 6px;
+}
+
+.edit-btn:hover {
+  color: #111;
 }
 
 /* =========================
@@ -310,10 +282,8 @@ button {
 ========================= */
 
 .empty {
-  border: 1px dashed #d8d8d6;
-  background: rgba(255,255,255,.5);
-  border-radius: 10px;
-  padding: 60px 20px;
+  border-top: 1px solid #ccc;
+  padding: 70px 20px;
   text-align: center;
   color: #999;
   font-size: 13px;
@@ -321,40 +291,114 @@ button {
 
 .empty strong {
   display: block;
-  color: #555;
-  margin-bottom: 7px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+/* =========================
+   RANDOM
+========================= */
+
+.random-screen {
+  display: none;
+}
+
+.random-screen.show {
+  display: block;
+}
+
+.random-card {
+  min-height: 55vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.random-inner {
+  width: min(760px, 100%);
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.random-number {
+  color: #aaa;
+  font-size: 11px;
+  margin-bottom: 35px;
+}
+
+.random-favicon {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  margin-bottom: 24px;
+}
+
+.random-title {
+  display: block;
+  color: #111;
+  text-decoration: none;
+  font-size: clamp(25px, 5vw, 46px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -2px;
+  word-break: keep-all;
+}
+
+.random-title:hover {
+  text-decoration: underline;
+}
+
+.random-domain {
+  margin-top: 17px;
+  color: #999;
+  font-size: 12px;
+}
+
+.random-category {
+  margin-top: 8px;
+  color: #777;
+  font-size: 11px;
+}
+
+.random-next {
+  margin-top: 45px;
+  border: 1px solid #ccc;
+  background: white;
+  padding: 11px 18px;
+  border-radius: 6px;
+  font-size: 12px;
 }
 
 /* =========================
    MODAL
 ========================= */
 
-.modal-bg {
-  display: none;
+.overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.35);
   z-index: 100;
+  display: none;
   align-items: center;
   justify-content: center;
+  background: rgba(0,0,0,.35);
   padding: 20px;
 }
 
-.modal-bg.show {
+.overlay.show {
   display: flex;
 }
 
 .modal {
-  width: 100%;
-  max-width: 600px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.18);
-  overflow: hidden;
+  width: min(650px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 20px 70px rgba(0,0,0,.2);
 }
 
 .modal-head {
-  padding: 20px 22px;
+  padding: 18px 20px;
   border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
@@ -363,102 +407,114 @@ button {
 
 .modal-title {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .close {
   border: 0;
   background: transparent;
-  color: #999;
-  font-size: 20px;
+  font-size: 21px;
+  color: #888;
 }
 
 .modal-body {
-  padding: 22px;
+  padding: 20px;
 }
 
 .field {
-  margin-bottom: 18px;
+  margin-bottom: 17px;
 }
 
 .field:last-child {
   margin-bottom: 0;
 }
 
-.field-label {
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 7px;
+.label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
   color: #555;
+  margin-bottom: 7px;
 }
 
 .field input,
-.field textarea {
+.field textarea,
+.field select {
   width: 100%;
   border: 1px solid #ddd;
-  border-radius: 7px;
-  padding: 10px 12px;
+  background: #fafaf8;
+  padding: 10px;
   outline: none;
-  background: #fafafa;
-}
-
-.field input:focus,
-.field textarea:focus {
-  background: #fff;
-  border-color: #aaa;
-}
-
-.field textarea {
-  min-height: 220px;
-  resize: vertical;
-  font-family: monospace;
+  border-radius: 5px;
   font-size: 12px;
 }
 
+.field textarea {
+  min-height: 210px;
+  resize: vertical;
+  font-family: monospace;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: #999;
+  background: white;
+}
+
 .help {
-  font-size: 11px;
   color: #999;
+  font-size: 10px;
   line-height: 1.5;
   margin-top: 6px;
 }
 
 .modal-foot {
-  padding: 15px 22px;
   border-top: 1px solid #eee;
+  padding: 14px 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 8px;
+}
+
+.modal-right {
+  display: flex;
+  gap: 7px;
+}
+
+.danger {
+  color: #b33;
+  border-color: #ead0d0;
+  background: #fff;
 }
 
 /* =========================
    PROGRESS
 ========================= */
 
-.progress-wrap {
+.progress {
   display: none;
-  margin-top: 18px;
+  margin-top: 15px;
 }
 
-.progress-wrap.show {
+.progress.show {
   display: block;
 }
 
 .progress-text {
-  font-size: 12px;
+  font-size: 11px;
   color: #777;
   margin-bottom: 7px;
 }
 
 .progress-bar {
-  height: 5px;
+  height: 4px;
   background: #eee;
-  border-radius: 5px;
-  overflow: hidden;
 }
 
-.progress-inner {
+.progress-fill {
+  width: 0;
   height: 100%;
-  width: 0%;
   background: #222;
   transition: width .2s;
 }
@@ -470,12 +526,11 @@ button {
 .error {
   display: none;
   margin-top: 15px;
-  padding: 12px;
-  border-radius: 7px;
-  background: #fff1f1;
-  border: 1px solid #f0d0d0;
-  color: #b33;
-  font-size: 12px;
+  padding: 11px;
+  background: #fff3f3;
+  border: 1px solid #edd0d0;
+  color: #a33;
+  font-size: 11px;
   line-height: 1.5;
   white-space: pre-wrap;
 }
@@ -485,160 +540,282 @@ button {
 }
 
 /* =========================
-   MOBILE
+   RESPONSIVE
 ========================= */
 
-@media (max-width: 700px) {
+@media (max-width: 720px) {
 
-  .sidebar {
-    position: static;
-    width: 100%;
-    min-height: auto;
-    border-right: 0;
-    border-bottom: 1px solid #e5e5e5;
-    padding: 15px;
+  .top-inner {
+    padding: 15px 15px 0;
   }
 
-  .logo {
-    margin-bottom: 14px;
+  .brand-row {
+    align-items: flex-start;
   }
 
-  .category-list {
-    flex-direction: row;
-    overflow-x: auto;
+  .brand small {
+    display: none;
   }
 
-  .category-btn {
-    width: auto;
-    white-space: nowrap;
-  }
-
-  .app {
-    display: block;
+  .actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .main {
-    margin-left: 0;
+    padding: 22px 15px 50px;
+  }
+
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .search {
     width: 100%;
   }
 
-  .header {
-    padding: 0 15px;
+  .item {
+    grid-template-columns: 28px minmax(0,1fr) auto;
   }
 
-  .content {
-    padding: 20px 15px 40px;
+  .item .tag {
+    display: none;
   }
 
-  .bookmark {
-    padding: 12px;
-  }
-
-  .domain {
-    max-width: 150px;
+  .random-title {
+    font-size: 30px;
   }
 }
 </style>
 </head>
 
+
 <body>
 
-<div class="app">
+<!-- =========================
+     TOP
+========================= -->
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+<header class="top">
 
-    <div class="logo">
-      Digital Archive <span>/ 개인 보관함</span>
-    </div>
+  <div class="top-inner">
 
-    <div class="category-title">
-      CATEGORY
-    </div>
+    <div class="brand-row">
 
-    <div id="categoryList" class="category-list"></div>
-
-  </aside>
-
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <header class="header">
-
-      <div class="header-left">
-        <div id="headerTitle" class="header-title">
-          전체 북마크
-        </div>
-
-        <div id="headerCount" class="header-count">
-          0개
-        </div>
+      <div class="brand">
+        DIGITAL ARCHIVE
+        <small>personal collection</small>
       </div>
 
-      <div class="header-actions">
+      <div class="actions">
 
-        <button class="btn" onclick="openModal()">
-          가져오기
-        </button>
-
-        <button class="btn primary" onclick="openModal()">
-          AI 분류
-        </button>
-
-      </div>
-
-    </header>
-
-
-    <section class="content">
-
-      <div class="search-box">
-        <input
-          id="searchInput"
-          class="search"
-          type="text"
-          placeholder="북마크 검색..."
-          oninput="renderBookmarks()"
+        <button
+          class="action"
+          onclick="openHTMLImport()"
         >
+          북마크 HTML
+        </button>
+
+        <button
+          class="action"
+          onclick="openJSON()"
+        >
+          JSON
+        </button>
+
+        <button
+          class="action dark"
+          onclick="openAI()"
+        >
+          AI 자동 분류
+        </button>
+
       </div>
 
+    </div>
 
-      <div class="section-header">
 
-        <div id="sectionName" class="section-name">
+    <!-- CATEGORY / TOOLS -->
+
+    <nav id="nav" class="nav">
+
+      <button
+        class="active"
+        data-mode="all"
+        onclick="setMode('all')"
+      >
+        전체
+      </button>
+
+      <button
+        class="tool"
+        data-mode="random"
+        onclick="setMode('random')"
+      >
+        랜덤 탐색
+      </button>
+
+      <span id="categoryButtons"></span>
+
+    </nav>
+
+  </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+  <!-- NORMAL VIEW -->
+
+  <section id="normalView">
+
+    <div class="toolbar">
+
+      <div>
+
+        <span id="heading" class="heading">
           전체
-        </div>
+        </span>
 
-        <div id="sectionCount" class="section-count">
+        <span id="count" class="count">
           0개
-        </div>
+        </span>
 
       </div>
 
+      <input
+        id="search"
+        class="search"
+        placeholder="검색..."
+        oninput="render()"
+      >
 
-      <div id="bookmarkContainer" class="bookmark-list"></div>
-
-    </section>
-
-  </main>
-
-</div>
+    </div>
 
 
-<!-- MODAL -->
+    <div
+      id="list"
+      class="list"
+    ></div>
 
-<div id="modalBg" class="modal-bg">
+  </section>
+
+
+  <!-- RANDOM VIEW -->
+
+  <section
+    id="randomView"
+    class="random-screen"
+  >
+
+    <div class="random-card">
+
+      <div class="random-inner">
+
+        <div
+          id="randomNumber"
+          class="random-number"
+        >
+          -
+        </div>
+
+        <img
+          id="randomFavicon"
+          class="random-favicon"
+          alt=""
+        >
+
+        <a
+          id="randomTitle"
+          class="random-title"
+          href="#"
+          target="_blank"
+          rel="noopener"
+        >
+          -
+        </a>
+
+        <div
+          id="randomDomain"
+          class="random-domain"
+        >
+          -
+        </div>
+
+        <div
+          id="randomCategory"
+          class="random-category"
+        >
+          -
+        </div>
+
+        <button
+          class="random-next"
+          onclick="nextRandom()"
+        >
+          다음 랜덤 →
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- =========================
+     HIDDEN FILE INPUTS
+========================= -->
+
+<input
+  id="htmlFile"
+  type="file"
+  accept=".html,text/html"
+  style="display:none"
+  onchange="importBookmarkHTML(event)"
+>
+
+<input
+  id="jsonFile"
+  type="file"
+  accept=".json,application/json"
+  style="display:none"
+  onchange="importJSONFile(event)"
+>
+
+
+<!-- =========================
+     EDIT MODAL
+========================= -->
+
+<div
+  id="editOverlay"
+  class="overlay"
+>
 
   <div class="modal">
 
     <div class="modal-head">
 
-      <div class="modal-title">
-        북마크 가져오기
+      <div
+        id="editTitle"
+        class="modal-title"
+      >
+        북마크 수정
       </div>
 
-      <button class="close" onclick="closeModal()">
+      <button
+        class="close"
+        onclick="closeModal('editOverlay')"
+      >
         ×
       </button>
 
@@ -649,34 +826,12 @@ button {
 
       <div class="field">
 
-        <div class="field-label">
-          Gemini API Key
-        </div>
+        <label class="label">
+          제목
+        </label>
 
         <input
-          id="apiKeyInput"
-          type="password"
-          placeholder="AIza..."
-        >
-
-        <div class="help">
-          API 키는 이 브라우저의 localStorage에 저장됩니다.
-        </div>
-
-      </div>
-
-
-      <div class="field">
-
-        <div class="field-label">
-          JSON 파일
-        </div>
-
-        <input
-          id="fileInput"
-          type="file"
-          accept=".json,application/json"
-          onchange="loadJSONFile(event)"
+          id="editBookmarkTitle"
         >
 
       </div>
@@ -684,48 +839,341 @@ button {
 
       <div class="field">
 
-        <div class="field-label">
-          또는 JSON 직접 붙여넣기
-        </div>
+        <label class="label">
+          URL
+        </label>
 
-        <textarea
-          id="jsonInput"
-          placeholder='[{"title":"예시","url":"https://example.com"}]'
-        ></textarea>
-
-      </div>
-
-
-      <div id="progressWrap" class="progress-wrap">
-
-        <div id="progressText" class="progress-text">
-          준비 중...
-        </div>
-
-        <div class="progress-bar">
-          <div id="progressInner" class="progress-inner"></div>
-        </div>
+        <input
+          id="editBookmarkURL"
+        >
 
       </div>
 
 
-      <div id="errorBox" class="error"></div>
+      <div class="field">
+
+        <label class="label">
+          대분류
+        </label>
+
+        <input
+          id="editMainCategory"
+          placeholder="예: 디자인"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label class="label">
+          소분류
+        </label>
+
+        <input
+          id="editSubCategory"
+          placeholder="예: 레퍼런스"
+        >
+
+      </div>
 
     </div>
 
 
     <div class="modal-foot">
 
-      <button class="btn" onclick="closeModal()">
+      <button
+        class="action danger"
+        onclick="deleteBookmark()"
+      >
+        삭제
+      </button>
+
+      <div class="modal-right">
+
+        <button
+          class="action"
+          onclick="closeModal('editOverlay')"
+        >
+          취소
+        </button>
+
+        <button
+          class="action dark"
+          onclick="saveBookmarkEdit()"
+        >
+          저장
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     HTML IMPORT INFO
+========================= -->
+
+<div
+  id="htmlOverlay"
+  class="overlay"
+>
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <div class="modal-title">
+        크롬 북마크 가져오기
+      </div>
+
+      <button
+        class="close"
+        onclick="closeModal('htmlOverlay')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div style="font-size:13px;line-height:1.7;color:#555;">
+
+        크롬에서 내보낸
+        <strong>bookmarks.html</strong>
+        파일을 그대로 넣으면 됩니다.
+
+        <br><br>
+
+        기존 북마크가 있다면
+        <strong>기존 데이터 뒤에 추가</strong>됩니다.
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-foot">
+
+      <button
+        class="action"
+        onclick="closeModal('htmlOverlay')"
+      >
         취소
       </button>
 
       <button
-        id="classifyButton"
-        class="btn primary"
-        onclick="classifyBookmarks()"
+        class="action dark"
+        onclick="chooseHTMLFile()"
       >
-        AI로 분류하기
+        HTML 파일 선택
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     JSON MODAL
+========================= -->
+
+<div
+  id="jsonOverlay"
+  class="overlay"
+>
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <div class="modal-title">
+        JSON
+      </div>
+
+      <button
+        class="close"
+        onclick="closeModal('jsonOverlay')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="field">
+
+        <label class="label">
+          JSON 데이터
+        </label>
+
+        <textarea
+          id="jsonText"
+          placeholder='북마크 JSON을 넣거나 현재 데이터를 확인할 수 있습니다.'
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-foot">
+
+      <div>
+
+        <button
+          class="action"
+          onclick="chooseJSONFile()"
+        >
+          JSON 가져오기
+        </button>
+
+        <button
+          class="action"
+          onclick="exportJSON()"
+        >
+          JSON 내보내기
+        </button>
+
+      </div>
+
+      <button
+        class="action dark"
+        onclick="applyJSON()"
+      >
+        JSON 적용
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     AI MODAL
+========================= -->
+
+<div
+  id="aiOverlay"
+  class="overlay"
+>
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <div class="modal-title">
+        AI 자동 분류
+      </div>
+
+      <button
+        class="close"
+        onclick="closeModal('aiOverlay')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="field">
+
+        <label class="label">
+          Gemini API Key
+        </label>
+
+        <input
+          id="apiKey"
+          type="password"
+          placeholder="AIza..."
+        >
+
+        <div class="help">
+          이 브라우저의 localStorage에 저장됩니다.
+        </div>
+
+      </div>
+
+
+      <div
+        style="
+          font-size:12px;
+          color:#666;
+          line-height:1.7;
+        "
+      >
+
+        현재 보관된 북마크를 AI가 보고
+        <strong>대분류 + 소분류</strong>를 자동으로 지정합니다.
+
+        <br>
+
+        제목과 URL은 그대로 유지합니다.
+
+      </div>
+
+
+      <div
+        id="progress"
+        class="progress"
+      >
+
+        <div
+          id="progressText"
+          class="progress-text"
+        >
+          준비 중...
+        </div>
+
+        <div class="progress-bar">
+
+          <div
+            id="progressFill"
+            class="progress-fill"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="error"
+        class="error"
+      ></div>
+
+    </div>
+
+
+    <div class="modal-foot">
+
+      <button
+        class="action"
+        onclick="closeModal('aiOverlay')"
+      >
+        취소
+      </button>
+
+      <button
+        id="aiButton"
+        class="action dark"
+        onclick="runAI()"
+      >
+        자동 분류 시작
       </button>
 
     </div>
@@ -737,56 +1185,68 @@ button {
 
 <script>
 
-/* ==========================================
+/* =====================================================
    DATA
-========================================== */
+===================================================== */
 
 const DATA_KEY = "digitalArchiveData";
 const API_KEY = "digitalArchiveGeminiKey";
 
 let archive = [];
-let activeCategory = "__all";
+let mode = "all";
+let currentEditIndex = -1;
+let randomIndex = -1;
 
 
-/* ==========================================
+/* =====================================================
    INIT
-========================================== */
+===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const savedData = localStorage.getItem(DATA_KEY);
+  const saved =
+    localStorage.getItem(DATA_KEY);
 
-  if (savedData) {
+  if (saved) {
 
     try {
-      archive = JSON.parse(savedData);
+
+      archive = JSON.parse(saved);
 
       if (!Array.isArray(archive)) {
         archive = [];
       }
 
-    } catch (e) {
+    } catch {
+
       archive = [];
+
     }
 
   }
 
-  const savedKey = localStorage.getItem(API_KEY);
 
-  if (savedKey) {
-    document.getElementById("apiKeyInput").value = savedKey;
+  const key =
+    localStorage.getItem(API_KEY);
+
+  if (key) {
+
+    document.getElementById("apiKey").value =
+      key;
+
   }
 
-  renderAll();
+
+  render();
 
 });
 
 
-/* ==========================================
+/* =====================================================
    SAVE
-========================================== */
+===================================================== */
 
-function saveArchive() {
+function saveData() {
 
   localStorage.setItem(
     DATA_KEY,
@@ -796,289 +1256,250 @@ function saveArchive() {
 }
 
 
-/* ==========================================
-   MODAL
-========================================== */
+/* =====================================================
+   MODE
+===================================================== */
 
-function openModal() {
+function setMode(newMode) {
+
+  mode = newMode;
+
 
   document
-    .getElementById("modalBg")
-    .classList.add("show");
+    .querySelectorAll(".nav button")
+    .forEach(btn => {
 
-}
+      btn.classList.remove("active");
 
-
-function closeModal() {
-
-  document
-    .getElementById("modalBg")
-    .classList.remove("show");
-
-}
+    });
 
 
-document
-  .getElementById("modalBg")
-  .addEventListener("click", function(e) {
-
-    if (e.target === this) {
-      closeModal();
-    }
-
-  });
+  const target =
+    document.querySelector(
+      `.nav button[data-mode="${newMode}"]`
+    );
 
 
-/* ==========================================
-   JSON FILE
-========================================== */
+  if (target) {
+    target.classList.add("active");
+  }
 
-function loadJSONFile(event) {
 
-  const file = event.target.files[0];
-
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
+  if (newMode === "random") {
 
     document
-      .getElementById("jsonInput")
-      .value = e.target.result;
+      .getElementById("normalView")
+      .style.display = "none";
 
-  };
+    document
+      .getElementById("randomView")
+      .classList.add("show");
 
-  reader.readAsText(file);
+    showRandom();
 
-}
+  } else {
 
+    document
+      .getElementById("normalView")
+      .style.display = "block";
 
-/* ==========================================
-   ESCAPE
-========================================== */
+    document
+      .getElementById("randomView")
+      .classList.remove("show");
 
-function escapeHTML(value) {
-
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-/* ==========================================
-   DOMAIN
-========================================== */
-
-function getDomain(url) {
-
-  try {
-
-    return new URL(url).hostname
-      .replace(/^www\./, "");
-
-  } catch {
-
-    return "";
+    render();
 
   }
 
 }
 
 
-/* ==========================================
-   RENDER ALL
-========================================== */
-
-function renderAll() {
-
-  renderCategories();
-  renderBookmarks();
-
-}
-
-
-/* ==========================================
+/* =====================================================
    CATEGORIES
-========================================== */
+===================================================== */
 
 function renderCategories() {
 
-  const container =
-    document.getElementById("categoryList");
-
-  const categoryCounts = {};
-
-  archive.forEach(item => {
-
-    const category =
-      item.mainCategory || "미분류";
-
-    categoryCounts[category] =
-      (categoryCounts[category] || 0) + 1;
-
-  });
+  const box =
+    document.getElementById("categoryButtons");
 
 
-  const categories =
-    Object.keys(categoryCounts)
-      .sort((a, b) =>
-        a.localeCompare(b, "ko")
-      );
+  const categories = [
+    ...new Set(
+      archive
+        .map(x => x.mainCategory)
+        .filter(Boolean)
+    )
+  ].sort((a,b) =>
+    a.localeCompare(b, "ko")
+  );
 
 
-  let html = `
+  box.innerHTML =
+    categories.map(category => {
 
-    <button
-      class="category-btn ${activeCategory === "__all" ? "active" : ""}"
-      onclick="selectCategory('__all')"
-    >
-
-      <span>전체</span>
-
-      <span class="category-count">
-        ${archive.length}
-      </span>
-
-    </button>
-
-  `;
+      const active =
+        mode === "category:" + category
+          ? "active"
+          : "";
 
 
-  categories.forEach(category => {
+      return `
 
-    html += `
-
-      <button
-        class="category-btn ${activeCategory === category ? "active" : ""}"
-        onclick="selectCategory(${JSON.stringify(category)})"
-      >
-
-        <span>
+        <button
+          class="${active}"
+          onclick='setCategory(${JSON.stringify(category)})'
+        >
           ${escapeHTML(category)}
-        </span>
+        </button>
 
-        <span class="category-count">
-          ${categoryCounts[category]}
-        </span>
+      `;
 
-      </button>
-
-    `;
-
-  });
-
-
-  container.innerHTML = html;
+    }).join("");
 
 }
 
 
-/* ==========================================
+/* =====================================================
    CATEGORY SELECT
-========================================== */
+===================================================== */
 
-function selectCategory(category) {
+function setCategory(category) {
 
-  activeCategory = category;
+  mode =
+    "category:" + category;
 
-  renderAll();
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+
+  document
+    .getElementById("normalView")
+    .style.display = "block";
+
+
+  document
+    .getElementById("randomView")
+    .classList.remove("show");
+
+
+  render();
 
 }
 
 
-/* ==========================================
-   RENDER BOOKMARKS
-========================================== */
+/* =====================================================
+   RENDER
+===================================================== */
 
-function renderBookmarks() {
+function render() {
 
-  const container =
-    document.getElementById("bookmarkContainer");
+  renderCategories();
+
+
+  const list =
+    document.getElementById("list");
+
 
   const search =
     document
-      .getElementById("searchInput")
+      .getElementById("search")
       .value
       .trim()
       .toLowerCase();
 
 
-  let filtered = archive.filter(item => {
-
-    if (
-      activeCategory !== "__all" &&
-      (item.mainCategory || "미분류") !== activeCategory
-    ) {
-      return false;
-    }
+  let filtered =
+    archive.map((item, index) => ({
+      ...item,
+      _index: index
+    }));
 
 
-    if (!search) {
-      return true;
-    }
+  if (mode.startsWith("category:")) {
+
+    const category =
+      mode.substring(9);
+
+    filtered =
+      filtered.filter(
+        item =>
+          (item.mainCategory || "미분류")
+          === category
+      );
+
+  }
 
 
-    const text = [
+  if (search) {
 
-      item.title,
-      item.url,
-      item.mainCategory,
-      item.subCategory
+    filtered =
+      filtered.filter(item => {
 
-    ]
-      .join(" ")
-      .toLowerCase();
+        const text = [
 
+          item.title,
+          item.url,
+          item.mainCategory,
+          item.subCategory
 
-    return text.includes(search);
-
-  });
-
-
-  const title =
-    activeCategory === "__all"
-      ? "전체"
-      : activeCategory;
+        ]
+          .join(" ")
+          .toLowerCase();
 
 
-  document.getElementById("sectionName").textContent =
-    title;
+        return text.includes(search);
+
+      });
+
+  }
 
 
-  document.getElementById("sectionCount").textContent =
-    `${filtered.length}개`;
+  let title = "전체";
 
 
-  document.getElementById("headerTitle").textContent =
-    title === "전체"
-      ? "전체 북마크"
-      : title;
+  if (mode.startsWith("category:")) {
+
+    title =
+      mode.substring(9);
+
+  }
 
 
-  document.getElementById("headerCount").textContent =
-    `${archive.length}개`;
+  document
+    .getElementById("heading")
+    .textContent = title;
+
+
+  document
+    .getElementById("count")
+    .textContent =
+      `${filtered.length}개`;
 
 
   if (filtered.length === 0) {
 
-    container.innerHTML = `
+    list.innerHTML = `
 
       <div class="empty">
 
         <strong>
-          ${archive.length === 0
-            ? "아직 북마크가 없습니다."
-            : "검색 결과가 없습니다."}
+          ${
+            archive.length === 0
+              ? "아직 북마크가 없음"
+              : "찾는 북마크가 없음"
+          }
         </strong>
 
-        ${archive.length === 0
-          ? "오른쪽 위 가져오기를 눌러 JSON 북마크를 가져와보세요."
-          : "다른 검색어나 카테고리를 선택해보세요."}
+        ${
+          archive.length === 0
+            ? "위쪽의 「북마크 HTML」에서 bookmarks.html을 넣어주세요."
+            : "검색어나 카테고리를 바꿔보세요."
+        }
 
       </div>
 
@@ -1089,192 +1510,751 @@ function renderBookmarks() {
   }
 
 
-  container.innerHTML =
+  list.innerHTML =
     filtered
-      .map(createBookmarkHTML)
+      .map(createItem)
       .join("");
 
 }
 
 
-/* ==========================================
-   BOOKMARK HTML
-========================================== */
+/* =====================================================
+   ITEM
+===================================================== */
 
-function createBookmarkHTML(item) {
+function createItem(item) {
 
   const title =
-    escapeHTML(item.title || "제목 없음");
+    escapeHTML(
+      item.title || "제목 없음"
+    );
+
 
   const url =
-    escapeHTML(item.url || "#");
+    escapeHTML(
+      item.url || "#"
+    );
+
 
   const domain =
-    escapeHTML(getDomain(item.url || ""));
-
-  const mainCategory =
-    escapeHTML(item.mainCategory || "미분류");
-
-  const subCategory =
-    escapeHTML(item.subCategory || "");
+    escapeHTML(
+      getDomain(item.url)
+    );
 
 
-  let favicon = "";
+  const category =
+    escapeHTML(
+      item.mainCategory || "미분류"
+    );
 
-  try {
 
-    favicon =
-      `https://www.google.com/s2/favicons?domain=${
-        encodeURIComponent(
-          new URL(item.url).hostname
-        )
-      }&sz=32`;
+  const sub =
+    escapeHTML(
+      item.subCategory || ""
+    );
 
-  } catch {
 
-    favicon = "";
-
-  }
+  const favicon =
+    getFavicon(item.url);
 
 
   return `
 
-    <article class="bookmark">
+    <div class="item">
 
       ${
         favicon
-          ? `<img
+          ? `
+            <img
               class="favicon"
               src="${favicon}"
               alt=""
-              loading="lazy"
               onerror="this.style.visibility='hidden'"
-            >`
-          : `<div class="favicon"></div>`
+            >
+          `
+          : `
+            <div></div>
+          `
       }
 
 
-      <div class="bookmark-info">
+      <div class="item-main">
 
         <a
-          class="bookmark-title"
+          class="item-title"
           href="${url}"
           target="_blank"
-          rel="noopener noreferrer"
-          title="${title}"
+          rel="noopener"
         >
           ${title}
         </a>
 
-
-        <div class="bookmark-meta">
-
-          <span class="domain">
-            ${domain}
-          </span>
-
-          <span>
-            ${mainCategory}
-          </span>
-
-          ${
-            subCategory
-              ? `<span class="subcategory">
-                  ${subCategory}
-                </span>`
-              : ""
-          }
-
+        <div class="item-url">
+          ${domain}
         </div>
 
       </div>
 
-    </article>
+
+      <div class="tag">
+
+        ${category}
+
+        ${
+          sub
+            ? " / " + sub
+            : ""
+        }
+
+      </div>
+
+
+      <button
+        class="edit-btn"
+        onclick="openEdit(${item._index})"
+      >
+        수정
+      </button>
+
+    </div>
 
   `;
 
 }
 
 
-/* ==========================================
-   ERROR
-========================================== */
+/* =====================================================
+   EDIT
+===================================================== */
 
-function showError(message) {
+function openEdit(index) {
 
-  const box =
-    document.getElementById("errorBox");
+  currentEditIndex = index;
 
-  box.textContent = message;
+  const item =
+    archive[index];
 
-  box.classList.add("show");
+
+  document.getElementById(
+    "editBookmarkTitle"
+  ).value =
+    item.title || "";
+
+
+  document.getElementById(
+    "editBookmarkURL"
+  ).value =
+    item.url || "";
+
+
+  document.getElementById(
+    "editMainCategory"
+  ).value =
+    item.mainCategory || "";
+
+
+  document.getElementById(
+    "editSubCategory"
+  ).value =
+    item.subCategory || "";
+
+
+  document
+    .getElementById("editOverlay")
+    .classList.add("show");
 
 }
 
 
-function clearError() {
+function saveBookmarkEdit() {
 
-  const box =
-    document.getElementById("errorBox");
+  if (
+    currentEditIndex < 0 ||
+    !archive[currentEditIndex]
+  ) {
+    return;
+  }
 
-  box.textContent = "";
 
-  box.classList.remove("show");
+  archive[currentEditIndex] = {
+
+    title:
+      document.getElementById(
+        "editBookmarkTitle"
+      ).value.trim(),
+
+    url:
+      document.getElementById(
+        "editBookmarkURL"
+      ).value.trim(),
+
+    mainCategory:
+      document.getElementById(
+        "editMainCategory"
+      ).value.trim(),
+
+    subCategory:
+      document.getElementById(
+        "editSubCategory"
+      ).value.trim()
+
+  };
+
+
+  saveData();
+
+  closeModal("editOverlay");
+
+  render();
 
 }
 
 
-/* ==========================================
-   PROGRESS
-========================================== */
+function deleteBookmark() {
 
-function setProgress(current, total) {
+  if (
+    currentEditIndex < 0 ||
+    !archive[currentEditIndex]
+  ) {
+    return;
+  }
 
-  const wrap =
-    document.getElementById("progressWrap");
+
+  if (
+    !confirm(
+      "이 북마크를 삭제할까요?"
+    )
+  ) {
+    return;
+  }
+
+
+  archive.splice(
+    currentEditIndex,
+    1
+  );
+
+
+  saveData();
+
+  closeModal("editOverlay");
+
+  render();
+
+}
+
+
+/* =====================================================
+   RANDOM
+===================================================== */
+
+function showRandom() {
+
+  if (archive.length === 0) {
+
+    document.getElementById(
+      "randomNumber"
+    ).textContent = "-";
+
+
+    document.getElementById(
+      "randomTitle"
+    ).textContent =
+      "북마크가 없습니다.";
+
+
+    document.getElementById(
+      "randomTitle"
+    ).removeAttribute("href");
+
+
+    document.getElementById(
+      "randomDomain"
+    ).textContent =
+      "먼저 북마크를 가져와주세요.";
+
+
+    return;
+
+  }
+
+
+  randomIndex =
+    Math.floor(
+      Math.random() *
+      archive.length
+    );
+
+
+  const item =
+    archive[randomIndex];
+
+
+  document.getElementById(
+    "randomNumber"
+  ).textContent =
+    `${randomIndex + 1} / ${archive.length}`;
+
+
+  document.getElementById(
+    "randomTitle"
+  ).textContent =
+    item.title || "제목 없음";
+
+
+  document.getElementById(
+    "randomTitle"
+  ).href =
+    item.url || "#";
+
+
+  document.getElementById(
+    "randomDomain"
+  ).textContent =
+    getDomain(item.url);
+
+
+  document.getElementById(
+    "randomCategory"
+  ).textContent =
+    [
+      item.mainCategory,
+      item.subCategory
+    ]
+      .filter(Boolean)
+      .join(" / ") ||
+      "미분류";
+
+
+  const favicon =
+    getFavicon(item.url);
+
+
+  document.getElementById(
+    "randomFavicon"
+  ).src =
+    favicon || "";
+
+}
+
+
+function nextRandom() {
+
+  if (archive.length === 0) {
+    return;
+  }
+
+
+  let next =
+    Math.floor(
+      Math.random() *
+      archive.length
+    );
+
+
+  if (
+    archive.length > 1 &&
+    next === randomIndex
+  ) {
+
+    next =
+      (next + 1) %
+      archive.length;
+
+  }
+
+
+  randomIndex = next;
+
+  const item =
+    archive[randomIndex];
+
+
+  document.getElementById(
+    "randomNumber"
+  ).textContent =
+    `${randomIndex + 1} / ${archive.length}`;
+
+
+  document.getElementById(
+    "randomTitle"
+  ).textContent =
+    item.title || "제목 없음";
+
+
+  document.getElementById(
+    "randomTitle"
+  ).href =
+    item.url || "#";
+
+
+  document.getElementById(
+    "randomDomain"
+  ).textContent =
+    getDomain(item.url);
+
+
+  document.getElementById(
+    "randomCategory"
+  ).textContent =
+    [
+      item.mainCategory,
+      item.subCategory
+    ]
+      .filter(Boolean)
+      .join(" / ") ||
+      "미분류";
+
+
+  document.getElementById(
+    "randomFavicon"
+  ).src =
+    getFavicon(item.url) || "";
+
+}
+
+
+/* =====================================================
+   HTML BOOKMARK IMPORT
+===================================================== */
+
+function openHTMLImport() {
+
+  document
+    .getElementById("htmlOverlay")
+    .classList.add("show");
+
+}
+
+
+function chooseHTMLFile() {
+
+  closeModal("htmlOverlay");
+
+  document
+    .getElementById("htmlFile")
+    .click();
+
+}
+
+
+function importBookmarkHTML(event) {
+
+  const file =
+    event.target.files[0];
+
+
+  if (!file) {
+    return;
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload = function(e) {
+
+    try {
+
+      const parser =
+        new DOMParser();
+
+
+      const doc =
+        parser.parseFromString(
+          e.target.result,
+          "text/html"
+        );
+
+
+      const links =
+        [...doc.querySelectorAll("a[href]")];
+
+
+      const imported =
+        links.map(a => {
+
+          return {
+
+            title:
+              a.textContent.trim() ||
+              "제목 없음",
+
+            url:
+              a.getAttribute("href") ||
+              "",
+
+            mainCategory:
+              "",
+
+            subCategory:
+              ""
+
+          };
+
+        })
+        .filter(x => x.url);
+
+
+      if (imported.length === 0) {
+
+        alert(
+          "북마크를 찾지 못했습니다."
+        );
+
+        return;
+
+      }
+
+
+      archive =
+        archive.concat(imported);
+
+
+      saveData();
+
+      mode = "all";
+
+      render();
+
+
+      alert(
+        `${imported.length}개의 북마크를 가져왔습니다.`
+      );
+
+
+    } catch (error) {
+
+      alert(
+        "HTML을 읽는 중 오류가 발생했습니다.\n\n" +
+        error.message
+      );
+
+    }
+
+  };
+
+
+  reader.readAsText(file);
+
+
+  event.target.value = "";
+
+}
+
+
+/* =====================================================
+   JSON
+===================================================== */
+
+function openJSON() {
+
+  document.getElementById(
+    "jsonText"
+  ).value =
+    JSON.stringify(
+      archive,
+      null,
+      2
+    );
+
+
+  document
+    .getElementById("jsonOverlay")
+    .classList.add("show");
+
+}
+
+
+function chooseJSONFile() {
+
+  document
+    .getElementById("jsonFile")
+    .click();
+
+}
+
+
+function importJSONFile(event) {
+
+  const file =
+    event.target.files[0];
+
+
+  if (!file) {
+    return;
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload = function(e) {
+
+    document.getElementById(
+      "jsonText"
+    ).value =
+      e.target.result;
+
+  };
+
+
+  reader.readAsText(file);
+
+  event.target.value = "";
+
+}
+
+
+function applyJSON() {
 
   const text =
-    document.getElementById("progressText");
-
-  const inner =
-    document.getElementById("progressInner");
-
-
-  wrap.classList.add("show");
-
-  const percent =
-    Math.round((current / total) * 100);
-
-
-  inner.style.width =
-    `${percent}%`;
-
-
-  text.textContent =
-    `AI 분류 중... ${current} / ${total}`;
-
-}
-
-
-/* ==========================================
-   AI CLASSIFY
-========================================== */
-
-async function classifyBookmarks() {
-
-  clearError();
-
-
-  const key =
     document
-      .getElementById("apiKeyInput")
+      .getElementById("jsonText")
       .value
       .trim();
 
 
-  const jsonText =
+  if (!text) {
+
+    alert(
+      "JSON 데이터가 없습니다."
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const data =
+      JSON.parse(text);
+
+
+    if (!Array.isArray(data)) {
+
+      throw new Error(
+        "JSON은 배열이어야 합니다."
+      );
+
+    }
+
+
+    archive =
+      data.map(item => ({
+
+        title:
+          item.title || "",
+
+        url:
+          item.url || "",
+
+        mainCategory:
+          item.mainCategory || "",
+
+        subCategory:
+          item.subCategory || ""
+
+      }));
+
+
+    saveData();
+
+    closeModal("jsonOverlay");
+
+    mode = "all";
+
+    render();
+
+
+  } catch (error) {
+
+    alert(
+      "JSON 형식이 올바르지 않습니다.\n\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+function exportJSON() {
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          archive,
+          null,
+          2
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+
+  const a =
+    document.createElement("a");
+
+
+  a.href = url;
+
+  a.download =
+    "digital-archive.json";
+
+  a.click();
+
+
+  URL.revokeObjectURL(url);
+
+}
+
+
+/* =====================================================
+   AI
+===================================================== */
+
+function openAI() {
+
+  clearError();
+
+  document
+    .getElementById("aiOverlay")
+    .classList.add("show");
+
+}
+
+
+async function runAI() {
+
+  clearError();
+
+
+  if (archive.length === 0) {
+
+    showError(
+      "먼저 북마크를 가져와주세요."
+    );
+
+    return;
+
+  }
+
+
+  const key =
     document
-      .getElementById("jsonInput")
+      .getElementById("apiKey")
       .value
       .trim();
 
@@ -1290,61 +2270,6 @@ async function classifyBookmarks() {
   }
 
 
-  if (!jsonText) {
-
-    showError(
-      "북마크 JSON을 넣어주세요."
-    );
-
-    return;
-
-  }
-
-
-  let bookmarks;
-
-
-  try {
-
-    bookmarks =
-      JSON.parse(jsonText);
-
-  } catch (e) {
-
-    showError(
-      "JSON 형식이 올바르지 않습니다.\n\n" +
-      e.message
-    );
-
-    return;
-
-  }
-
-
-  if (!Array.isArray(bookmarks)) {
-
-    showError(
-      "JSON의 최상위 구조가 배열이어야 합니다."
-    );
-
-    return;
-
-  }
-
-
-  if (bookmarks.length === 0) {
-
-    showError(
-      "북마크가 비어 있습니다."
-    );
-
-    return;
-
-  }
-
-
-  /* API KEY 저장 */
-
   localStorage.setItem(
     API_KEY,
     key
@@ -1352,61 +2277,69 @@ async function classifyBookmarks() {
 
 
   const button =
-    document.getElementById("classifyButton");
+    document.getElementById(
+      "aiButton"
+    );
+
 
   button.disabled = true;
-  button.textContent = "분류 중...";
+
+  button.textContent =
+    "분류 중...";
+
+
+  document
+    .getElementById("progress")
+    .classList.add("show");
 
 
   try {
 
     const chunkSize = 20;
 
-    const chunks = [];
+    const result = [];
 
 
     for (
-      let i = 0;
-      i < bookmarks.length;
-      i += chunkSize
+      let start = 0;
+      start < archive.length;
+      start += chunkSize
     ) {
-
-      chunks.push(
-        bookmarks.slice(i, i + chunkSize)
-      );
-
-    }
-
-
-    let results = [];
-
-
-    for (
-      let i = 0;
-      i < chunks.length;
-      i++
-    ) {
-
-      setProgress(
-        Math.min(
-          (i + 1) * chunkSize,
-          bookmarks.length
-        ),
-        bookmarks.length
-      );
-
 
       const chunk =
-        chunks[i];
+        archive.slice(
+          start,
+          start + chunkSize
+        );
+
+
+      const end =
+        Math.min(
+          start + chunkSize,
+          archive.length
+        );
+
+
+      document.getElementById(
+        "progressText"
+      ).textContent =
+        `AI 분류 중... ${end} / ${archive.length}`;
+
+
+      document.getElementById(
+        "progressFill"
+      ).style.width =
+        `${(end / archive.length) * 100}%`;
 
 
       const prompt = `
 
-너는 사용자의 개인 북마크를 정리하는 분류 AI다.
+너는 개인 디지털 북마크를 정리하는 AI다.
 
-아래 북마크들을 내용과 URL을 보고 적절한 카테고리로 분류해라.
+각 북마크를 실제 내용과 URL을 보고
+사용자가 나중에 찾기 쉽도록 분류해라.
 
-각 북마크마다 다음 형식으로 반환한다.
+반드시 아래 JSON 배열 형식으로만 답한다.
 
 [
   {
@@ -1419,13 +2352,16 @@ async function classifyBookmarks() {
 
 규칙:
 
-1. title과 url은 원본을 그대로 유지한다.
-2. mainCategory는 너무 세분화하지 말고 비슷한 북마크끼리 묶는다.
-3. subCategory는 mainCategory 안에서 내용을 더 구체적으로 구분한다.
-4. 사용자가 나중에 찾기 쉽도록 실용적으로 분류한다.
-5. 카테고리 이름은 한국어로 작성한다.
-6. 설명이나 마크다운은 절대 넣지 않는다.
-7. 반드시 JSON 배열만 반환한다.
+- title은 절대로 바꾸지 않는다.
+- url은 절대로 바꾸지 않는다.
+- mainCategory와 subCategory만 새로 지정한다.
+- 대분류는 너무 많이 만들지 않는다.
+- 비슷한 자료는 같은 대분류로 묶는다.
+- 소분류는 필요할 때만 구체적으로 나눈다.
+- 한국어 카테고리명을 사용한다.
+- 설명문을 넣지 않는다.
+- 마크다운을 사용하지 않는다.
+- JSON 배열만 반환한다.
 
 북마크:
 
@@ -1434,100 +2370,80 @@ ${JSON.stringify(chunk, null, 2)}
 `;
 
 
-      /*
-       * 중요:
-       * 기존 gemini-2.5-flash-lite 대신
-       * 현재 신규 사용자가 사용할 수 있는
-       * gemini-3.5-flash-lite 사용
-       */
-
-      const endpoint =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent";
-
-
       const response =
-        await fetch(endpoint, {
+        await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+          {
 
-          method: "POST",
+            method: "POST",
 
-          headers: {
+            headers: {
 
-            "Content-Type":
-              "application/json",
+              "Content-Type":
+                "application/json",
 
-            "x-goog-api-key":
-              key
+              "x-goog-api-key":
+                key
 
-          },
+            },
 
-          body: JSON.stringify({
+            body:
+              JSON.stringify({
 
-            contents: [
-
-              {
-
-                parts: [
+                contents: [
 
                   {
-                    text: prompt
+
+                    parts: [
+
+                      {
+                        text: prompt
+                      }
+
+                    ]
+
                   }
 
-                ]
+                ],
 
-              }
+                generationConfig: {
 
-            ],
+                  responseMimeType:
+                    "application/json"
 
-            generationConfig: {
+                }
 
-              responseMimeType:
-                "application/json"
+              })
 
-            }
-
-          })
-
-        });
+          }
+        );
 
 
       if (!response.ok) {
 
-        let errorMessage =
+        let message =
           `API 오류 (${response.status})`;
 
 
         try {
 
-          const errorData =
+          const data =
             await response.json();
 
+
           if (
-            errorData &&
-            errorData.error &&
-            errorData.error.message
+            data?.error?.message
           ) {
 
-            errorMessage +=
-              `\n${errorData.error.message}`;
+            message +=
+              `\n${data.error.message}`;
 
           }
 
-        } catch {
-
-          const text =
-            await response.text();
-
-          if (text) {
-            errorMessage +=
-              `\n${text}`;
-          }
-
-        }
+        } catch {}
 
 
-        throw new Error(
-          errorMessage
-        );
+        throw new Error(message);
 
       }
 
@@ -1547,90 +2463,66 @@ ${JSON.stringify(chunk, null, 2)}
       if (!text) {
 
         throw new Error(
-          "Gemini가 분류 결과를 반환하지 않았습니다."
+          "Gemini가 결과를 반환하지 않았습니다."
         );
 
       }
 
 
-      let parsed;
-
-
-      try {
-
-        parsed =
-          JSON.parse(text);
-
-      } catch (e) {
-
-        console.log(
-          "Gemini raw response:",
-          text
-        );
-
-        throw new Error(
-          "Gemini가 올바른 JSON을 반환하지 않았습니다."
-        );
-
-      }
+      const parsed =
+        JSON.parse(text);
 
 
       if (!Array.isArray(parsed)) {
 
         throw new Error(
-          "Gemini 응답이 배열 형태가 아닙니다."
+          "Gemini 결과가 배열이 아닙니다."
         );
 
       }
 
 
-      results =
-        results.concat(
-          parsed.map(item => ({
-
-            title:
-              item.title || "",
-
-            url:
-              item.url || "",
-
-            mainCategory:
-              item.mainCategory ||
-              "미분류",
-
-            subCategory:
-              item.subCategory ||
-              ""
-
-          }))
-        );
+      result.push(
+        ...parsed
+      );
 
     }
 
 
-    archive = results;
+    archive =
+      result.map(item => ({
+
+        title:
+          item.title || "",
+
+        url:
+          item.url || "",
+
+        mainCategory:
+          item.mainCategory ||
+          "미분류",
+
+        subCategory:
+          item.subCategory ||
+          ""
+
+      }));
 
 
-    saveArchive();
+    saveData();
 
-    activeCategory = "__all";
-
-
-    document.getElementById("progressText")
-      .textContent =
-      `완료! ${results.length}개 분류됨`;
+    render();
 
 
-    document.getElementById("progressInner")
-      .style.width = "100%";
-
-
-    renderAll();
+    document.getElementById(
+      "progressText"
+    ).textContent =
+      `완료 · ${archive.length}개 분류`;
 
 
     setTimeout(() => {
 
-      closeModal();
+      closeModal("aiOverlay");
 
     }, 700);
 
@@ -1641,30 +2533,163 @@ ${JSON.stringify(chunk, null, 2)}
 
     showError(
       error.message ||
-      "분류 중 오류가 발생했습니다."
+      "AI 분류 중 오류가 발생했습니다."
     );
-
 
   } finally {
 
     button.disabled = false;
-    button.textContent = "AI로 분류하기";
+
+    button.textContent =
+      "자동 분류 시작";
 
   }
 
 }
 
 
-/* ==========================================
-   ESC KEY
-========================================== */
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function closeModal(id) {
+
+  document
+    .getElementById(id)
+    .classList.remove("show");
+
+}
+
+
+function showError(message) {
+
+  const box =
+    document.getElementById(
+      "error"
+    );
+
+
+  box.textContent =
+    message;
+
+
+  box.classList.add("show");
+
+}
+
+
+function clearError() {
+
+  const box =
+    document.getElementById(
+      "error"
+    );
+
+
+  box.textContent =
+    "";
+
+
+  box.classList.remove("show");
+
+}
+
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function getDomain(url) {
+
+  try {
+
+    return new URL(url)
+      .hostname
+      .replace(/^www\./, "");
+
+  } catch {
+
+    return "";
+
+  }
+
+}
+
+
+function getFavicon(url) {
+
+  try {
+
+    const domain =
+      new URL(url).hostname;
+
+
+    return (
+      "https://www.google.com/s2/favicons" +
+      "?domain=" +
+      encodeURIComponent(domain) +
+      "&sz=32"
+    );
+
+  } catch {
+
+    return "";
+
+  }
+
+}
+
+
+/* =====================================================
+   CLOSE MODALS WHEN CLICK OUTSIDE
+===================================================== */
+
+document
+  .querySelectorAll(".overlay")
+  .forEach(overlay => {
+
+    overlay.addEventListener(
+      "click",
+      function(e) {
+
+        if (e.target === overlay) {
+
+          overlay.classList.remove(
+            "show"
+          );
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =====================================================
+   ESC
+===================================================== */
 
 document.addEventListener(
   "keydown",
-  function(e) {
+  e => {
 
     if (e.key === "Escape") {
-      closeModal();
+
+      document
+        .querySelectorAll(".overlay.show")
+        .forEach(x =>
+          x.classList.remove("show")
+        );
+
     }
 
   }
