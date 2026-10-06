@@ -1,178 +1,1631 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>디지털 쓰레기 분리수거장</title>
-  <style>
-    body { font-family: 'Pretendard', sans-serif; background-color: #f4f4f5; margin: 0; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .api-key-section { margin-bottom: 30px; padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
-    input[type="password"] { padding: 10px; width: 60%; border: 1px solid #cbd5e1; border-radius: 6px; }
-    button { padding: 10px 20px; border: none; border-radius: 6px; background: #1e293b; color: #fff; font-weight: bold; cursor: pointer; }
-    button:hover { background: #334155; }
-    .btn-action { width: 100%; margin-bottom: 10px; background: #0f172a; padding: 15px; }
-    .archive-header { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-    details { margin-bottom: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; }
-    summary { font-weight: 700; cursor: pointer; font-size: 1.1rem; list-style-type: none; outline: none; }
-    summary::-webkit-details-marker { display: none; }
-    .sub-cat { margin-left: 20px; margin-top: 10px; background: #fff; border: 1px solid #f1f5f9; }
-    .sub-cat summary { font-size: 1rem; font-weight: 600; color: #475569; }
-    ul { margin-top: 10px; padding-left: 25px; }
-    li { margin-bottom: 8px; color: #64748b; }
-    a { text-decoration: none; color: #2563eb; font-weight: 500; }
-    a:hover { text-decoration: underline; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Archive</title>
+
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --surface-2: #f1f1ee;
+    --line: #e7e7e2;
+    --text: #171717;
+    --muted: #858585;
+    --accent: #171717;
+    --blue: #4263eb;
+    --danger: #d94848;
+    --radius: 14px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--bg);
+  }
+
+  body {
+    margin: 0;
+    color: var(--text);
+    background: var(--bg);
+    font-family:
+      Inter,
+      Pretendard,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button,
+  input,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* ──────────────── 전체 레이아웃 ──────────────── */
+
+  .app {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+  }
+
+  /* ──────────────── 사이드바 ──────────────── */
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 28px 18px;
+    border-right: 1px solid var(--line);
+    background: #fafaf8;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand {
+    padding: 0 10px;
+    margin-bottom: 38px;
+  }
+
+  .brand-small {
+    font-size: 10px;
+    letter-spacing: .18em;
+    color: var(--muted);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+  }
+
+  .brand-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+  }
+
+  .nav-label {
+    padding: 0 10px;
+    margin-bottom: 9px;
+    font-size: 10px;
+    color: #aaa;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+  }
+
+  #category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .category-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 10px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #666;
+    text-align: left;
+    transition: .15s ease;
+  }
+
+  .category-btn:hover {
+    background: #ededeb;
+    color: #111;
+  }
+
+  .category-btn.active {
+    background: #191919;
+    color: white;
+  }
+
+  .category-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .category-count {
+    font-size: 11px;
+    color: #aaa;
+    margin-left: 10px;
+  }
+
+  .category-btn.active .category-count {
+    color: #aaa;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .settings-btn {
+    width: 100%;
+    padding: 10px;
+    border: 0;
+    background: transparent;
+    color: #777;
+    text-align: left;
+    border-radius: 9px;
+  }
+
+  .settings-btn:hover {
+    background: #ededeb;
+    color: #111;
+  }
+
+  /* ──────────────── 메인 ──────────────── */
+
+  .main {
+    min-width: 0;
+    padding: 34px 48px 80px;
+  }
+
+  .topbar {
+    max-width: 1100px;
+    margin: 0 auto 42px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: .18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 9px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(30px, 4vw, 48px);
+    letter-spacing: -.055em;
+    line-height: 1;
+    font-weight: 750;
+  }
+
+  .description {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 26px;
+    padding-top: 7px;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: 20px;
+    font-weight: 650;
+    letter-spacing: -.03em;
+  }
+
+  .stat-label {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* ──────────────── 액션바 ──────────────── */
+
+  .action-bar {
+    max-width: 1100px;
+    margin: 0 auto 26px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .search {
+    flex: 1;
+    position: relative;
+  }
+
+  .search input {
+    width: 100%;
+    height: 43px;
+    padding: 0 14px 0 38px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    outline: none;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  .search input:focus {
+    border-color: #bbb;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 14px;
+  }
+
+  .primary-btn {
+    height: 43px;
+    padding: 0 17px;
+    border: 0;
+    border-radius: 10px;
+    background: #171717;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .primary-btn:hover {
+    background: #333;
+  }
+
+  /* ──────────────── 콘텐츠 ──────────────── */
+
+  .content {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .content-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .content-title {
+    font-size: 14px;
+    font-weight: 650;
+    letter-spacing: -.02em;
+  }
+
+  .content-count {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .bookmark-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .bookmark {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 4px;
+    border-bottom: 1px solid var(--line);
+    transition: .12s ease;
+  }
+
+  .bookmark:hover {
+    padding-left: 10px;
+    padding-right: 10px;
+    background: rgba(0,0,0,.018);
+  }
+
+  .favicon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #f0f0ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #999;
+    font-size: 12px;
+  }
+
+  .favicon img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .bookmark-title {
+    display: block;
+    color: #181818;
+    font-size: 13px;
+    font-weight: 550;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bookmark-title:hover {
+    text-decoration: underline;
+  }
+
+  .bookmark-url {
+    margin-top: 4px;
+    color: #999;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sub-category {
+    padding: 5px 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: #888;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  /* ──────────────── 빈 상태 ──────────────── */
+
+  .empty {
+    min-height: 390px;
+    border: 1px dashed #d9d9d4;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .empty-inner {
+    max-width: 360px;
+  }
+
+  .empty-symbol {
+    font-size: 27px;
+    margin-bottom: 15px;
+    opacity: .5;
+  }
+
+  .empty-title {
+    color: #444;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .empty-text {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  /* ──────────────── 모달 ──────────────── */
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    backdrop-filter: blur(7px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+  }
+
+  .modal {
+    width: min(680px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 20px 70px rgba(0,0,0,.18);
+    padding: 25px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+  }
+
+  .modal-description {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .close-btn {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 8px;
+    background: #f1f1ee;
+    color: #777;
+  }
+
+  .close-btn:hover {
+    background: #e6e6e2;
+    color: #111;
+  }
+
+  .field {
+    margin-bottom: 19px;
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .field-help {
+    margin-top: 6px;
+    font-size: 10px;
+    color: #999;
+    line-height: 1.6;
+  }
+
+  .modal input[type="password"],
+  .modal textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fafaf8;
+    outline: none;
+    padding: 11px 12px;
+    color: #222;
+  }
+
+  .modal input[type="password"]:focus,
+  .modal textarea:focus {
+    border-color: #aaa;
+    background: white;
+  }
+
+  .modal textarea {
+    min-height: 190px;
+    resize: vertical;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .file-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .file-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fafaf8;
+    color: #555;
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .file-label:hover {
+    background: #f0f0ed;
+  }
+
+  #bookmark-file {
+    display: none;
+  }
+
+  .modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 5px;
+  }
+
+  .status {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .status.success {
+    color: #27814a;
+  }
+
+  .status.error {
+    color: var(--danger);
+  }
+
+  .sort-btn {
+    height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 9px;
+    background: #171717;
+    color: white;
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .sort-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  /* ──────────────── 반응형 ──────────────── */
+
+  @media (max-width: 760px) {
+    .app {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      position: static;
+      height: auto;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+      padding: 18px;
+    }
+
+    .brand {
+      margin-bottom: 20px;
+    }
+
+    #category-list {
+      flex-direction: row;
+      overflow-x: auto;
+    }
+
+    .category-btn {
+      width: auto;
+      min-width: max-content;
+    }
+
+    .sidebar-bottom {
+      display: none;
+    }
+
+    .main {
+      padding: 28px 18px 60px;
+    }
+
+    .topbar {
+      margin-bottom: 28px;
+    }
+
+    .stats {
+      display: none;
+    }
+
+    .bookmark {
+      grid-template-columns: 36px minmax(0,1fr);
+    }
+
+    .sub-category {
+      display: none;
+    }
+  }
+</style>
 </head>
+
 <body>
 
-  <div class="container">
-    <h2>디지털 쓰레기 분리수거장</h2>
-    <p style="color: #64748b; margin-bottom: 30px;">방치된 북마크 무덤을 AI가 자동 분류하고 팩폭으로 심판하는 공간.</p>
+<div class="app">
 
-    <!-- API 키 설정 구역 -->
-    <div class="api-key-section">
-      <h3 style="margin-top: 0; font-size: 1rem; color: #334155;">Gemini API 키 설정 (필수)</h3>
-      <input type="password" id="gemini-api-key" placeholder="API Key 입력 (로컬에만 저장됨)">
-      <button id="save-key-btn">키 저장</button>
-      <p id="key-status" style="font-size: 0.85rem; color: #ef4444; margin-top: 8px;">* API 키가 없습니다. 먼저 등록하세요.</p>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-small">Personal System</div>
+      <div class="brand-title">Digital Archive</div>
     </div>
 
-    <!-- 액션 버튼 구역 -->
-    <div style="margin-bottom: 30px;">
-      <button class="btn-action" id="start-sort-btn">이미 저장된 미분류 북마크 AI 분류 시작</button>
+    <div class="nav-label">Collections</div>
+
+    <div id="category-list">
+      <button class="category-btn active" data-category="__all">
+        <span class="category-name">All bookmarks</span>
+        <span class="category-count" id="all-count">0</span>
+      </button>
     </div>
 
-    <!-- 렌더링 구역 -->
-    <div class="archive-header">
-      <h3 style="margin: 0;">ARCHIVE</h3>
+    <div class="sidebar-bottom">
+      <button class="settings-btn" id="settings-btn">
+        ⚙&nbsp;&nbsp; Import & AI settings
+      </button>
     </div>
-    <div id="bookmark-archive-container" style="margin-top: 20px;">
-      <p style="color: #94a3b8; text-align: center; padding: 20px;">아직 분류된 북마크가 없습니다.</p>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Bookmark Intelligence</div>
+        <h1>Archive.</h1>
+        <p class="description">
+          흩어진 북마크를 AI가 구조화한다.
+        </p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-number" id="total-count">0</span>
+          <span class="stat-label">Bookmarks</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-number" id="category-count">0</span>
+          <span class="stat-label">Categories</span>
+        </div>
+      </div>
+    </header>
+
+
+    <div class="action-bar">
+
+      <div class="search">
+        <span class="search-icon">⌕</span>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="북마크 검색..."
+        >
+      </div>
+
+      <button class="primary-btn" id="open-import-btn">
+        + Import
+      </button>
+
     </div>
+
+
+    <section class="content">
+
+      <div class="content-header">
+        <div class="content-title" id="current-title">
+          All bookmarks
+        </div>
+
+        <div class="content-count" id="current-count">
+          0 items
+        </div>
+      </div>
+
+      <div id="bookmark-container">
+
+        <div class="empty">
+          <div class="empty-inner">
+            <div class="empty-symbol">◌</div>
+
+            <div class="empty-title">
+              아직 아카이브가 비어 있음
+            </div>
+
+            <div class="empty-text">
+              Chrome 등에서 북마크 JSON을 가져온 뒤<br>
+              AI 자동 분류를 실행해라.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- IMPORT / SETTINGS MODAL -->
+
+<div class="modal-backdrop" id="modal-backdrop">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <div class="modal-title">Import & AI</div>
+
+        <div class="modal-description">
+          북마크 데이터를 넣으면 AI가 카테고리를 자동 생성한다.
+        </div>
+      </div>
+
+      <button class="close-btn" id="close-modal">×</button>
+
+    </div>
+
+
+    <div class="field">
+
+      <label class="field-label">
+        Gemini API Key
+      </label>
+
+      <input
+        id="api-key"
+        type="password"
+        placeholder="AIza..."
+      >
+
+      <div class="field-help">
+        API 키는 이 브라우저의 localStorage에만 저장된다.
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label class="field-label">
+        Bookmark JSON
+      </label>
+
+      <div class="file-row">
+
+        <label class="file-label">
+          JSON 파일 선택
+          <input
+            id="bookmark-file"
+            type="file"
+            accept=".json"
+          >
+        </label>
+
+        <span
+          id="file-name"
+          style="
+            align-self:center;
+            font-size:11px;
+            color:#999;
+          "
+        >
+          선택된 파일 없음
+        </span>
+
+      </div>
+
+      <textarea
+        id="bookmark-input"
+        placeholder='[{"title":"Google","url":"https://google.com"}]'
+      ></textarea>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <div id="status" class="status">
+        준비됨
+      </div>
+
+      <button
+        class="sort-btn"
+        id="sort-btn"
+      >
+        AI로 분류하기
+      </button>
+
+    </div>
+
   </div>
 
-  <script>
-    // 1. API 키 로컬 스토리지 관리
-    const apiKeyInput = document.getElementById('gemini-api-key');
-    const saveKeyBtn = document.getElementById('save-key-btn');
-    const keyStatus = document.getElementById('key-status');
+</div>
 
-    function checkApiKey() {
-      const savedKey = localStorage.getItem('geminiApiKey');
-      if (savedKey) {
-        apiKeyInput.value = savedKey;
-        keyStatus.textContent = "✅ API 키가 로컬 스토리지에 안전하게 고정되었습니다.";
-        keyStatus.style.color = "#10b981";
-      }
+
+<script>
+/* =========================================================
+   DIGITAL ARCHIVE
+   ========================================================= */
+
+const STORAGE_KEY = "digitalArchiveData";
+const API_KEY_STORAGE = "digitalArchiveGeminiKey";
+
+let archiveData = [];
+let activeCategory = "__all";
+
+
+/* ──────────────── DOM ──────────────── */
+
+const categoryList = document.getElementById("category-list");
+const bookmarkContainer = document.getElementById("bookmark-container");
+
+const totalCount = document.getElementById("total-count");
+const categoryCount = document.getElementById("category-count");
+const allCount = document.getElementById("all-count");
+
+const currentTitle = document.getElementById("current-title");
+const currentCount = document.getElementById("current-count");
+
+const searchInput = document.getElementById("search-input");
+
+const modal = document.getElementById("modal-backdrop");
+const settingsBtn = document.getElementById("settings-btn");
+const openImportBtn = document.getElementById("open-import-btn");
+const closeModal = document.getElementById("close-modal");
+
+const apiKeyInput = document.getElementById("api-key");
+const bookmarkInput = document.getElementById("bookmark-input");
+const bookmarkFile = document.getElementById("bookmark-file");
+const fileName = document.getElementById("file-name");
+
+const sortBtn = document.getElementById("sort-btn");
+const status = document.getElementById("status");
+
+
+/* ──────────────── 초기화 ──────────────── */
+
+function init() {
+
+  const savedData =
+    localStorage.getItem(STORAGE_KEY);
+
+  if (savedData) {
+
+    try {
+      archiveData = JSON.parse(savedData);
+    } catch {
+      archiveData = [];
     }
-    checkApiKey();
 
-    saveKeyBtn.addEventListener('click', () => {
-      const key = apiKeyInput.value.trim();
-      if (!key) return alert('키를 입력해라.');
-      localStorage.setItem('geminiApiKey', key);
-      checkApiKey();
-      alert('API 키 로컬 저장 완료.');
+  }
+
+  const savedKey =
+    localStorage.getItem(API_KEY_STORAGE);
+
+  if (savedKey) {
+    apiKeyInput.value = savedKey;
+  }
+
+  render();
+}
+
+
+/* ──────────────── 모달 ──────────────── */
+
+function openModal() {
+  modal.classList.add("open");
+}
+
+function closeModalWindow() {
+  modal.classList.remove("open");
+}
+
+settingsBtn.addEventListener("click", openModal);
+openImportBtn.addEventListener("click", openModal);
+closeModal.addEventListener("click", closeModalWindow);
+
+modal.addEventListener("click", (event) => {
+
+  if (event.target === modal) {
+    closeModalWindow();
+  }
+
+});
+
+
+/* ──────────────── 검색 ──────────────── */
+
+searchInput.addEventListener("input", renderBookmarks);
+
+
+/* ──────────────── 파일 읽기 ──────────────── */
+
+bookmarkFile.addEventListener("change", () => {
+
+  const file = bookmarkFile.files[0];
+
+  if (!file) return;
+
+  fileName.textContent = file.name;
+
+  const reader = new FileReader();
+
+  reader.onload = event => {
+    bookmarkInput.value = event.target.result;
+  };
+
+  reader.readAsText(file);
+
+});
+
+
+/* ──────────────── 데이터 저장 ──────────────── */
+
+function saveArchive() {
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(archiveData)
+  );
+
+}
+
+
+/* ──────────────── 카테고리 생성 ──────────────── */
+
+function getCategories() {
+
+  const categories = {};
+
+  archiveData.forEach(item => {
+
+    const category =
+      item.mainCategory || "Other";
+
+    if (!categories[category]) {
+      categories[category] = 0;
+    }
+
+    categories[category]++;
+
+  });
+
+  return categories;
+
+}
+
+
+/* ──────────────── 전체 렌더링 ──────────────── */
+
+function render() {
+
+  const categories = getCategories();
+
+  totalCount.textContent = archiveData.length;
+
+  categoryCount.textContent =
+    Object.keys(categories).length;
+
+  allCount.textContent =
+    archiveData.length;
+
+  renderCategories(categories);
+  renderBookmarks();
+
+}
+
+
+/* ──────────────── 사이드바 ──────────────── */
+
+function renderCategories(categories) {
+
+  categoryList.innerHTML = "";
+
+  const allButton =
+    document.createElement("button");
+
+  allButton.className =
+    "category-btn" +
+    (activeCategory === "__all"
+      ? " active"
+      : "");
+
+  allButton.innerHTML = `
+    <span class="category-name">
+      All bookmarks
+    </span>
+    <span class="category-count">
+      ${archiveData.length}
+    </span>
+  `;
+
+  allButton.addEventListener(
+    "click",
+    () => selectCategory("__all")
+  );
+
+  categoryList.appendChild(allButton);
+
+
+  Object.entries(categories)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([category, count]) => {
+
+      const button =
+        document.createElement("button");
+
+      button.className =
+        "category-btn" +
+        (activeCategory === category
+          ? " active"
+          : "");
+
+      button.innerHTML = `
+        <span class="category-name">
+          ${escapeHTML(category)}
+        </span>
+
+        <span class="category-count">
+          ${count}
+        </span>
+      `;
+
+      button.addEventListener(
+        "click",
+        () => selectCategory(category)
+      );
+
+      categoryList.appendChild(button);
+
     });
 
-    // 2. 미분류 북마크 AI 분류 및 청크(Chunk) 처리 로직
-    const startSortBtn = document.getElementById('start-sort-btn');
-    const container = document.getElementById('bookmark-archive-container');
+}
 
-    startSortBtn.addEventListener('click', async () => {
-      const apiKey = localStorage.getItem('geminiApiKey');
-      if (!apiKey) {
-        alert('API 키부터 저장해라. 안 그러면 AI 못 돌린다.');
-        return;
-      }
 
-      // 테스트용 가짜 미분류 북마크 데이터 (실제 파이어베이스 DB 데이터로 교체해야 함)
-      const mockBookmarks = [
-        { title: "React 공식 문서", url: "https://react.dev" },
-        { title: "무신사 스탠다드 와이드 슬랙스", url: "https://musinsa.com" },
-        { title: "Next.js 튜토리얼", url: "https://nextjs.org" },
-        { title: "오늘의집 USM 모듈 가구", url: "https://ohou.se" }
-      ];
+/* ──────────────── 카테고리 선택 ──────────────── */
 
-      startSortBtn.textContent = "AI 분류 진행 중... (브라우저 끄지 마라)";
-      startSortBtn.disabled = true;
+function selectCategory(category) {
 
-      const chunkSize = 20;
-      let classifiedResults = [];
+  activeCategory = category;
 
-      for (let i = 0; i < mockBookmarks.length; i += chunkSize) {
-        const chunk = mockBookmarks.slice(i, i + chunkSize);
-        
-        const promptText = `
-        너는 웹 북마크 자동 분류기야. 다음 북마크 리스트를 분석해서 가장 직관적인 대분류(mainCategory)와 소분류(subCategory)를 도출해.
-        반드시 아래 JSON 배열 형식으로만 응답하고, 마크다운 기호나 부가 설명은 절대 덧붙이지 마.
-        예시: [{"title": "북마크 제목", "url": "주소", "mainCategory": "IT", "subCategory": "프론트엔드"}]
-        
-        분류할 데이터: ${JSON.stringify(chunk)}
-        `;
+  renderCategories(getCategories());
+  renderBookmarks();
 
-        try {
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+}
+
+
+/* ──────────────── 북마크 렌더링 ──────────────── */
+
+function renderBookmarks() {
+
+  let items = [...archiveData];
+
+  const query =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+
+  if (activeCategory !== "__all") {
+
+    items = items.filter(
+      item =>
+        (item.mainCategory || "Other")
+        === activeCategory
+    );
+
+  }
+
+
+  if (query) {
+
+    items = items.filter(item => {
+
+      const title =
+        String(item.title || "")
+          .toLowerCase();
+
+      const url =
+        String(item.url || "")
+          .toLowerCase();
+
+      const main =
+        String(item.mainCategory || "")
+          .toLowerCase();
+
+      const sub =
+        String(item.subCategory || "")
+          .toLowerCase();
+
+      return (
+        title.includes(query) ||
+        url.includes(query) ||
+        main.includes(query) ||
+        sub.includes(query)
+      );
+
+    });
+
+  }
+
+
+  currentTitle.textContent =
+    activeCategory === "__all"
+      ? "All bookmarks"
+      : activeCategory;
+
+  currentCount.textContent =
+    `${items.length} item${items.length === 1 ? "" : "s"}`;
+
+
+  if (!items.length) {
+
+    bookmarkContainer.innerHTML = `
+      <div class="empty">
+        <div class="empty-inner">
+          <div class="empty-symbol">⌁</div>
+          <div class="empty-title">
+            표시할 북마크가 없음
+          </div>
+          <div class="empty-text">
+            다른 카테고리를 선택하거나<br>
+            검색어를 지워봐.
+          </div>
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  const list =
+    document.createElement("div");
+
+  list.className = "bookmark-list";
+
+
+  items.forEach(item => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "bookmark";
+
+
+    const url =
+      String(item.url || "#");
+
+    const title =
+      String(
+        item.title ||
+        item.url ||
+        "Untitled"
+      );
+
+    const main =
+      item.mainCategory ||
+      "Other";
+
+    const sub =
+      item.subCategory ||
+      "";
+
+
+    let hostname = "";
+
+    try {
+      hostname =
+        new URL(url).hostname
+          .replace(/^www\./, "");
+    } catch {
+      hostname = url;
+    }
+
+
+    row.innerHTML = `
+
+      <div class="favicon">
+
+        <img
+          src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}&sz=32"
+          alt=""
+          loading="lazy"
+          onerror="this.style.display='none'"
+        >
+
+      </div>
+
+
+      <div style="min-width:0">
+
+        <a
+          class="bookmark-title"
+          href="${escapeAttribute(url)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ${escapeHTML(title)}
+        </a>
+
+        <div class="bookmark-url">
+          ${escapeHTML(hostname)}
+        </div>
+
+      </div>
+
+
+      <div class="sub-category">
+        ${escapeHTML(sub || main)}
+      </div>
+
+    `;
+
+    list.appendChild(row);
+
+  });
+
+
+  bookmarkContainer.innerHTML = "";
+
+  bookmarkContainer.appendChild(list);
+
+}
+
+
+/* ──────────────── HTML 안전 처리 ──────────────── */
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+  return escapeHTML(value);
+}
+
+
+/* ──────────────── AI 분류 ──────────────── */
+
+sortBtn.addEventListener(
+  "click",
+  classifyBookmarks
+);
+
+
+async function classifyBookmarks() {
+
+  const apiKey =
+    apiKeyInput.value.trim();
+
+  if (!apiKey) {
+
+    setStatus(
+      "Gemini API 키를 입력해.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const raw =
+    bookmarkInput.value.trim();
+
+  if (!raw) {
+
+    setStatus(
+      "북마크 JSON을 넣어.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  let bookmarks;
+
+  try {
+
+    bookmarks =
+      JSON.parse(raw);
+
+  } catch {
+
+    setStatus(
+      "JSON 형식이 잘못됨.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (!Array.isArray(bookmarks)) {
+
+    setStatus(
+      "JSON 최상위 구조는 배열이어야 함.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (!bookmarks.length) {
+
+    setStatus(
+      "북마크가 비어 있음.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  localStorage.setItem(
+    API_KEY_STORAGE,
+    apiKey
+  );
+
+
+  sortBtn.disabled = true;
+
+  sortBtn.textContent =
+    "AI 분석 중...";
+
+
+  try {
+
+    const chunkSize = 25;
+
+    const results = [];
+
+
+    for (
+      let i = 0;
+      i < bookmarks.length;
+      i += chunkSize
+    ) {
+
+      setStatus(
+        `AI 분석 중 ${Math.min(
+          i + chunkSize,
+          bookmarks.length
+        )} / ${bookmarks.length}`,
+        ""
+      );
+
+
+      const chunk =
+        bookmarks.slice(
+          i,
+          i + chunkSize
+        );
+
+
+      const prompt = `
+
+너는 개인용 웹 북마크 정리 시스템이다.
+
+각 북마크의 제목과 URL을 분석해서
+직관적인 대분류와 소분류를 지정해라.
+
+규칙:
+
+1. mainCategory는 너무 세분화하지 마라.
+2. 비슷한 사이트는 같은 대분류에 넣어라.
+3. subCategory는 구체적인 용도를 나타내라.
+4. 의미가 불분명하면 Other / Unsorted를 사용해라.
+5. 원본 title과 url은 반드시 그대로 유지해라.
+6. 결과는 반드시 JSON 배열만 출력해라.
+7. 설명, 마크다운, 코드블록을 절대 넣지 마라.
+
+출력 형식:
+
+[
+  {
+    "title": "원본 제목",
+    "url": "원본 URL",
+    "mainCategory": "대분류",
+    "subCategory": "소분류"
+  }
+]
+
+북마크:
+
+${JSON.stringify(chunk)}
+`;
+
+
+      /*
+       * Gemini API
+       *
+       * 최신 Flash 계열 모델 사용.
+       */
+
+      const response =
+        await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="
+          + encodeURIComponent(apiKey),
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
             body: JSON.stringify({
-              contents: [{ parts: [{ text: promptText }] }],
-              generationConfig: { response_mime_type: "application/json" } 
+
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: prompt
+                    }
+                  ]
+                }
+              ],
+
+              generationConfig: {
+                responseMimeType:
+                  "application/json"
+              }
+
             })
-          });
-          
-          const data = await response.json();
-          const resultJson = JSON.parse(data.candidates[0].content.parts[0].text);
-          classifiedResults = classifiedResults.concat(resultJson);
-          
-        } catch (error) {
-          console.error('API 호출 에러:', error);
-          alert('API 호출 중에 에러 났다. 콘솔 확인해라.');
-          break; 
-        }
+
+          }
+        );
+
+
+      if (!response.ok) {
+
+        const errorText =
+          await response.text();
+
+        throw new Error(
+          `Gemini API 오류 ${response.status}: ${errorText}`
+        );
+
       }
-      
-      // 분류 완료 후 렌더링
-      renderAccordion(classifiedResults);
-      startSortBtn.textContent = "이미 저장된 미분류 북마크 AI 분류 시작";
-      startSortBtn.disabled = false;
-    });
 
-    // 3. 아코디언 트리 구조 렌더링 로직
-    function renderAccordion(classifiedData) {
-      if (classifiedData.length === 0) return;
-      container.innerHTML = ''; 
 
-      // 대분류 > 소분류 그룹화
-      const grouped = classifiedData.reduce((acc, item) => {
-        if (!acc[item.mainCategory]) acc[item.mainCategory] = {};
-        if (!acc[item.mainCategory][item.subCategory]) acc[item.mainCategory][item.subCategory] = [];
-        acc[item.mainCategory][item.subCategory].push(item);
-        return acc;
-      }, {});
+      const data =
+        await response.json();
 
-      // HTML 트리 조립
-      for (const [mainCat, subCats] of Object.entries(grouped)) {
-        let mainDetails = `<details open>
-                             <summary>📁 ${mainCat}</summary>`;
-        
-        for (const [subCat, items] of Object.entries(subCats)) {
-          let subDetails = `<details class="sub-cat">
-                              <summary>📂 ${subCat} <span>(${items.length})</span></summary>
-                              <ul>`;
-          
-          items.forEach(item => {
-            subDetails += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
-          });
-          
-          subDetails += `</ul></details>`;
-          mainDetails += subDetails;
-        }
-        mainDetails += `</details>`;
-        container.innerHTML += mainDetails;
+
+      const text =
+        data
+          ?.candidates?.[0]
+          ?.content?.parts?.[0]
+          ?.text;
+
+
+      if (!text) {
+        throw new Error(
+          "Gemini 응답이 비어 있음."
+        );
       }
+
+
+      const parsed =
+        JSON.parse(text);
+
+
+      if (!Array.isArray(parsed)) {
+        throw new Error(
+          "AI가 배열 형식으로 응답하지 않음."
+        );
+      }
+
+
+      results.push(...parsed);
+
     }
-  </script>
+
+
+    archiveData =
+      results.map(item => ({
+
+        title:
+          item.title || "Untitled",
+
+        url:
+          item.url || "#",
+
+        mainCategory:
+          item.mainCategory || "Other",
+
+        subCategory:
+          item.subCategory || "Unsorted"
+
+      }));
+
+
+    saveArchive();
+
+
+    activeCategory = "__all";
+
+    render();
+
+
+    setStatus(
+      `${results.length}개 북마크 분류 완료.`,
+      "success"
+    );
+
+
+    sortBtn.textContent =
+      "분류 완료";
+
+
+    setTimeout(() => {
+
+      closeModalWindow();
+
+      sortBtn.disabled = false;
+
+      sortBtn.textContent =
+        "AI로 분류하기";
+
+    }, 700);
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    setStatus(
+      "분류 실패. API 키나 응답을 확인해.",
+      "error"
+    );
+
+    sortBtn.disabled = false;
+
+    sortBtn.textContent =
+      "AI로 분류하기";
+
+  }
+
+}
+
+
+/* ──────────────── 상태 ──────────────── */
+
+function setStatus(message, type) {
+
+  status.textContent = message;
+
+  status.className =
+    "status " + (type || "");
+
+}
+
+
+/* ──────────────── 시작 ──────────────── */
+
+init();
+
+</script>
+
 </body>
 </html>
