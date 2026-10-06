@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bookmarks</title>
+<title>Digital Archive</title>
 <style>
 *{box-sizing:border-box}
 :root{
@@ -20,7 +20,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .top-inner,.main{width:min(760px,calc(100% - 32px));margin:0 auto}
 .top-inner{padding:14px 0 0}
-.brand-row{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand-row{display:flex;align-items:center;justify-content:flex-end;gap:18px}
 .brand{font-size:17px;font-weight:800;letter-spacing:-.7px}
 .brand small{font-size:10px;color:var(--muted);font-weight:400;margin-left:6px;letter-spacing:0}
 .actions{display:flex;gap:6px;align-items:center}
@@ -48,7 +48,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .list{display:flex;flex-direction:column;border-top:1px solid #cfcfcf}
 .item{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--line);min-width:0}
 .item:hover{background:#fbfbfb}
-.item.child{background:#fff}
+.item.child{background:linear-gradient(90deg,transparent 0,transparent 1px,#fafafa 1px,#fafafa 100%)}
 .favicon{width:20px;height:20px;object-fit:contain}
 .item-main{min-width:0}
 .item-title{display:block;color:#171717;text-decoration:none;font-size:12px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -78,7 +78,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .random-actions{display:flex;gap:7px;margin-top:15px}
 .random-next{border:1px solid #d2d2d2;background:#fff;padding:7px 11px;border-radius:11px;font-size:10px}
 .random-open{display:inline-flex;align-items:center;border:1px solid #171717;background:#171717;color:#fff;text-decoration:none;padding:7px 11px;border-radius:11px;font-size:10px}
-.preview-label{padding:9px 12px;border-top:1px solid #ececec;border-bottom:1px solid #ececec;background:#fff;color:#777;font-size:10px}
+.preview-label{padding:9px 12px;border-top:1px solid #ececec;border-bottom:1px solid #ececec;background:#fafafa;color:#777;font-size:10px}
 .preview-frame{width:100%;height:410px;border:0;display:block;background:#fafafa}
 .overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.2);padding:18px}
 .overlay.show{display:flex}
@@ -98,7 +98,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .progress-text{font-size:10px;color:#777;margin-bottom:6px}.progress-bar{height:3px;background:#eee}.progress-fill{width:0;height:100%;background:#222;transition:width .2s}
 .error{display:none;margin-top:13px;padding:9px;background:#fff7f7;border:1px solid #edd0d0;color:#a33;font-size:10px;line-height:1.5;white-space:pre-wrap}.error.show{display:block}
 .ai-note{font-size:11px;line-height:1.65;color:#555}.ai-note strong{color:#222}
-.manual-note{margin-top:9px;padding:9px 10px;background:#fff;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
+.manual-note{margin-top:9px;padding:9px 10px;background:#fafafa;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
 .category-list{display:flex;flex-direction:column;gap:9px;max-height:55vh;overflow:auto}
 .category-row{border:1px solid #e5e5e5;border-radius:12px;padding:9px;background:#fff}
 .category-main-row{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
@@ -113,7 +113,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .add-sub-row input{flex:1;font-size:10px;padding:6px 8px}
 .add-category-row{display:flex;gap:6px;margin-top:10px}
 .add-category-row input{flex:1;border:1px solid #ddd;padding:7px 9px;border-radius:10px;font-size:11px}
-.hierarchy-note{margin-top:7px;padding:8px 9px;background:#fff;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
+.hierarchy-note{margin-top:7px;padding:8px 9px;background:#fafafa;border:1px solid #eee;color:#777;font-size:10px;line-height:1.55}
 @media (max-width:720px){
   .top-inner,.main{width:calc(100% - 28px)}
   .brand-row{align-items:flex-start}.brand small{display:none}.actions{flex-wrap:wrap;justify-content:flex-end}
@@ -122,214 +122,12 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   .item-actions{gap:3px}.child-btn{display:none}
   .random-info{padding:18px}.preview-frame{height:300px}
 }
-
-/* ===== SPACE CATEGORY UI ===== */
-.space-shell{
-  width:min(760px,calc(100% - 28px));
-  margin:0 auto;
-  padding:18px 0 60px;
-}
-.space-stage{
-  position:relative;
-  min-height:700px;
-  overflow:visible;
-  border:1px solid #ececec;
-  border-radius:28px;
-  background:#fff;
-  isolation:isolate;
-}
-.space-stage::before{
-  content:"";
-  position:absolute;
-  inset:14px;
-  border:1px dashed #f1f1f1;
-  border-radius:24px;
-  pointer-events:none;
-}
-.space-center-dot{
-  position:absolute;
-  left:50%; top:50%; width:4px; height:4px;
-  transform:translate(-50%,-50%);
-  border-radius:50%; background:#111; opacity:.07;
-  pointer-events:none;
-}
-.space-empty{
-  display:flex;align-items:center;justify-content:center;min-height:690px;
-  color:#aaa;font-size:11px;
-}
-.home-space.hidden{display:none}
-.planet{
-  position:absolute;
-  left:0; top:0;
-  width:82px; height:82px;
-  transform:translate(calc(-50% + var(--mx,0px)),calc(-50% + var(--my,0px)));
-  border:0;
-  padding:0;
-  background:transparent;
-  color:#171717;
-  cursor:default;
-  z-index:2;
-  will-change:transform;
-  overflow:visible;
-}
-.planet-body{
-  position:absolute;
-  left:50%; top:50%;
-  width:82px; height:82px;
-  transform:translate(-50%,-50%);
-  border:1px solid #d7d7d7;
-  border-radius:50%;
-  background:#fff;
-  box-shadow:0 6px 16px rgba(0,0,0,.045);
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;
-  padding:10px;
-  overflow:visible;
-  animation:planetFloat var(--dur,6.2s) ease-in-out infinite;
-  animation-delay:var(--delay,0s);
-  transition:width .28s ease,height .28s ease,box-shadow .22s ease,border-color .22s ease;
-}
-.planet.active{z-index:60}
-.planet.active .planet-body{
-  width:var(--expanded-size,180px);
-  height:var(--expanded-size,180px);
-  border-color:#888;
-  box-shadow:0 18px 34px rgba(0,0,0,.11);
-}
-.planet-label{
-  position:relative;
-  z-index:2;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  max-width:54px;
-  padding:4px 5px;
-  border-radius:9px;
-  background:rgba(255,255,255,.9);
-}
-.planet .planet-name{
-  font-size:10px;font-weight:800;line-height:1.15;letter-spacing:-.25px;
-  word-break:keep-all;
-}
-.planet .planet-count{
-  display:block;margin-top:3px;font-size:7px;color:#999;font-weight:500;
-}
-.inner-bookmarks{
-  position:absolute;
-  inset:20px;
-  z-index:3;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .16s ease;
-}
-.planet.active .inner-bookmarks{
-  opacity:1;
-  pointer-events:auto;
-}
-.inner-bookmark{
-  position:absolute;
-  width:36px;height:36px;
-  transform:translate(-50%,-50%);
-  border:1px solid #cfcfcf;
-  border-radius:50%;
-  background:#fff;
-  color:#222;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:4px;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
-  opacity:1;
-  transition:transform .15s ease,border-color .16s ease,box-shadow .16s ease;
-}
-.inner-bookmark:hover{
-  transform:translate(-50%,-50%) scale(1.14);
-  border-color:#8d8d8d;
-  box-shadow:0 8px 16px rgba(0,0,0,.09);
-}
-.inner-bookmark-title{
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  font-size:6.5px;
-  line-height:1.08;
-  font-weight:700;
-  word-break:keep-all;
-}
-.inner-bookmark.more{
-  color:#888;
-  font-size:7px;
-  font-weight:700;
-}
-@keyframes planetFloat{
-  0%,100%{transform:translate(-50%,-50%) translate3d(0,0,0)}
-  50%{transform:translate(-50%,-50%) translate3d(0,-7px,0)}
-}
-.hover-cloud{
-  position:absolute;
-  left:0; top:0;
-  width:1px; height:1px;
-  pointer-events:none;
-  z-index:35;
-}
-.sub-orb{
-  position:absolute;
-  left:0; top:0;
-  width:70px; height:70px;
-  transform:translate(-50%,-50%) scale(.72);
-  opacity:0;
-  pointer-events:none;
-  border:1px solid #dcdcdc;
-  border-radius:50%;
-  background:#fff;
-  box-shadow:0 6px 14px rgba(0,0,0,.04);
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;padding:8px;
-  transition:transform .2s ease,opacity .2s ease,border-color .2s ease,box-shadow .2s ease;
-}
-.hover-cloud.show .sub-orb{
-  opacity:1;
-  transform:translate(-50%,-50%) scale(1);
-  pointer-events:auto;
-}
-.sub-orb:hover{
-  transform:translate(-50%,-50%) scale(1.08) !important;
-  border-color:#aaa;
-  box-shadow:0 12px 22px rgba(0,0,0,.08);
-}
-.sub-orb .sub-name{
-  font-size:9px;font-weight:800;line-height:1.2;word-break:keep-all;
-}
-.sub-orb .sub-count{
-  display:block;margin-top:4px;font-size:7px;color:#999;font-weight:500;
-}
-.space-tip{
-  position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
-  color:#b0b0b0;font-size:8px;white-space:nowrap;pointer-events:none;
-}
-.category-space{display:none}
-.category-space.show{display:none}
-@media(max-width:720px){
- .space-shell{width:calc(100% - 20px);padding-top:10px}
- .space-stage{min-height:620px;border-radius:24px}
- .planet{width:72px;height:72px}.planet .planet-body{width:72px;height:72px}.planet .planet-name{font-size:9px}.planet .planet-count{font-size:7px}.planet.active .planet-body{width:var(--expanded-size,180px);height:var(--expanded-size,180px)}
- .sub-orb{width:62px;height:62px}.sub-orb .sub-name{font-size:8px}
- .bookmark-peek{width:min(250px,calc(100% - 18px))}
-}
-
-/* home hides old horizontal category strip; it remains available on list/search views */
-body.space-home-active .nav{display:none}
-
 </style>
 </head>
 <body>
 <header class="top">
   <div class="top-inner">
-    <div class="brand-row">
+    <div class="brand-row actions-only">
       <div></div>
       <div class="actions">
         <button class="action" onclick="openHTMLImport()">북마크 HTML</button>
@@ -347,33 +145,6 @@ body.space-home-active .nav{display:none}
     <div id="subNav" class="subnav" style="display:none"></div>
   </div>
 </header>
-
-
-
-<!-- PLANET HOME -->
-<section id="spaceHome" class="home-space">
-  <div class="space-shell">
-    <div id="planetStage" class="space-stage">
-      <div class="space-center-dot"></div>
-      <div id="planetEmpty" class="space-empty" style="display:none">카테고리가 없음</div>
-    </div>
-  </div>
-</section>
-
-<!-- CATEGORY FOCUS -->
-<section id="categorySpace" class="category-space">
-  <div class="category-focus">
-    <div class="back-line">
-      <button class="back-btn" onclick="showSpaceHome()">← 카테고리로</button>
-      <div class="space-actions">
-        <button class="action" onclick="openCategoryManager()">카테고리 관리</button>
-        <button class="action" onclick="openAddBookmark()">북마크 추가</button>
-      </div>
-    </div>
-    <div id="focusStage" class="focus-stage"></div>
-    <div id="categoryBookmarks" class="category-bookmarks"></div>
-  </div>
-</section>
 
 <main class="main">
   <section id="normalView">
@@ -1367,323 +1138,6 @@ function getFavicon(url){
   }
 }
 
-
-
-function categoryBookmarkCount(name, sub=""){
-  return archive.filter(x=>{
-    const main = x.mainCategory || "미분류";
-    if(main !== name) return false;
-    return !sub || (x.subCategory || "") === sub;
-  }).length;
-}
-
-function showSpaceHome(){
-  document.body.classList.add("space-home-active");
-  mode="home";
-  selectedSubCategory="";
-  document.getElementById("spaceHome").classList.remove("hidden");
-  document.getElementById("categorySpace").classList.remove("show");
-  document.getElementById("normalView").style.display="none";
-  document.getElementById("randomView").classList.remove("show");
-  document.getElementById("subNav").style.display="none";
-  document.querySelectorAll(".nav button").forEach(btn=>btn.classList.remove("active"));
-  const all=document.querySelector('.nav button[data-mode="all"]');
-  if(all) all.classList.add("active");
-  renderPlanetHome();
-}
-
-let spaceState = {
-  activeName: "",
-  activeSub: "",
-  pointerX: -999,
-  pointerY: -999
-};
-
-function getHomeCategoryNames(){
-  const names=categoryNames().slice();
-  if(archive.some(x=>!x.mainCategory || x.mainCategory==="미분류") && !names.includes("미분류")) names.push("미분류");
-  return names;
-}
-
-function categoryItems(name, sub=""){
-  return archive.filter(item=>{
-    const main=item.mainCategory || "미분류";
-    if(main!==name) return false;
-    if(sub) return (item.subCategory || "미분류")===sub;
-    return true;
-  });
-}
-
-function categoryBookmarkCount(name, sub=""){
-  return categoryItems(name,sub).length;
-}
-
-function categoryHoverSubs(name){
-  const cat=findCategory(name);
-  const items=categoryItems(name);
-  const subs=[];
-  if(cat && Array.isArray(cat.subs)) subs.push(...cat.subs);
-  const hasUnsorted=items.some(item=>!item.subCategory);
-  if(hasUnsorted && !subs.includes("미분류")) subs.push("미분류");
-  return uniqueClean(subs);
-}
-
-function renderPlanetHome(){
-  const stage=document.getElementById("planetStage");
-  if(!stage) return;
-  stage.querySelectorAll(".planet,.hover-cloud,.bookmark-peek,.space-tip").forEach(x=>x.remove());
-  const names=getHomeCategoryNames();
-  if(!names.length){ document.getElementById("planetEmpty").style.display="flex"; return; }
-  document.getElementById("planetEmpty").style.display="none";
-  const cols = window.innerWidth < 720 ? 4 : 7;
-  const stageW=stage.clientWidth || 760;
-  const stageH=stage.clientHeight || 700;
-  const top=72, bottom=78;
-  const rows=Math.ceil(names.length/cols);
-  const usableH=Math.max(420,stageH-top-bottom);
-  const cellW=stageW/cols;
-  const cellH=usableH/Math.max(rows,1);
-
-  names.forEach((name,i)=>{
-    const col=i%cols,row=Math.floor(i/cols);
-    const jitterX=((i*31)%13)-6;
-    const jitterY=((i*47)%11)-5;
-    const x=Math.min(stageW-50,Math.max(50,cellW*(col+.5)+jitterX));
-    const y=Math.min(stageH-bottom,Math.max(top,row*cellH+top+cellH*.5+jitterY));
-
-    const btn=document.createElement("div");
-    btn.className="planet";
-    btn.dataset.name=name;
-    btn.dataset.x=x;
-    btn.dataset.y=y;
-    btn.style.left=`${x}px`;
-    btn.style.top=`${y}px`;
-    btn.style.setProperty("--dur",`${5.6+(i%5)*.45}s`);
-    btn.style.setProperty("--delay",`${-(i%7)*.45}s`);
-    const count=categoryBookmarkCount(name);
-    btn.innerHTML=`<div class="planet-body"><div class="planet-label"><span class="planet-name">${escapeHTML(name)}</span><span class="planet-count">${count}개</span></div><div class="inner-bookmarks"></div></div>`;
-    stage.appendChild(btn);
-  });
-
-  const tip=document.createElement("div");
-  tip.className="space-tip";
-  tip.textContent="커서를 가까이 가져가면 펼쳐짐";
-  stage.appendChild(tip);
-  bindSpacePointer(stage);
-}
-
-function getInnerBookmarkItems(name,sub="") {
-  const items = categoryItems(name, sub);
-  if (sub) return items;
-  // 대분류 안에서 소분류로 따로 분리하지 않은 북마크만 안쪽에 띄운다.
-  // '미분류' 대분류는 애초에 전부 소분류가 없는 것으로 취급한다.
-  return items.filter(item => name === "미분류" || !String(item.subCategory || "").trim());
-}
-
-function getExpandedSizeForItems(count, isMobile=false){
-  // 북마크를 억지로 우겨넣지 않고, 개수만큼 큰 원을 만든다.
-  // 36px 원 + 10px 간격 기준의 격자 크기를 원 안에 담는다.
-  if(count <= 0) return isMobile ? 150 : 180;
-  const cell = isMobile ? 44 : 48;
-  const cols = Math.ceil(Math.sqrt(count));
-  const rows = Math.ceil(count / cols);
-  const maxSide = Math.max(cols, rows);
-  const diameter = maxSide * cell + (isMobile ? 48 : 64);
-  return Math.max(isMobile ? 170 : 210, diameter);
-}
-
-function renderInnerBookmarks(stage,name,sub="") {
-  const planet = [...stage.querySelectorAll(".planet")].find(p => p.dataset.name === name);
-  if(!planet) return;
-  let layer = planet.querySelector(".inner-bookmarks");
-  if(!layer){
-    layer = document.createElement("div");
-    layer.className = "inner-bookmarks";
-    planet.querySelector(".planet-body")?.appendChild(layer);
-  }
-  layer.innerHTML = "";
-
-  const items = getInnerBookmarkItems(name, sub);
-  const isMobile = window.innerWidth < 720;
-  const expandedSize = getExpandedSizeForItems(items.length, isMobile);
-  planet.style.setProperty("--expanded-size", `${expandedSize}px`);
-
-  if(!items.length) return;
-
-  const cols = Math.ceil(Math.sqrt(items.length));
-  const rows = Math.ceil(items.length / cols);
-  const gap = isMobile ? 44 : 48;
-  const gridWidth = (cols - 1) * gap;
-  const gridHeight = (rows - 1) * gap;
-  const available = Math.max(120, expandedSize - (isMobile ? 54 : 70));
-  const scale = Math.min(1, available / Math.max(gridWidth, gridHeight, 1));
-  const step = gap * scale;
-  const startX = 50 - ((cols - 1) * step) / (2 * Math.max(1, layer.clientWidth || expandedSize));
-  const startY = 50 - ((rows - 1) * step) / (2 * Math.max(1, layer.clientHeight || expandedSize));
-
-  // layer 크기는 CSS의 inset을 제외한 실제 내부 영역에 맞춰 퍼센트로 배치한다.
-  const innerWidth = Math.max(80, expandedSize - 40);
-  const innerHeight = Math.max(80, expandedSize - 40);
-  const leftPad = (innerWidth - (cols - 1) * step) / 2;
-  const topPad = (innerHeight - (rows - 1) * step) / 2;
-
-  items.forEach((item,index)=>{
-    const col = index % cols;
-    const row = Math.floor(index / cols);
-    const x = leftPad + col * step;
-    const y = topPad + row * step;
-    const el = document.createElement(item.url ? "a" : "div");
-    el.className = "inner-bookmark";
-    el.style.left = `${(x / innerWidth) * 100}%`;
-    el.style.top = `${(y / innerHeight) * 100}%`;
-    el.title = item.title || "제목 없음";
-    if(item.url){
-      el.href = item.url;
-      el.target = "_blank";
-      el.rel = "noopener";
-    }
-    el.innerHTML = `<span class="inner-bookmark-title">${escapeHTML(item.title || "제목 없음")}</span>`;
-    layer.appendChild(el);
-  });
-}
-
-function createHoverCloud(stage,name,centerX,centerY){
-  const cloud=document.createElement("div");
-  cloud.className="hover-cloud show";
-  cloud.dataset.name=name;
-  cloud.style.left=`${centerX}px`;
-  cloud.style.top=`${centerY}px`;
-  const subs=categoryHoverSubs(name);
-  const radius=Math.min(125, Math.max(96, 32+subs.length*7));
-  subs.forEach((sub,i)=>{
-    const orb=document.createElement("div");
-    orb.className="sub-orb";
-    orb.dataset.sub=sub;
-    const angle=(-Math.PI/2)+(Math.PI*2*i/Math.max(subs.length,1));
-    const x=Math.cos(angle)*radius;
-    const y=Math.sin(angle)*radius;
-    orb.style.left=`${x}px`;
-    orb.style.top=`${y}px`;
-    const count=categoryBookmarkCount(name,sub);
-    orb.innerHTML=`<span><span class="sub-name">${escapeHTML(sub)}</span><span class="sub-count">${count}개</span></span>`;
-    orb.addEventListener("mouseenter",()=>{
-      spaceState.activeSub=sub;
-      renderInnerBookmarks(stage,name,sub);
-    });
-    orb.addEventListener("mouseleave",()=>{
-      spaceState.activeSub="";
-      if(spaceState.activeName===name) renderInnerBookmarks(stage,name,"");
-    });
-    cloud.appendChild(orb);
-  });
-  stage.appendChild(cloud);
-  return cloud;
-}
-
-function clearHoverCloud(stage){
-  stage.querySelectorAll(".hover-cloud,.bookmark-peek").forEach(x=>x.remove());
-  stage.querySelectorAll(".planet").forEach(x=>{
-    x.classList.remove("active");
-    const layer=x.querySelector(".inner-bookmarks");
-    if(layer) layer.innerHTML="";
-  });
-  spaceState.activeName="";
-  spaceState.activeSub="";
-}
-
-function bindSpacePointer(stage){
-  stage.onpointermove=(e)=>{
-    const rect=stage.getBoundingClientRect();
-    spaceState.pointerX=e.clientX-rect.left;
-    spaceState.pointerY=e.clientY-rect.top;
-    const planets=[...stage.querySelectorAll(".planet")];
-    let nearest=null, nearestDist=Infinity;
-    planets.forEach(planet=>{
-      const x=Number(planet.dataset.x), y=Number(planet.dataset.y);
-      const dx=spaceState.pointerX-x,dy=spaceState.pointerY-y;
-      const d=Math.hypot(dx,dy);
-      if(d<nearestDist){nearestDist=d;nearest=planet;}
-      const maxDist=150;
-      let mx=0,my=0;
-      if(d<maxDist){
-        const strength=(1-d/maxDist)*(1-d/maxDist);
-        if(d>0){ mx=-(dx/d)*20*strength; my=-(dy/d)*20*strength; }
-      }
-      planet.style.setProperty("--mx",`${mx}px`);
-      planet.style.setProperty("--my",`${my}px`);
-    });
-
-    const normalThreshold=window.innerWidth<720?116:128;
-    const stickyThreshold=window.innerWidth<720?195:215;
-    const activePlanet=spaceState.activeName ? planets.find(p=>p.dataset.name===spaceState.activeName) : null;
-    const activeDistance=activePlanet ? Math.hypot(spaceState.pointerX-Number(activePlanet.dataset.x),spaceState.pointerY-Number(activePlanet.dataset.y)) : Infinity;
-    const keepActive=activePlanet && activeDistance<=stickyThreshold;
-
-    if((nearest && nearestDist<=normalThreshold) || keepActive){
-      const target=keepActive ? activePlanet : nearest;
-      const name=target.dataset.name;
-      target.classList.add("active");
-      planets.filter(p=>p!==target).forEach(p=>p.classList.remove("active"));
-
-      const mx=Number((target.style.getPropertyValue("--mx")||"0").replace("px",""))||0;
-      const my=Number((target.style.getPropertyValue("--my")||"0").replace("px",""))||0;
-      const x=Number(target.dataset.x)+mx;
-      const y=Number(target.dataset.y)+my;
-
-      if(spaceState.activeName!==name){
-        clearHoverCloud(stage);
-        spaceState.activeName=name;
-        spaceState.activeSub="";
-        createHoverCloud(stage,name,x,y);
-        renderInnerBookmarks(stage,name,"");
-      }else{
-        const cloud=stage.querySelector(`.hover-cloud[data-name=\"${CSS.escape(name)}\"]`);
-        if(cloud){ cloud.style.left=`${x}px`; cloud.style.top=`${y}px`; }
-        const inner=document.querySelector(`.planet[data-name=\"${CSS.escape(name)}\"] .inner-bookmarks`);
-        if(inner && !inner.children.length) renderInnerBookmarks(stage,name,spaceState.activeSub||"");
-      }
-    }else{
-      clearHoverCloud(stage);
-    }
-  };
-  stage.onpointerleave=()=>{
-    [...stage.querySelectorAll(".planet")].forEach(planet=>{
-      planet.style.setProperty("--mx","0px");
-      planet.style.setProperty("--my","0px");
-    });
-    clearHoverCloud(stage);
-  };
-}
-
-function showCategorySpaceFromUI(name){
-  // 기존 클릭형 카테고리 화면 대신 동일한 공간에서 호버 방식으로 탐색한다.
-  showSpaceHome();
-}
-
-// 기존 카테고리 버튼을 눌렀을 때도 화면을 바꾸지 않고 공간형 화면으로 돌아간다.
-const originalSetCategory=setCategory;
-setCategory=function(category){ showCategorySpaceFromUI(category); };
-
-const originalSetMode=setMode;
-setMode=function(newMode){
-  if(newMode === "all") { showSpaceHome(); return; }
-  if(newMode === "random") {
-    originalSetMode(newMode);
-    document.getElementById("spaceHome").classList.add("hidden");
-    document.getElementById("categorySpace").classList.remove("show");
-    return;
-  }
-  originalSetMode(newMode);
-};
-
-const originalRender=render;
-render=function(){
-  if(mode === "home") { renderPlanetHome(); return; }
-  originalRender();
-};
-
-window.addEventListener("resize",()=>{ if(mode === "home") renderPlanetHome(); });
-
 document.addEventListener("DOMContentLoaded", () => {
   // 저장된 카테고리와 북마크를 먼저 복구한 뒤 화면을 그린다.
   // 이 순서가 뒤집히면 새로고침 시 archive가 빈 배열인 상태로 저장될 수 있다.
@@ -1695,7 +1149,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("apiKey").value = savedKey;
   }
 
-  showSpaceHome();
+  render();
 });
 
 document.querySelectorAll(".overlay").forEach(overlay => {
